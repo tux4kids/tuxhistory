@@ -315,14 +315,6 @@ int handle_activity(int act, int param)
       run_arcade(param);
       break;
 
-    case RUN_LAN_HOST:
-      run_lan_host();
-      break;
-
-    case RUN_LAN_JOIN:
-      run_lan_join();
-      break;
-
     case RUN_CUSTOM:
       run_custom_game();
       break;
@@ -569,140 +561,6 @@ int run_factoroids(int choice)
     fprintf(stderr, "\nCould not find config file\n");
   }
 
-  return 0;
-}
-
-
-/* If pthreads available, we launch server in own thread.  Otherwise, we use  */
-/* the C system() call to launch the server as a standalone program.          */
-int run_lan_host(void)
-{
-#ifdef HAVE_LIBSDL_NET
-  char buf[256];
-  char server_name[150];
-  char* argv[3];
-  int chosen_lesson = -1;
-
-  /* For now, only allow one server instance: */
-  if(ServerRunning())
-  {
-    ShowMessage(DEFAULT_MENU_FONT_SIZE, _("The server is already running"),
-                NULL, NULL, NULL);
-    return 0;
-  }
-
-  NameEntry(server_name, _("Enter Server Name:"), _("(limit 50 characters)"));
-  argv[0] = "tuxmathserver";
-  argv[1] = "--name";
-  snprintf(buf, 256, "\"%s\"", server_name);
-  argv[2] = buf;
-
-
-  /* If we have POSIX threads available (Linux), we launch server in a thread within  */
-  /* our same process. The server will use the currently selected Mathcards settings, */
-  /* so we can let the user select the lesson for the server to use.                  */
-
-#ifdef HAVE_PTHREAD_H
-
-  ShowMessage(DEFAULT_MENU_FONT_SIZE, 
-              _("Click or press key to select server lesson file"),
-              NULL, NULL, NULL);
-
-  {
-    chosen_lesson = run_menu(menus[MENU_LESSONS], true);
-
-    while (chosen_lesson >= 0)
-    {
-      if (Opts_GetGlobalOpt(MENU_SOUND))
-        playsound(SND_POP);
-
-      /* Re-read global settings first in case any settings were */
-      /* clobbered by other lesson or arcade games this session: */
-      read_global_config_file();
-      /* Now read the selected file and play the "mission": */
-      if (read_named_config_file(lesson_list_filenames[chosen_lesson]))
-        break;
-      else    
-      {  // Something went wrong - could not read lesson config file:
-        fprintf(stderr, "\nCould not find file: %s\n", lesson_list_filenames[chosen_lesson]);
-        chosen_lesson = -1;
-      }
-      // Let the user choose another lesson; start with the screen and
-      // selection that we ended with
-      chosen_lesson = run_menu(menus[MENU_LESSONS], true);
-    }
-  }
-
-  ShowMessage(DEFAULT_MENU_FONT_SIZE,
-              _("Server Name:"),
-              server_name,
-              _("Selected Lesson:"),
-              lesson_list_titles[chosen_lesson]);
-
-  RunServer_pthread(3, argv);
-
-
-  /* Without pthreads, we just launch standalone server, which for now only     */
-  /* supports the hardcoded default settings.                                   */
-#else
-  RunServer_prog(3, argv);
-#endif
-
-/* No SDL_net, so show explanatory message: */
-#else
-  ShowMessage(DEFAULT_MENU_FONT_SIZE, 
-              NULL, _("Sorry, this version built without network support"), NULL, NULL);
-  printf( _("Sorry, this version built without network support.\n"));
-#endif
-  return 0;
-}
-
-
-
-int run_lan_join(void)
-{
-#ifdef HAVE_LIBSDL_NET
-  if(detecting_servers(_("Detecting servers"), _("Please wait")))
-  {
-    int stdby;
-    char buf[256];
-    char player_name[HIGH_SCORE_NAME_LENGTH * 3];
-
-    snprintf(buf, 256, _("Connected to server: %s"), LAN_ConnectedServerName());
-    NameEntry(player_name, buf, _("Enter your name:"));
-    LAN_SetName(player_name);
-    Ready(_("Click when ready"));
-    LAN_StartGame();
-    stdby = Standby(_("Waiting for other players"), NULL);
-    if (stdby == 1)
-    {
-      audioMusicUnload();
-      Opts_SetLanMode(1);  // Tells game() we are playing over network
-      game();
-      Opts_SetLanMode(0);  // Go back to local play
-      if (Opts_GetGlobalOpt(MENU_MUSIC))
-          audioMusicLoad( "tuxi.ogg", -1 );
-    }
-    else
-    {
-      ShowMessage(DEFAULT_MENU_FONT_SIZE,
-                  NULL, _("Sorry, game already in progress."), NULL, NULL);
-      printf(_("Sorry, game already in progress.\n"));
-    }  
-  }
-  else
-  {
-    ShowMessage(DEFAULT_MENU_FONT_SIZE, 
-                NULL, _("Sorry, no server could be found."), NULL, NULL);
-    printf(_("Sorry, no server could be found.\n"));
-  }
-#else
-  ShowMessage(DEFAULT_MENU_FONT_SIZE, 
-              NULL, _("Sorry, this version built without network support"), NULL, NULL);
-  printf( _("Sorry, this version built without network support.\n"));
-#endif
-
-  DEBUGMSG(debug_menu, "Leaving run_lan_join()\n"); 
   return 0;
 }
 
@@ -1454,11 +1312,11 @@ void LoadMenus(void)
   menu_file = fopen(DATA_PREFIX "/menus/main_menu.xml", "r");
   if(menu_file == NULL)
   {
-    DEBUGMSG(debug_menu, "LoadMenus(): Could not load main menu file !\n");
+      DEBUGMSG(debug_menu, "LoadMenus(): Could not load main menu file !\n");
   }
   else
   {
-    menus[MENU_MAIN] = load_menu_from_file(menu_file, NULL);
+      menus[MENU_MAIN] = load_menu_from_file(menu_file, NULL);
     fclose(menu_file);
   }
 

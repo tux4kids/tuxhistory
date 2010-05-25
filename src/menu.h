@@ -37,8 +37,6 @@
   X( RUN_ARCADE ),\
   X( RUN_CUSTOM ),\
   X( RUN_MAIN_MENU ),\
-  X( RUN_LAN_HOST ),\
-  X( RUN_LAN_JOIN ),\
   X( RUN_SCORE_SWEEP ),\
   X( RUN_ELIMINATION ),\
   X( RUN_FACTORS ),\
