@@ -16,21 +16,16 @@ LDADD = @LIBINTL@ \
   ../linebreak/liblinebreak.a
 
 if BUILD_MINGW32
-  bin_PROGRAMS = TuxMath tuxmathserver
+  bin_PROGRAMS = TuxHistory 
   DATA_PREFIX=@MINGW32_PACKAGE_DATA_DIR@
 else
   TUXMATHRC =
-  bin_PROGRAMS = tuxmath \
-                 tuxmathadmin \
-                 generate_lesson \
-                 tuxmathserver	\
-                 tuxmathtestclient
-
+  bin_PROGRAMS = tuxhistory 
   DATA_PREFIX=${pkgdatadir}
 endif
 
 
-tuxmath_SOURCES = tuxmath.c \
+tuxhistory_SOURCES = tuxmath.c \
 	setup.c 	\
 	titlescreen.c	\
 	menu.c		\
@@ -59,37 +54,8 @@ tuxmath_SOURCES = tuxmath.c \
 
 
 # HACK "TuxMath" is the Windows program, whereas "tuxmath" is the Unix program
-TuxMath_SOURCES  = $(tuxmath_SOURCES) tuxmathrc.rc
+TuxHistory_SOURCES  = $(tuxmath_SOURCES) tuxmathrc.rc
 
-
-# NOTE - the "extra" programs built here don't need the same linking,
-# so they have their own prog_LDADD statements to override the
-# global LDADD flag.
-
-tuxmathadmin_SOURCES = tuxmathadmin.c
-tuxmathadmin_LDADD = @LIBINTL@
-
-generate_lesson_SOURCES = generate_lesson.c	\
-		mathcards.c	\
-		options.c	\
-		fileops.c	\
-		lessons.c
-generate_lesson_LDADD =
-
-
-tuxmathserver_SOURCES = servermain.c	\
-		server.c \
-		mathcards.c	\
-		throttle.c	\
-		options.c
-tuxmathserver_LDADD = @LIBINTL@
-
-tuxmathtestclient_SOURCES = testclient.c \
-                            throttle.c \
-                            network.c  \
-                            options.c  \
-                            mathcards.c
-tuxmathtestclient_LDADD =
 
 EXTRA_DIST = 	credits.h 	\
 	factoroids.h	\
