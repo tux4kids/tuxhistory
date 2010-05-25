@@ -21,7 +21,7 @@
 ***************************************************************************/
 
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "options.h"   //Needed for Opts_UsingSound()
 #include "titlescreen.h"
 

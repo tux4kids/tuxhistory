@@ -46,7 +46,7 @@
 //#include "config.h"
 #endif
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "loaders.h"
 
 #define MAX_LESSONS                     100

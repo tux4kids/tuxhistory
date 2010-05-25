@@ -8,7 +8,7 @@ Author: B. Luchen
 
 */
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "SDL_extras.h"
 #include "multiplayer.h"
 #include "game.h"

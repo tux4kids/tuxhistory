@@ -19,7 +19,7 @@
 */
 
 /* put this first so we get <config.h> and <gettext.h> immediately: */
-#include "tuxmath.h"
+#include "tuxhistory.h"
 
 #include <stdio.h>
 #include <stdlib.h>

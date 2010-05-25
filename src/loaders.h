@@ -16,7 +16,7 @@
 #ifndef LOADERS_H
 #define LOADERS_H
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 
 #include <string.h>
 #include <math.h>

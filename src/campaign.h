@@ -8,7 +8,7 @@
  */
  
 #include "SDL_extras.h"
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "linewrap.h"
 
 

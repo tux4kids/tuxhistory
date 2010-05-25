@@ -8,7 +8,7 @@
   and is called from the main setup function.
 
   Some globals are declared in setup.c - all globals throughout tuxmath
-  are now extern'd in the same place in tuxmath.h
+  are now extern'd in the same place in tuxhistory.h
 
   by Bill Kendrick
   bill@newbreedsoftware.com

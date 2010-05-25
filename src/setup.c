@@ -39,7 +39,7 @@
 #include "SDL_image.h"
 
 #include "options.h"
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "mathcards.h"
 #include "setup.h"
 #include "fileops.h"

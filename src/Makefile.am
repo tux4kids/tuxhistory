@@ -1,4 +1,4 @@
-## Makefile.am for tuxmath src:
+## Makefile.am for tuxhisotry src:
 ## Process with Automake to create Makefile.in
 
 # Support for gettext:
@@ -25,7 +25,7 @@ else
 endif
 
 
-tuxhistory_SOURCES = tuxmath.c \
+tuxhistory_SOURCES = tuxhistory.c \
 	setup.c 	\
 	titlescreen.c	\
 	menu.c		\
@@ -53,8 +53,8 @@ tuxhistory_SOURCES = tuxmath.c \
 	throttle.c	
 
 
-# HACK "TuxMath" is the Windows program, whereas "tuxmath" is the Unix program
-TuxHistory_SOURCES  = $(tuxmath_SOURCES) tuxmathrc.rc
+# HACK "TuxHistory" is the Windows program, whereas "tuxhistory" is the Unix program
+TuxHistory_SOURCES  = $(tuxhistory_SOURCES) tuxmathrc.rc
 
 
 EXTRA_DIST = 	credits.h 	\
@@ -74,7 +74,7 @@ EXTRA_DIST = 	credits.h 	\
 	mathcards.h 	\
 	campaign.h	\
 	multiplayer.h	\
-	tuxmath.h	\
+	tuxhistory.h	\
 	convert_utf.h	\
 	SDL_extras.h	\
 	SDL_rotozoom.h	\

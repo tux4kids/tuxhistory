@@ -1,4 +1,4 @@
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "fileops.h"
 #include "loaders.h"
 #include "options.h"

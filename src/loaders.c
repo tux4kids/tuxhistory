@@ -23,7 +23,7 @@
 
 #include "loaders.h"
 #include "globals.h"
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "setup.h"       // for cleanup_on_error()
 #include "SDL_extras.h"
 

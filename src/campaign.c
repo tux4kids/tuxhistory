@@ -5,7 +5,7 @@
  */
  
 #include "campaign.h"
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "credits.h"
 #include "titlescreen.h"
 #include "game.h"

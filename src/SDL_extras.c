@@ -12,7 +12,7 @@
 #include <math.h>
 
 #include "SDL_extras.h"
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "loaders.h"
 #include "pixels.h"
 #include "options.h"

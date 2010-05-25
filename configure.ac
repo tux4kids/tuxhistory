@@ -1,6 +1,6 @@
 #                                               -*- Autoconf -*-
 # Process this file with autoconf to produce a configure script.
-AC_INIT([Tux Of Math Command],[1.8.0],[tuxmath-devel@lists.sourceforge.net],[tuxmath])
+AC_INIT([Tux Hisotry],[0.0.1],[tuxmath-devel@lists.sourceforge.net],[tuxhistory])
 
 AC_PREREQ(2.61)
 AC_CANONICAL_HOST
@@ -8,13 +8,13 @@ AC_CANONICAL_BUILD
 AC_CANONICAL_TARGET
 
 AM_INIT_AUTOMAKE(foreign)
-AC_CONFIG_SRCDIR([src/tuxmath.c])
+AC_CONFIG_SRCDIR([src/tuxhistory.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 NAME_VERSION=$PACKAGE-$VERSION
 
-AC_DEFINE_UNQUOTED([PROGRAM_NAME], "$PACKAGE", [Tux Of Math Command])
+AC_DEFINE_UNQUOTED([PROGRAM_NAME], "$PACKAGE", [Tux History])
 
 AC_SUBST(NAME_VERSION)
 

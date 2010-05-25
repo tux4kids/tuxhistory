@@ -22,7 +22,7 @@
 
 #include "titlescreen.h"
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "options.h"
 #include "fileops.h"
 #include "setup.h"

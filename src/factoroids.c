@@ -18,7 +18,7 @@
  *  http://tux4kids.alioth.debian.org/                      *
  ************************************************************/
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 
 #include <stdio.h>
 #include <stdlib.h>

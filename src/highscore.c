@@ -11,7 +11,7 @@
 */
 #include <string.h>
 
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "highscore.h"
 #include "menu.h"
 #include "titlescreen.h"

@@ -1,7 +1,7 @@
 /*
   tuxmath.c
 
-  Main function for TuxMath
+  Main function for TuxHistory 
   Calls functions in other modules (eg, "setup", "title", "game", etc.)
   as needed.
 
@@ -20,7 +20,7 @@
 */
 
 /* (tuxmath.h brings in "gettext.h" and <locale.h> */
-#include "tuxmath.h"
+#include "tuxhistory.h"
 #include "setup.h"
 #include "titlescreen.h"
 #include "linewrap.h"
