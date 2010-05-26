@@ -655,25 +655,7 @@ int parse_lesson_file_directory(void)
 
   /* prevent memory leak in case we called this already and */
   /* free the list:                                         */
-  if(lesson_list_goldstars)
-  {
-    free(lesson_list_goldstars);
-    lesson_list_goldstars = NULL;
-  }
-
-  lesson_list_goldstars = (int*)malloc(num_lessons*sizeof(int));
-  if (!lesson_list_goldstars)
-  {
-    perror("unable to allocate memory for gold star list");
-    return 0;
-  }
-  for (i = 0; i < num_lessons; i++)
-  {
-    lesson_list_goldstars[i] = 0;
-  }
-
   /* Now read file to see what lessons have been previously completed: */
-  read_goldstars();
 
   return (num_lessons > 0);  /* Success! */
 }
@@ -727,21 +709,6 @@ int write_goldstars(void)
   /* find $HOME and add rest of path to config file: */
   get_user_data_dir_with_subdir(opt_path);
   strcat(opt_path, GOLDSTAR_FILENAME);
-
-  DEBUGMSG(debug_fileops, "In write_goldstars() full path to file is: = %s\n", opt_path);
-
-  fp = fopen(opt_path, "w");
-  if (fp)
-  {
-    write_goldstars_fp(fp);
-    fclose(fp);
-    fp = NULL;
-    return 1;
-  }
-  else {
-    fprintf(stderr, "\nUnable to write goldstars file.\n");
-    return 0;
-  }
 }
 
 

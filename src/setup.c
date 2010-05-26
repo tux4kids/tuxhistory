@@ -729,12 +729,6 @@ void cleanup_memory(void)
     lesson_list_filenames = NULL;
   }
 
-  if (lesson_list_goldstars)
-  {
-    free(lesson_list_goldstars);
-    lesson_list_goldstars = NULL;
-  }
-
   // Close the audio mixer. We have to do this at least as many times
   // as it was opened.
   n_timesopened = Mix_QuerySpec(&frequency,&format,&channels);

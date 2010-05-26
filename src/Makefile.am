@@ -43,7 +43,6 @@ tuxhistory_SOURCES = tuxhistory.c \
 	SDL_rotozoom.c	\
 	scandir.c	\
 	pixels.c	\
-	server.c	\
 	throttle.c	
 
 

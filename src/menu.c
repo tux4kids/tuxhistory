@@ -1223,6 +1223,7 @@ void RunMainMenu(void)
   DEBUGMSG(debug_menu, "Entering RunMainMenu()\n");
 
    /* lessons menu */
+  /* TODO: If inecesary delete!
   DEBUGMSG(debug_menu, "LoadMenus(): Generating lessons submenu. (%d lessons)\n", num_lessons);
 
   tmp_node = create_empty_node();
@@ -1240,10 +1241,10 @@ void RunMainMenu(void)
   set_font_size();
   prerender_menu(menus[MENU_LESSONS]);
   //prerender_all();
-
+*/
   run_menu(menus[MENU_MAIN], false);
   DEBUGMSG(debug_menu, "Leaving RunMainMenu()\n");
-}
+} 
 
 /* free all loaded menu trees */
 void UnloadMenus(void)
