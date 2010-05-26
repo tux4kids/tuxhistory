@@ -32,25 +32,14 @@
 
 #define ACTIVITIES \
   X( RUN_QUIT ),\
-  X( RUN_ACADEMY ),\
-  X( RUN_CAMPAIGN ),\
   X( RUN_ARCADE ),\
-  X( RUN_CUSTOM ),\
   X( RUN_MAIN_MENU ),\
   X( RUN_SCORE_SWEEP ),\
-  X( RUN_ELIMINATION ),\
-  X( RUN_FACTORS ),\
-  X( RUN_FRACTIONS ),\
   X( RUN_HELP ),\
   X( RUN_DEMO ),\
   X( RUN_INFO ),\
   X( RUN_CREDITS ),\
   X( RUN_HALL_OF_FAME ),\
-  X( RUN_SPACE_CADET ),\
-  X( RUN_SCOUT ),\
-  X( RUN_RANGER ),\
-  X( RUN_ACE ),\
-  X( RUN_COMMANDO ),\
   X( N_OF_ACTIVITIES )  /* this one has to be the last one */
 
 /* create enum */

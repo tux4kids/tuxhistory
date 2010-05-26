@@ -30,7 +30,6 @@ tuxhistory_SOURCES = tuxhistory.c \
 	titlescreen.c	\
 	menu.c		\
 	game.c 		\
-	factoroids.c    \
 	fileops_media.c \
 	options.c	\
 	credits.c	\
@@ -38,15 +37,10 @@ tuxhistory_SOURCES = tuxhistory.c \
 	linewrap.c	\
 	loaders.c	\
 	audio.c 	\
-        network.c       \
-	mathcards.c	\
-	campaign.c	\
-	multiplayer.c	\
 	fileops.c	\
 	convert_utf.c	\
 	SDL_extras.c	\
 	SDL_rotozoom.c	\
-	lessons.c	\
 	scandir.c	\
 	pixels.c	\
 	server.c	\
@@ -58,7 +52,6 @@ TuxHistory_SOURCES  = $(tuxhistory_SOURCES) tuxmathrc.rc
 
 
 EXTRA_DIST = 	credits.h 	\
-	factoroids.h	\
 	fileops.h 	\
 	game.h		\
 	menu.h		\
@@ -66,25 +59,18 @@ EXTRA_DIST = 	credits.h 	\
 	highscore.h 	\
 	linewrap.h	\
 	loaders.h	\
-        network.h       \
 	titlescreen.h   \
 	menu.h		\
 	options.h	\
 	setup.h		\
-	mathcards.h 	\
-	campaign.h	\
-	multiplayer.h	\
 	tuxhistory.h	\
 	convert_utf.h	\
 	SDL_extras.h	\
 	SDL_rotozoom.h	\
-	lessons.h	\
 	gettext.h	\
 	scandir.h	\
 	pixels.h	\
 	compiler.h	\
-	server.h	\
-	testclient.h	\
 	transtruct.h	\
 	throttle.h
         

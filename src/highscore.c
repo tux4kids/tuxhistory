@@ -21,7 +21,6 @@
 #include "SDL_extras.h"
 #include "convert_utf.h"
 #include "transtruct.h"
-#include "network.h"
 #include "throttle.h"
 
 

@@ -40,7 +40,6 @@
 
 #include "options.h"
 #include "tuxhistory.h"
-#include "mathcards.h"
 #include "setup.h"
 #include "fileops.h"
 #include "loaders.h"
@@ -141,13 +140,6 @@ void setup(int argc, char * argv[])
 /* then read in global config file                                 */
 void initialize_options(void)
 {
-  /* Initialize MathCards backend for math questions: */
-  if (!MC_Initialize())
-  {
-    printf("\nUnable to initialize MathCards\n");
-    fprintf(stderr, "\nUnable to initialize MathCards\n");
-    exit(1);
-  }
 
   /* initialize game_options struct with defaults DSB */
   if (!Opts_Initialize())
@@ -249,13 +241,6 @@ void handle_command_args(int argc, char* argv[])
         "                         current working directory, the absolute path of the\n"
         "                         filename, tuxmath's missions directory, the user's\n"
         "                         tuxmath directory, and the user's home.\n"
-        "--playthroughlist      - to ask each question only once, allowing player to\n"
-        "                         win game if all questions successfully answered\n"
-
-        "--answersfirst   - to ask questions in format: ? + num2 = num3\n"
-        "                   instead of default format: num1 + num2 = ?\n"
-        "--answersmiddle  - to ask questions in format: num1 + ? = num3\n"
-        "                   instead of default format: num1 + num2 = ?\n"
         "--nosound        - to disable sound/music\n"
         "--nobackground   - to disable background photos (for slower systems)\n"
         "--fullscreen     - to run in fullscreen, if possible (vs. windowed)\n"
@@ -352,7 +337,7 @@ void handle_command_args(int argc, char* argv[])
     else if (strcmp(argv[i], "--version") == 0 ||
              strcmp(argv[i], "-v") == 0)
     {
-      printf("Tux, of Math Command (\"tuxmath\")\n"
+      printf("Tux History (\"tuxhistory\")\n"
              "Version " VERSION "\n");
       cleanup_on_error();
       exit(0);
@@ -371,28 +356,6 @@ void handle_command_args(int argc, char* argv[])
              strcmp(argv[i], "-k") == 0)
     {
       Opts_SetGlobalOpt(USE_KEYPAD, 1);
-    }
-    else if (strcmp(argv[i], "--allownegatives") == 0 ||
-             strcmp(argv[i], "-n") == 0)
-    {
-      MC_SetOpt(ALLOW_NEGATIVES, 1);
-    }
-    else if (strcmp(argv[i], "--playthroughlist") == 0 ||
-             strcmp(argv[i], "-l") == 0)
-    {
-      MC_SetOpt(PLAY_THROUGH_LIST, 1);
-    }
-    else if (strcmp(argv[i], "--answersfirst") == 0)
-    {
-      MC_SetOpt(FORMAT_ANSWER_LAST, 0);
-      MC_SetOpt(FORMAT_ANSWER_FIRST, 1);
-      MC_SetOpt(FORMAT_ANSWER_MIDDLE, 0);
-    }
-    else if (strcmp(argv[i], "--answersmiddle") == 0)
-    {
-      MC_SetOpt(FORMAT_ANSWER_LAST, 0);
-      MC_SetOpt(FORMAT_ANSWER_FIRST, 0);
-      MC_SetOpt(FORMAT_ANSWER_MIDDLE, 1);
     }
     else if (strcmp(argv[i], "--speed") == 0 ||
              strcmp(argv[i], "-s") == 0)
@@ -787,9 +750,7 @@ void cleanup_memory(void)
 
   /* frees the game_options struct: */
   Opts_Cleanup();
-  /* frees any heap used by MathCards: */
-  MC_EndGame();
-}
+  }
 
 
 

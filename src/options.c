@@ -24,8 +24,6 @@
 
 //#include "SDL.h"
 
-#include "mathcards.h"
-
 #include "options.h"
 #include "fileops.h"
 #include "setup.h"
@@ -965,22 +963,6 @@ int int_to_bool(int i)
   else
     return 0;
 }
-
-///* determine which option class a name belongs to, and set it */
-///* accordingly. Returns 1 on success, 0 on failure            */
-//static int find_and_set_option(const char* name, int val)
-//{
-//  int index = -1;
-//  
-//  if ((index = MC_MapTextToIndex(name)) != -1) //is it a math opt?
-//    MC_SetOpt(index, val);
-//  else if ((index = Opts_MapTextToIndex(name)) != -1) //is it a global opt?
-//    Opts_SetGlobalOpt(index, val);
-//  else //no? oh well.
-//    return 0;
-//    
-//  return 1;
-//}
   
 /* prints struct to stream: */
 void print_game_options(FILE* fp, int verbose)

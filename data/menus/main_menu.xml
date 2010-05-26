@@ -1,4 +1,4 @@
-<menu title="Main Menu" entries="7">
+<menu title="Main Menu" entries="6">
     <menu title="Play Alone" sprite="alone" entries="5">
         <item title="Math Command Training Academy" sprite="lesson" run="RUN_ACADEMY">
         <item title="Math Command Fleet Missions" sprite="fleet" run="RUN_CAMPAIGN">
@@ -12,11 +12,6 @@
             <item title="Main Menu" sprite="main" run="RUN_MAIN_MENU">
         </menu>
         <item title="Play Custom Game" sprite="tux_config_brown" run="RUN_CUSTOM">
-        <item title="Main Menu" sprite="main" run="RUN_MAIN_MENU">
-    </menu>
-    <menu title="Network Game" sprite="lan" entries="3">
-        <item title="Run Server" sprite="lan" run="RUN_LAN_HOST">
-        <item title="Join Game" sprite="lan" run="RUN_LAN_JOIN">
         <item title="Main Menu" sprite="main" run="RUN_MAIN_MENU">
     </menu>
     <menu title="Play With Friends" sprite="friends" entries="3">

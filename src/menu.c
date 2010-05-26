@@ -18,25 +18,15 @@
 #include "SDL_extras.h"
 #include "titlescreen.h"
 #include "highscore.h"
-#include "factoroids.h"
 #include "credits.h"
-#include "multiplayer.h"
-#include "mathcards.h"
-#include "campaign.h"
 #include "game.h"
 #include "options.h"
 #include "fileops.h"
 #include "setup.h"
 
-#ifdef HAVE_LIBSDL_NET
-#include "network.h"
-#include "server.h"
-#endif
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 
 
 /* create string array of activities' names */
@@ -215,13 +205,15 @@ MenuNode* load_menu_from_file(FILE* xml_file, MenuNode* parent)
     read_attributes(xml_file, new_node);
     if(new_node->title == NULL)
     {
-      DEBUGMSG(debug_menu_parser, "load_menu_from_file(): no title attribute, exiting\n");
+
+     DEBUGMSG(debug_menu_parser, "load_menu_from_file(): no title attribute, exiting\n");
       return NULL;
     }
   }
   else
   {
     DEBUGMSG(debug_menu_parser, "load_menu_from_file(): unknown tag: %s\n, exiting\n", buffer);
+
     return NULL;
   }
 
@@ -302,66 +294,20 @@ int handle_activity(int act, int param)
 
   switch(act)
   {
-    case RUN_CAMPAIGN:
-      start_campaign();
-      break;
-
-    case RUN_ACADEMY:
-      if(run_academy() == QUIT)
-        return QUIT;
-      break;
-
     case RUN_ARCADE:
-      run_arcade(param);
+      game();
       break;
-
-    case RUN_CUSTOM:
-      run_custom_game();
-      break;
-
     case RUN_HALL_OF_FAME:
       DisplayHighScores(CADET_HIGH_SCORE);
       break;
 
-    case RUN_SCORE_SWEEP:
-      run_multiplayer(0, param);
-      break;
-
-    case RUN_ELIMINATION:
-      run_multiplayer(1, param);
-      break;
-
     case RUN_HELP:
-      Opts_SetHelpMode(1);
-      Opts_SetDemoMode(0);
-      if (Opts_GetGlobalOpt(MENU_MUSIC))  //Turn menu music off for game
-        {audioMusicUnload();}
       game();
-      if (Opts_GetGlobalOpt(MENU_MUSIC)) //Turn menu music back on
-        audioMusicLoad( "tuxi.ogg", -1 );
-      Opts_SetHelpMode(0);
-      break;
-
-    case RUN_FACTORS:
-      run_factoroids(0);
-      break;
-
-    case RUN_FRACTIONS:
-      run_factoroids(1);
       break;
 
     case RUN_DEMO:
-      if(read_named_config_file("demo"))
-      {
-        audioMusicUnload();
-        game();
-        if (Opts_GetGlobalOpt(MENU_MUSIC))
-          audioMusicLoad( "tuxi.ogg", -1 );
-      }
-      else
-        fprintf(stderr, "\nCould not find demo config file\n");
-      break;
-
+       game();
+       
     case RUN_INFO:
       ShowMessage(DEFAULT_MENU_FONT_SIZE,
                   _("TuxMath is free and open-source!"),
@@ -383,186 +329,7 @@ int handle_activity(int act, int param)
   return 0;
 }
 
-int run_academy(void)
-{
-  int chosen_lesson = -1;
 
-  chosen_lesson = run_menu(menus[MENU_LESSONS], true);
-  while (chosen_lesson >= 0)
-  {
-    if (Opts_GetGlobalOpt(MENU_SOUND))
-      playsound(SND_POP);
-
-    /* Re-read global settings first in case any settings were */
-    /* clobbered by other lesson or arcade games this session: */
-    read_global_config_file();
-    /* Now read the selected file and play the "mission": */
-    if (read_named_config_file(lesson_list_filenames[chosen_lesson]))
-    {
-      if (Opts_GetGlobalOpt(MENU_MUSIC))  //Turn menu music off for game
-        {audioMusicUnload();}
-
-      game();
-
-      /* If successful, display Gold Star for this lesson! */
-      if (MC_MissionAccomplished())
-      {
-        lesson_list_goldstars[chosen_lesson] = 1;
-       /* and save to disk: */
-        write_goldstars();
-      }
-
-      if (Opts_GetGlobalOpt(MENU_MUSIC)) //Turn menu music back on
-        {audioMusicLoad("tuxi.ogg", -1);}
-    }
-    else  // Something went wrong - could not read lesson config file:
-    {
-      fprintf(stderr, "\nCould not find file: %s\n", lesson_list_filenames[chosen_lesson]);
-      chosen_lesson = -1;
-    }
-    // Let the user choose another lesson; start with the screen and
-    // selection that we ended with
-    chosen_lesson = run_menu(menus[MENU_LESSONS], true);
-  }
-  return chosen_lesson;
-}
-
-int run_arcade(int choice)
-{
-  const char* arcade_config_files[5] =
-    {"arcade/space_cadet",
-     "arcade/scout",
-     "arcade/ranger",
-     "arcade/ace",
-     "arcade/commando"
-    };
-
-  const int arcade_high_score_tables[5] =
-    {CADET_HIGH_SCORE,
-     SCOUT_HIGH_SCORE,
-     RANGER_HIGH_SCORE,
-     ACE_HIGH_SCORE,
-     COMMANDO_HIGH_SCORE
-    };
-
-  int hs_table;
-
-  if (choice < NUM_MATH_COMMAND_LEVELS) {
-    // Play arcade game
-    if (read_named_config_file(arcade_config_files[choice]))
-    {
-      audioMusicUnload();
-      game();
-      RenderTitleScreen();
-      if (Opts_GetGlobalOpt(MENU_MUSIC))
-        audioMusicLoad( "tuxi.ogg", -1 );
-      /* See if player made high score list!                        */
-      read_high_scores();  /* Update, in case other users have added to it */
-      hs_table = arcade_high_score_tables[choice];
-      if (check_score_place(hs_table, Opts_LastScore()) < HIGH_SCORES_SAVED)
-      {
-        char player_name[HIGH_SCORE_NAME_LENGTH * 3];
-
-        /* Get name from player: */
-        HighScoreNameEntry(&player_name[0]);
-        insert_score(player_name, hs_table, Opts_LastScore());
-        /* Show the high scores. Note the user will see his/her */
-        /* achievement even if (in the meantime) another player */
-        /* has in fact already bumped this score off the table. */
-        DisplayHighScores(hs_table);
-        /* save to disk: */
-        /* See "On File Locking" in fileops.c */
-        append_high_score(choice,Opts_LastScore(),&player_name[0]);
-
-        DEBUGCODE(debug_titlescreen)
-          print_high_scores(stderr);
-      }
-    }
-    else {
-      fprintf(stderr, "\nCould not find %s config file\n",arcade_config_files[choice]);
-    }
-  }
-  return 0;
-}
-
-int run_custom_game(void)
-{
-  const char *s1, *s2, *s3, *s4;
-  s1 = _("Edit 'options' file in your home directory");
-  s2 = _("to create customized game!");
-  s3 = _("Press a key or click your mouse to start game.");
-  s4 = _("See README.txt for more information");
-  ShowMessage(DEFAULT_MENU_FONT_SIZE, s1, s2, s3, s4);
-
-  if (read_user_config_file()) {
-    if (Opts_GetGlobalOpt(MENU_MUSIC))
-      audioMusicUnload();
-
-    game();
-    write_user_config_file();
-
-    if (Opts_GetGlobalOpt(MENU_MUSIC))
-      audioMusicLoad( "tuxi.ogg", -1 );
-  }
-
-  return 0;
-}
-
-void run_multiplayer(int mode, int difficulty)
-{
-  int nplayers = 0;
-  char npstr[HIGH_SCORE_NAME_LENGTH * 3];
-
-  while (nplayers <= 0 || nplayers > MAX_PLAYERS)
-  {
-    NameEntry(npstr, _("How many kids are playing?"),
-                     _("(Between 2 and 4 players)"));
-    nplayers = atoi(npstr);
-  }
-
-  mp_set_parameter(PLAYERS, nplayers);
-  mp_set_parameter(MODE, mode);
-  mp_set_parameter(DIFFICULTY, difficulty);
-  mp_run_multiplayer();
-}
-
-int run_factoroids(int choice)
-{
-  const int factoroids_high_score_tables[2] =
-    {FACTORS_HIGH_SCORE, FRACTIONS_HIGH_SCORE};
-  int hs_table;
-
-  audioMusicUnload();
-  if(choice == 0)
-    factors();
-  else
-    fractions();
-
-  if (Opts_GetGlobalOpt(MENU_MUSIC))
-    audioMusicLoad( "tuxi.ogg", -1 );
-
-  hs_table = factoroids_high_score_tables[choice];
-  if (check_score_place(hs_table, Opts_LastScore()) < HIGH_SCORES_SAVED){
-    char player_name[HIGH_SCORE_NAME_LENGTH * 3];
-    /* Get name from player: */
-    HighScoreNameEntry(&player_name[0]);
-    insert_score(player_name, hs_table, Opts_LastScore());
-    /* Show the high scores. Note the user will see his/her */
-    /* achievement even if (in the meantime) another player */
-    /* has in fact already bumped this score off the table. */
-    DisplayHighScores(hs_table);
-    /* save to disk: */
-    /* See "On File Locking" in fileops.c */
-    append_high_score(hs_table,Opts_LastScore(),&player_name[0]);
-    DEBUGCODE(debug_titlescreen)
-    print_high_scores(stderr);
-  }
-  else {
-    fprintf(stderr, "\nCould not find config file\n");
-  }
-
-  return 0;
-}
 
 
 /* Display the menu and run the event loop.

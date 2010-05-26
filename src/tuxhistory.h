@@ -75,7 +75,4 @@ extern Mix_Chunk* sounds[];    /* declared in setup.c; also used in fileops.c, p
 extern Mix_Music* musics[];    /* declared in setup.c; also used in fileops.c, game.c  */
 #endif
 
-
-/* NOTE: default values for math options are now in mathcards.h */
-
 #endif
