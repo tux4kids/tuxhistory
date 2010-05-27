@@ -1,3 +1,11 @@
+
+2010.May.26 (git://git.debian.org/tux4kids/tuxhistory.git)
+	We start TuxHistory, I made the first import using as base the
+	existing code of TuxMath. At this moment TuxHistory have had a 
+	cleaning process deleting the Tuxmath specific code. 
+
+	Jesús Mager <fongog at gmail dot com>
+
 2010.Mar.12 (git://git.debian.org/tux4kids/tuxmath.git)
         Tuxmath now using Git for source code management, which provides
 	superior automated documentation for changes in the form of commit

@@ -3,11 +3,11 @@
 # modified for tuxmath by Yves Combe (yves@ycombe.net)
 
 !define PKG_VERSION "@VERSION@"
-!define PKG_PREFIX  "tuxmath"
+!define PKG_PREFIX  "tuxhistory"
 
-!define APP_PREFIX  "TuxMath"
+!define APP_PREFIX  "TuxHistory"
 !define APP_EXE     "${APP_PREFIX}.exe"
-!define APP_NAME    "Tux of Math Command"
+!define APP_NAME    "Tux History"
 
 !define CONF_EXE     "tuxmath_config.exe"
 !define CONF_DIR     "TuxMathConfig"
@@ -68,17 +68,17 @@ Section "Start Menu Shortcuts"
   SetShellVarContext all
   SetOutPath $INSTDIR
   CreateDirectory "$SMPROGRAMS\${APP_NAME}"
-  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\${APP_NAME} (Full Screen).lnk" "$INSTDIR\${APP_EXE}" "-f" "$INSTDIR\${APP_EXE}" 0 "" "" "Start TuxMath in Fullscreen mode"
-  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\${APP_NAME} (Windowed).lnk" "$INSTDIR\${APP_EXE}" "-w" "$INSTDIR\${APP_EXE}" 0 "" "" "Start TuxMath in a Window"
-  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\Configure TuxMath.lnk" "$INSTDIR\${CONF_DIR}\${CONF_EXE}" "-w" "$INSTDIR\${CONF_DIR}\${CONF_EXE}" 0 "" "" "Configure TuxMath"
-  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0 "" "" "Remove Tux of Math Command"
+  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\${APP_NAME} (Full Screen).lnk" "$INSTDIR\${APP_EXE}" "-f" "$INSTDIR\${APP_EXE}" 0 "" "" "Start TuxHistory in Fullscreen mode"
+  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\${APP_NAME} (Windowed).lnk" "$INSTDIR\${APP_EXE}" "-w" "$INSTDIR\${APP_EXE}" 0 "" "" "Start TuxHistory in a Window"
+  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\Configure TuxMath.lnk" "$INSTDIR\${CONF_DIR}\${CONF_EXE}" "-w" "$INSTDIR\${CONF_DIR}\${CONF_EXE}" 0 "" "" "Configure TuxHistory"
+  CreateShortCut  "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0 "" "" "Remove Tux History"
 SectionEnd
 
 
 Section "Desktop Shortcut"
   SetShellVarContext all
   SetOutPath $INSTDIR
-  CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}" "" "$INSTDIR\${APP_EXE}" 0  "" "" "Run Tux of Math Command"
+  CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${APP_EXE}" "" "$INSTDIR\${APP_EXE}" 0  "" "" "Run Tux History"
 SectionEnd
 
 ;Function .onInstSuccess

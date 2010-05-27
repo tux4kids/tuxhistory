@@ -4,11 +4,11 @@
 # modified more for tuxmath by David Bruce <davidstuartbruce@gmail.com>
 
 !define PKG_VERSION "@VERSION@"
-!define PKG_PREFIX  "tuxmath"
+!define PKG_PREFIX  "tuxhistory"
 
-!define APP_PREFIX  "TuxMath"
+!define APP_PREFIX  "TuxHistory"
 !define APP_EXE     "${APP_PREFIX}.exe"
-!define APP_NAME    "Tux of Math Command"
+!define APP_NAME    "Tux History"
 
 OutFile     "${PKG_PREFIX}-${PKG_VERSION}-win32-installer.exe"
 Name        "${APP_NAME}"
@@ -46,7 +46,7 @@ AutoCloseWindow     true
 
 Section
   SetOutPath $INSTDIR
-  File "mingw32\${APP_EXE}"
+  File "src\${APP_EXE}"
 #  File "mingw32\*.dll"
   SetOutPath $INSTDIR\data
   File /r "mingw32\data\*.*"
@@ -77,19 +77,19 @@ Section "Start Menu Shortcuts"
                   "-f" \
                   "$INSTDIR\data\images\icons\tuxmath.ico" \
                   0 "" ""  \
-                  "Start TuxMath in Fullscreen mode"
+                  "Start Tux History in Fullscreen mode"
 
   CreateShortCut  "$SMPROGRAMS\${APP_NAME}\${APP_NAME} (Windowed).lnk" \
                   "$INSTDIR\${APP_EXE}" \
                   "-w" \
                   "$INSTDIR\data\images\icons\tuxmath.ico"  \ 
                   0 "" "" \
-                  "Start TuxMath in a Window"
+                  "Start TuxHistory in a Window"
 
   CreateShortCut  "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" \
                   "$INSTDIR\uninstall.exe" ""  \ 
                   "$INSTDIR\uninstall.exe" 0 "" "" \
-                  "Remove Tux of Math Command"
+                  "Remove Tux History Command"
 SectionEnd
 
 Section "Desktop Shortcut"
@@ -99,7 +99,7 @@ Section "Desktop Shortcut"
                  "$INSTDIR\${APP_EXE}"  ""  \
                  "$INSTDIR\data\images\icons\tuxmath.ico" \
                  0  "" ""  \ 
-                 "Run Tux of Math Command"
+                 "Run Tux History"
 SectionEnd
 
 # Uninstall stuff
