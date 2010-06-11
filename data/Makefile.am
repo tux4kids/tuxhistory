@@ -4,7 +4,6 @@
 SUBDIRS = fonts	\
 	images	\
 	menus \
-	maps \
 	sounds
 
 #EXTRA_DIST = options

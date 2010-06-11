@@ -1,7 +1,7 @@
 /*
   setup.c
 
-  For TuxMath
+  For TuxHistory
   Contains some globals (screen surface, images, some option flags, etc.)
   as well as the function to load data files (images, sounds, music)
   and display a "Loading..." screen.
@@ -73,18 +73,7 @@ sprite* sprites[NUM_SPRITES];
    NUM_IMAGES. */
 #define NUM_FLIPPED_IMAGES 6
 SDL_Surface* flipped_images[NUM_FLIPPED_IMAGES];
-int flipped_img_lookup[NUM_IMAGES];
 SDL_Surface* blended_igloos[NUM_BLENDED_IGLOOS];
-
-const int flipped_img[] = {
-  IMG_PENGUIN_WALK_ON1,
-  IMG_PENGUIN_WALK_ON2,
-  IMG_PENGUIN_WALK_ON3,
-  IMG_PENGUIN_WALK_OFF1,
-  IMG_PENGUIN_WALK_OFF2,
-  IMG_PENGUIN_WALK_OFF3
-};
-
 
 #ifndef NOSOUND
 Mix_Chunk* sounds[NUM_SOUNDS];
@@ -96,8 +85,6 @@ void initialize_options(void);
 void handle_command_args(int argc, char* argv[]);
 void initialize_SDL(void);
 void load_data_files(void);
-void generate_flipped_images(void);
-void generate_blended_images(void);
 
 //int initialize_game_options(void);
 void seticon(void);
@@ -121,10 +108,6 @@ void setup(int argc, char * argv[])
   initialize_SDL();
   /* Read image and sound files: */
   load_data_files();
-  /* Generate flipped versions of walking images */
-  generate_flipped_images();
-  /* Generate blended images (e.g., igloos) */
-  generate_blended_images();
   /* Note that the per-user options will be set after the call to
      titlescreen, to allow for user-login to occur. 
      
@@ -600,46 +583,6 @@ void load_data_files(void)
     exit(1);
   }
 }
-
-
-
-/* Create flipped versions of certain images; also set up the flip
-   lookup table */
-void generate_flipped_images(void)
-{
-  int i;
-
-  /* Zero out the flip lookup table */
-  for (i = 0; i < NUM_IMAGES; i++)
-    flipped_img_lookup[i] = 0;
-
-  for (i = 0; i < NUM_FLIPPED_IMAGES; i++) {
-    flipped_images[i] = Flip(images[flipped_img[i]],1,0);
-    flipped_img_lookup[flipped_img[i]] = i;
-  }
-}
-
-/* Created images that are blends of two other images to smooth out
-   the transitions. */
-void generate_blended_images(void)
-{
-  blended_igloos[0] = Blend(images[IMG_IGLOO_REBUILDING1],NULL,0.06);
-  blended_igloos[1] = Blend(images[IMG_IGLOO_REBUILDING1],NULL,0.125);
-  blended_igloos[2] = Blend(images[IMG_IGLOO_REBUILDING1],NULL,0.185);
-  blended_igloos[3] = Blend(images[IMG_IGLOO_REBUILDING1],NULL,0.25);
-  blended_igloos[4] = Blend(images[IMG_IGLOO_REBUILDING1],NULL,0.5);
-  blended_igloos[5] = Blend(images[IMG_IGLOO_REBUILDING1],NULL,0.75);
-  blended_igloos[6] = images[IMG_IGLOO_REBUILDING1];
-  blended_igloos[7] = Blend(images[IMG_IGLOO_REBUILDING2],images[IMG_IGLOO_REBUILDING1],0.25);
-  blended_igloos[8] = Blend(images[IMG_IGLOO_REBUILDING2],images[IMG_IGLOO_REBUILDING1],0.5);
-  blended_igloos[9] = Blend(images[IMG_IGLOO_REBUILDING2],images[IMG_IGLOO_REBUILDING1],0.75);
-  blended_igloos[10] = images[IMG_IGLOO_REBUILDING2];
-  blended_igloos[11] = Blend(images[IMG_IGLOO_INTACT],images[IMG_IGLOO_REBUILDING2],0.25);
-  blended_igloos[12] = Blend(images[IMG_IGLOO_INTACT],images[IMG_IGLOO_REBUILDING2],0.5);
-  blended_igloos[13] = Blend(images[IMG_IGLOO_INTACT],images[IMG_IGLOO_REBUILDING2],0.75);
-  blended_igloos[14] = images[IMG_IGLOO_INTACT];
-}
-
 
 /* save options and free heap */
 /* use for successful exit */

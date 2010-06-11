@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nb\n"
 "Report-Msgid-Bugs-To: tuxmath-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-05-27 00:16-0500\n"
+"POT-Creation-Date: 2010-06-11 13:40-0500\n"
 "PO-Revision-Date: 2008-09-21 19:08+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <i18n-nn@lister.ping.uio.no>\n"
@@ -177,240 +177,6 @@ msgstr "tuxmath-devel@lists.sourceforge.net"
 msgid "Help"
 msgstr "Hjelp"
 
-#: data/missions/lessons/descr_lessons:1
-msgid "Number Typing"
-msgstr "Tallskriving"
-
-#: data/missions/lessons/descr_lessons:2
-msgid "Addition: 1 to 3"
-msgstr "Addisjon: 1 til 3"
-
-#: data/missions/lessons/descr_lessons:3
-msgid "Addition: 0 to 5"
-msgstr "Addisjon: 0 til 5"
-
-#: data/missions/lessons/descr_lessons:4
-msgid "Addition: Sums to 10"
-msgstr "Addisjon: Summer til 10"
-
-#: data/missions/lessons/descr_lessons:5
-msgid "Addition: Sums to 15"
-msgstr "Addisjon: Summer til 15"
-
-#: data/missions/lessons/descr_lessons:6
-msgid "Addition: Sums to 20"
-msgstr "Addisjon: Summer til 20"
-
-#: data/missions/lessons/descr_lessons:7
-msgid "Addition: Two Digit Numbers"
-msgstr "Addisjon: Tosifrede tall"
-
-#: data/missions/lessons/descr_lessons:8
-msgid "Addition: Missing Numbers"
-msgstr "Addisjon: Manglende tall"
-
-#: data/missions/lessons/descr_lessons:9
-msgid "Subtraction: 0 to 10"
-msgstr "Subtraksjon: 0 til 10"
-
-#: data/missions/lessons/descr_lessons:10
-msgid "Subtraction: 0 to 20"
-msgstr "Subtraksjon: 0 til 20"
-
-#: data/missions/lessons/descr_lessons:11
-msgid "Subtraction: Two Digit Numbers"
-msgstr "Subtraksjon: Tosifrede tall"
-
-#: data/missions/lessons/descr_lessons:12
-msgid "Addition and Subtraction Review"
-msgstr "Gjennomgang: Addisjon og subtraksjon"
-
-#: data/missions/lessons/descr_lessons:13
-msgid "Multiplication: 0 to 3"
-msgstr "Multiplikasjon: 0 til 3"
-
-#: data/missions/lessons/descr_lessons:14
-msgid "Multiples of 2"
-msgstr "Multiplum av 2"
-
-#: data/missions/lessons/descr_lessons:15
-msgid "Multiples of 3"
-msgstr "Multiplum av 3"
-
-#: data/missions/lessons/descr_lessons:16
-msgid "Multiples of 4"
-msgstr "Multiplum av 4"
-
-#: data/missions/lessons/descr_lessons:17
-msgid "Multiples of 5"
-msgstr "Multiplum av 5"
-
-#: data/missions/lessons/descr_lessons:18
-msgid "Multiplication: 0 to 5"
-msgstr "Multiplikasjon: 0 til 5"
-
-#: data/missions/lessons/descr_lessons:19
-msgid "Multiples of 6"
-msgstr "Multiplum av 6"
-
-#: data/missions/lessons/descr_lessons:20
-msgid "Multiples of 7"
-msgstr "Multiplum av 7"
-
-#: data/missions/lessons/descr_lessons:21
-msgid "Multiplication: 0 to 7"
-msgstr "Multiplikasjon: 0 til 7"
-
-#: data/missions/lessons/descr_lessons:22
-msgid "Multiples of 8"
-msgstr "Multiplum av 8"
-
-#: data/missions/lessons/descr_lessons:23
-msgid "Multiples of 9"
-msgstr "Multiplum av 9"
-
-#: data/missions/lessons/descr_lessons:24
-msgid "Multiples of 10"
-msgstr "Multiplum av 10"
-
-#: data/missions/lessons/descr_lessons:25
-msgid "Multiplication: 0 to 10"
-msgstr "Multiplikasjon: 0 til 10"
-
-#: data/missions/lessons/descr_lessons:26
-msgid "Multiples of 11 and 12"
-msgstr "Multiplum av 11 og 12"
-
-#: data/missions/lessons/descr_lessons:27
-msgid "Multiplication: 0 to 12"
-msgstr "Multiplikasjon: 0 til 12"
-
-#: data/missions/lessons/descr_lessons:28
-msgid "Multiples of 13, 14, and 15"
-msgstr "Multiplum av 13, 14 og 15"
-
-#: data/missions/lessons/descr_lessons:29
-msgid "Multiplication: 0 to 15"
-msgstr "Multiplikasjon: 0 til 15"
-
-#: data/missions/lessons/descr_lessons:30
-msgid "Multiplication: Missing Numbers"
-msgstr "Multiplikasjon: Manglende tall"
-
-#: data/missions/lessons/descr_lessons:31
-msgid "Division by 2"
-msgstr "Divisjon med 2"
-
-#: data/missions/lessons/descr_lessons:32
-msgid "Division by 3"
-msgstr "Divisjon med 3"
-
-#: data/missions/lessons/descr_lessons:33
-msgid "Division by 4"
-msgstr "Divisjon med 4"
-
-#: data/missions/lessons/descr_lessons:34
-msgid "Division by 5"
-msgstr "Divisjon med 5"
-
-#: data/missions/lessons/descr_lessons:35
-msgid "Division: 1 to 5"
-msgstr "Divisjon: 1 til 5"
-
-#: data/missions/lessons/descr_lessons:36
-msgid "Division by 6"
-msgstr "Divisjon med 6"
-
-#: data/missions/lessons/descr_lessons:37
-msgid "Division by 7"
-msgstr "Divisjon med 7"
-
-#: data/missions/lessons/descr_lessons:38
-msgid "Division by 8"
-msgstr "Divisjon med 8"
-
-#: data/missions/lessons/descr_lessons:39
-msgid "Division by 9"
-msgstr "Divisjon med 9"
-
-#: data/missions/lessons/descr_lessons:40
-msgid "Division by 10"
-msgstr "Divisjon med 10"
-
-#: data/missions/lessons/descr_lessons:41
-msgid "Division: 1 to 10"
-msgstr "Divisjon: 1 til 10"
-
-#: data/missions/lessons/descr_lessons:42
-msgid "Division by 11 and 12"
-msgstr "Divisjon med 11 og 12"
-
-#: data/missions/lessons/descr_lessons:43
-msgid "Division: 1 to 12"
-msgstr "Divisjon: 1 til 12"
-
-#: data/missions/lessons/descr_lessons:44
-msgid "Division by 13, 14, and 15"
-msgstr "Divisjon med 13, 14 og 15"
-
-#: data/missions/lessons/descr_lessons:45
-msgid "Division: 1 to 15"
-msgstr "Divisjon: 1 til 15"
-
-#: data/missions/lessons/descr_lessons:46
-msgid "Multiplication and Division Review"
-msgstr "Gjennomgang: Multiplikasjon og divisjon"
-
-#: data/missions/lessons/descr_lessons:47
-msgid "Typing Negative Numbers"
-msgstr "Negative tall"
-
-#: data/missions/lessons/descr_lessons:48
-msgid "Subtraction: Negative Answers"
-msgstr "Subtraksjon: Negative svar"
-
-#: data/missions/lessons/descr_lessons:49
-msgid "Adding Negatives to Positives"
-msgstr "Addisjon av negative til positive tall"
-
-#: data/missions/lessons/descr_lessons:50
-#, fuzzy
-msgid "Adding Positives to Negatives"
-msgstr "Addisjon av negative til negative tall"
-
-#: data/missions/lessons/descr_lessons:51
-msgid "Subtracting Negatives From Positives"
-msgstr "Subtraksjon av negative fra positive tall"
-
-#: data/missions/lessons/descr_lessons:52
-#, fuzzy
-msgid "Subtracting Positives From Negatives"
-msgstr "Subtraksjon av negative fra negative tall"
-
-#: data/missions/lessons/descr_lessons:53
-msgid "Adding Negatives to Negatives"
-msgstr "Addisjon av negative til negative tall"
-
-#: data/missions/lessons/descr_lessons:54
-msgid "Subtracting Negatives From Negatives"
-msgstr "Subtraksjon av negative fra negative tall"
-
-#: data/missions/lessons/descr_lessons:55
-msgid "Negative and Positive Numbers Review"
-msgstr "Gjennomgang: Negative og positive tall"
-
-#: data/missions/lessons/descr_lessons:56
-msgid "Multiplication and Division of Negatives"
-msgstr "Multiplikasjon og divisjon av negative tall"
-
-#: data/missions/lessons/descr_lessons:57
-msgid "Multiplication of Positives and Negatives"
-msgstr "Multiplikasjon av positive og negative tall"
-
-#: data/missions/lessons/descr_lessons:58
-msgid "Division of Positives and Negatives"
-msgstr "Divisjon av positive og negative tall"
-
 #: data/menus/menu_strings:1
 msgid "Credits"
 msgstr "Bidragsytere"
@@ -434,6 +200,182 @@ msgstr "Prosjektinfo"
 #: data/menus/menu_strings:7
 msgid "Quit"
 msgstr "Avslutt"
+
+#~ msgid "Number Typing"
+#~ msgstr "Tallskriving"
+
+#~ msgid "Addition: 1 to 3"
+#~ msgstr "Addisjon: 1 til 3"
+
+#~ msgid "Addition: 0 to 5"
+#~ msgstr "Addisjon: 0 til 5"
+
+#~ msgid "Addition: Sums to 10"
+#~ msgstr "Addisjon: Summer til 10"
+
+#~ msgid "Addition: Sums to 15"
+#~ msgstr "Addisjon: Summer til 15"
+
+#~ msgid "Addition: Sums to 20"
+#~ msgstr "Addisjon: Summer til 20"
+
+#~ msgid "Addition: Two Digit Numbers"
+#~ msgstr "Addisjon: Tosifrede tall"
+
+#~ msgid "Addition: Missing Numbers"
+#~ msgstr "Addisjon: Manglende tall"
+
+#~ msgid "Subtraction: 0 to 10"
+#~ msgstr "Subtraksjon: 0 til 10"
+
+#~ msgid "Subtraction: 0 to 20"
+#~ msgstr "Subtraksjon: 0 til 20"
+
+#~ msgid "Subtraction: Two Digit Numbers"
+#~ msgstr "Subtraksjon: Tosifrede tall"
+
+#~ msgid "Addition and Subtraction Review"
+#~ msgstr "Gjennomgang: Addisjon og subtraksjon"
+
+#~ msgid "Multiplication: 0 to 3"
+#~ msgstr "Multiplikasjon: 0 til 3"
+
+#~ msgid "Multiples of 2"
+#~ msgstr "Multiplum av 2"
+
+#~ msgid "Multiples of 3"
+#~ msgstr "Multiplum av 3"
+
+#~ msgid "Multiples of 4"
+#~ msgstr "Multiplum av 4"
+
+#~ msgid "Multiples of 5"
+#~ msgstr "Multiplum av 5"
+
+#~ msgid "Multiplication: 0 to 5"
+#~ msgstr "Multiplikasjon: 0 til 5"
+
+#~ msgid "Multiples of 6"
+#~ msgstr "Multiplum av 6"
+
+#~ msgid "Multiples of 7"
+#~ msgstr "Multiplum av 7"
+
+#~ msgid "Multiplication: 0 to 7"
+#~ msgstr "Multiplikasjon: 0 til 7"
+
+#~ msgid "Multiples of 8"
+#~ msgstr "Multiplum av 8"
+
+#~ msgid "Multiples of 9"
+#~ msgstr "Multiplum av 9"
+
+#~ msgid "Multiples of 10"
+#~ msgstr "Multiplum av 10"
+
+#~ msgid "Multiplication: 0 to 10"
+#~ msgstr "Multiplikasjon: 0 til 10"
+
+#~ msgid "Multiples of 11 and 12"
+#~ msgstr "Multiplum av 11 og 12"
+
+#~ msgid "Multiplication: 0 to 12"
+#~ msgstr "Multiplikasjon: 0 til 12"
+
+#~ msgid "Multiples of 13, 14, and 15"
+#~ msgstr "Multiplum av 13, 14 og 15"
+
+#~ msgid "Multiplication: 0 to 15"
+#~ msgstr "Multiplikasjon: 0 til 15"
+
+#~ msgid "Multiplication: Missing Numbers"
+#~ msgstr "Multiplikasjon: Manglende tall"
+
+#~ msgid "Division by 2"
+#~ msgstr "Divisjon med 2"
+
+#~ msgid "Division by 3"
+#~ msgstr "Divisjon med 3"
+
+#~ msgid "Division by 4"
+#~ msgstr "Divisjon med 4"
+
+#~ msgid "Division by 5"
+#~ msgstr "Divisjon med 5"
+
+#~ msgid "Division: 1 to 5"
+#~ msgstr "Divisjon: 1 til 5"
+
+#~ msgid "Division by 6"
+#~ msgstr "Divisjon med 6"
+
+#~ msgid "Division by 7"
+#~ msgstr "Divisjon med 7"
+
+#~ msgid "Division by 8"
+#~ msgstr "Divisjon med 8"
+
+#~ msgid "Division by 9"
+#~ msgstr "Divisjon med 9"
+
+#~ msgid "Division by 10"
+#~ msgstr "Divisjon med 10"
+
+#~ msgid "Division: 1 to 10"
+#~ msgstr "Divisjon: 1 til 10"
+
+#~ msgid "Division by 11 and 12"
+#~ msgstr "Divisjon med 11 og 12"
+
+#~ msgid "Division: 1 to 12"
+#~ msgstr "Divisjon: 1 til 12"
+
+#~ msgid "Division by 13, 14, and 15"
+#~ msgstr "Divisjon med 13, 14 og 15"
+
+#~ msgid "Division: 1 to 15"
+#~ msgstr "Divisjon: 1 til 15"
+
+#~ msgid "Multiplication and Division Review"
+#~ msgstr "Gjennomgang: Multiplikasjon og divisjon"
+
+#~ msgid "Typing Negative Numbers"
+#~ msgstr "Negative tall"
+
+#~ msgid "Subtraction: Negative Answers"
+#~ msgstr "Subtraksjon: Negative svar"
+
+#~ msgid "Adding Negatives to Positives"
+#~ msgstr "Addisjon av negative til positive tall"
+
+#, fuzzy
+#~ msgid "Adding Positives to Negatives"
+#~ msgstr "Addisjon av negative til negative tall"
+
+#~ msgid "Subtracting Negatives From Positives"
+#~ msgstr "Subtraksjon av negative fra positive tall"
+
+#, fuzzy
+#~ msgid "Subtracting Positives From Negatives"
+#~ msgstr "Subtraksjon av negative fra negative tall"
+
+#~ msgid "Adding Negatives to Negatives"
+#~ msgstr "Addisjon av negative til negative tall"
+
+#~ msgid "Subtracting Negatives From Negatives"
+#~ msgstr "Subtraksjon av negative fra negative tall"
+
+#~ msgid "Negative and Positive Numbers Review"
+#~ msgstr "Gjennomgang: Negative og positive tall"
+
+#~ msgid "Multiplication and Division of Negatives"
+#~ msgstr "Multiplikasjon og divisjon av negative tall"
+
+#~ msgid "Multiplication of Positives and Negatives"
+#~ msgstr "Multiplikasjon av positive og negative tall"
+
+#~ msgid "Division of Positives and Negatives"
+#~ msgstr "Divisjon av positive og negative tall"
 
 #~ msgid "Welcome to TuxMath!"
 #~ msgstr "Velkommen til TuxMath!"
