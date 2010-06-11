@@ -4,7 +4,7 @@
 
 plainsdir = $(pkgdatadir)/images/terrain/plains
 
-dist_backgrounds_DATA = 
+dist_plains_DATA = 
 border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \

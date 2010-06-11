@@ -4,7 +4,7 @@
 
 savannahdir = $(pkgdatadir)/images/terrain/savannah
 
-dist_backgrounds_DATA = 
+dist_savannah_DATA = 
 border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \

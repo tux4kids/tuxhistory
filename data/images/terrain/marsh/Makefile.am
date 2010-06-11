@@ -4,7 +4,7 @@
 
 marshdir = $(pkgdatadir)/images/terrain/marsh
 
-dist_backgrounds_DATA = 
+dist_marsh_DATA = 
 border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \

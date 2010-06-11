@@ -4,7 +4,7 @@
 
 oceandir = $(pkgdatadir)/images/terrain/ocean
 
-dist_backgrounds_DATA = 
+dist_ocean_DATA = 
 border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \
