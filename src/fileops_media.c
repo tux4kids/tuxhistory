@@ -71,8 +71,7 @@ int load_image_data()
   "comets/bonus_cometex"
   };
 
-  static char* terrain_filenames[NUM_TERRAINS]
-  {
+  static char* terrain_filenames[NUM_TERRAINS] = {
     "terrain/highSeas/border_E_odd.png",//HIGHSEA
     "terrain/highSeas/border_SW_even.png",
     "terrain/highSeas/border_NW_odd.png",
@@ -289,7 +288,7 @@ int load_image_data()
     "terrain/prairie/border_N_odd.png",
     "terrain/prairie/center1.png",
     "terrain/prairie/border_S_even.png"
-  }
+  };
 
 
   /* Load static images: */
@@ -330,7 +329,8 @@ int load_image_data()
   k = 0;
   for (i = 0; i < NUM_TERRAINS; i++)
   {
-    terrain[j][k] = LoadImage(terrain_filenames[i], IMG_ALPHA);
+    terrain[i] = LoadImage(terrain_filenames[i], IMG_ALPHA);
+    /*terrain[j][k] = LoadImage(terrain_filenames[i], IMG_ALPHA);
     if (++k > NUM_COMPTILDE)
     {
         k=0;
@@ -339,7 +339,7 @@ int load_image_data()
     if (j > NUM_OF_TERRAINS)
     {
         break;
-    }
+    }*/
    }
 
 

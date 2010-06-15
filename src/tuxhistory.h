@@ -62,7 +62,8 @@ extern SDL_Color yellow;
 extern SDL_Surface* screen; /* declared in setup.c; also used in game.c, options.c, fileops.c, credits.c, titlescreen.c */
 extern SDL_Surface* images[];    /* declared in setup.c, used in same files as screen */
 extern sprite* sprites[];
-extern SDL_Surface* terrain[][];
+extern SDL_Surface* flipped_images[];
+extern SDL_Surface* terrain[];
 
 #define NUM_BLENDED_IGLOOS 15
 extern SDL_Surface* blended_igloos[];

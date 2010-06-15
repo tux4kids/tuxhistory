@@ -136,7 +136,7 @@ enum{
     CENTER_1,
     BORDER_S_EVEN,
     NUM_COMPTILDE
-}
+};
 
 enum {
     HIGHSEAS_BORDER_E_ODD,
@@ -356,7 +356,7 @@ enum {
     PRAIRIE_CENTER_1,
     PRAIRIE_BORDER_S_EVEN,
     NUM_TERRAINS
-}
+};
 
 /* Names for game sounds (formerly in sounds.h): */
 enum {
