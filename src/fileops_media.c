@@ -14,12 +14,9 @@ int glyph_offset;
 
 /* returns 1 if all data files successfully loaded, 0 otherwise. */
 
-/* TODO load only "igloo" or "city" files, not both.             */
-/* TODO get rid of files no longer used.                         */
-
 int load_image_data()
 {
-  int i;
+  int i, j, k;
 
   static char* image_filenames[NUM_IMAGES] = {
   "status/title.png",
@@ -66,12 +63,234 @@ int load_image_data()
   "status/gameover_won.png",
   };
 
+
   static char* sprite_filenames[NUM_IMAGES] = {
   "comets/comet",
   "comets/bonus_comet",
   "comets/cometex",
   "comets/bonus_cometex"
   };
+
+  static char* terrain_filenames[NUM_TERRAINS]
+  {
+    "terrain/highSeas/border_E_odd.png",//HIGHSEA
+    "terrain/highSeas/border_SW_even.png",
+    "terrain/highSeas/border_NW_odd.png",
+    "terrain/highSeas/border_W_even.png",
+    "terrain/highSeas/border_NE_odd.png",
+    "terrain/highSeas/border_SE_even.png",
+    "terrain/highSeas/border_W_odd.png",
+    "terrain/highSeas/border_E_even.png",
+    "terrain/highSeas/border_SW_odd.png",
+    "terrain/highSeas/border_NW_even.png",
+    "terrain/highSeas/center0.png",
+    "terrain/highSeas/border_N_even.png",
+    "terrain/highSeas/border_SE_odd.png",
+    "terrain/highSeas/border_NE_even.png",
+    "terrain/highSeas/border_S_odd.png",
+    "terrain/highSeas/border_N_odd.png",
+    "terrain/highSeas/center1.png",
+    "terrain/highSeas/border_S_even.png",
+    "terrain/tundra/border_E_odd.png",//TUNDRA
+    "terrain/tundra/border_SW_even.png",
+    "terrain/tundra/border_NW_odd.png",
+    "terrain/tundra/border_W_even.png",
+    "terrain/tundra/border_NE_odd.png",
+    "terrain/tundra/border_SE_even.png",
+    "terrain/tundra/border_W_odd.png",
+    "terrain/tundra/border_E_even.png",
+    "terrain/tundra/border_SW_odd.png",
+    "terrain/tundra/border_NW_even.png",
+    "terrain/tundra/center0.png",
+    "terrain/tundra/border_N_even.png",
+    "terrain/tundra/border_SE_odd.png",
+    "terrain/tundra/border_NE_even.png",
+    "terrain/tundra/border_S_odd.png",
+    "terrain/tundra/border_N_odd.png",
+    "terrain/tundra/center1.png",
+    "terrain/tundra/border_S_even.png",
+    "terrain/swamp/border_E_odd.png",//SWAMP
+    "terrain/swamp/border_SW_even.png",
+    "terrain/swamp/border_NW_odd.png",
+    "terrain/swamp/border_W_even.png",
+    "terrain/swamp/border_NE_odd.png",
+    "terrain/swamp/border_SE_even.png",
+    "terrain/swamp/border_W_odd.png",
+    "terrain/swamp/border_E_even.png",
+    "terrain/swamp/border_SW_odd.png",
+    "terrain/swamp/border_NW_even.png",
+    "terrain/swamp/center0.png",
+    "terrain/swamp/border_N_even.png",
+    "terrain/swamp/border_SE_odd.png",
+    "terrain/swamp/border_NE_even.png",
+    "terrain/swamp/border_S_odd.png",
+    "terrain/swamp/border_N_odd.png",
+    "terrain/swamp/center1.png",
+    "terrain/swamp/border_S_even.png",
+    "terrain/unexplored/border_E_odd.png",//UNEXPLORED
+    "terrain/unexplored/border_SW_even.png",
+    "terrain/unexplored/border_NW_odd.png",
+    "terrain/unexplored/border_W_even.png",
+    "terrain/unexplored/border_NE_odd.png",
+    "terrain/unexplored/border_SE_even.png",
+    "terrain/unexplored/border_W_odd.png",
+    "terrain/unexplored/border_E_even.png",
+    "terrain/unexplored/border_SW_odd.png",
+    "terrain/unexplored/border_NW_even.png",
+    "terrain/unexplored/center0.png",
+    "terrain/unexplored/border_N_even.png",
+    "terrain/unexplored/border_SE_odd.png",
+    "terrain/unexplored/border_NE_even.png",
+    "terrain/unexplored/border_S_odd.png",
+    "terrain/unexplored/border_N_odd.png",
+    "terrain/unexplored/center1.png",
+    "terrain/unexplored/border_S_even.png",
+    "terrain/desert/border_E_odd.png",//DESERT
+    "terrain/desert/border_SW_even.png",
+    "terrain/desert/border_NW_odd.png",
+    "terrain/desert/border_W_even.png",
+    "terrain/desert/border_NE_odd.png",
+    "terrain/desert/border_SE_even.png",
+    "terrain/desert/border_W_odd.png",
+    "terrain/desert/border_E_even.png",
+    "terrain/desert/border_SW_odd.png",
+    "terrain/desert/border_NW_even.png",
+    "terrain/desert/center0.png",
+    "terrain/desert/border_N_even.png",
+    "terrain/desert/border_SE_odd.png",
+    "terrain/desert/border_NE_even.png",
+    "terrain/desert/border_S_odd.png",
+    "terrain/desert/border_N_odd.png",
+    "terrain/desert/center1.png",
+    "terrain/desert/border_S_even.png",
+    "terrain/grassland/border_E_odd.png",//GRASSLAND
+    "terrain/grassland/border_SW_even.png",
+    "terrain/grassland/border_NW_odd.png",
+    "terrain/grassland/border_W_even.png",
+    "terrain/grassland/border_NE_odd.png",
+    "terrain/grassland/border_SE_even.png",
+    "terrain/grassland/border_W_odd.png",
+    "terrain/grassland/border_E_even.png",
+    "terrain/grassland/border_SW_odd.png",
+    "terrain/grassland/border_NW_even.png",
+    "terrain/grassland/center0.png",
+    "terrain/grassland/border_N_even.png",
+    "terrain/grassland/border_SE_odd.png",
+    "terrain/grassland/border_NE_even.png",
+    "terrain/grassland/border_S_odd.png",
+    "terrain/grassland/border_N_odd.png",
+    "terrain/grassland/center1.png",
+    "terrain/grassland/border_S_even.png",
+    "terrain/arctic/border_E_odd.png",//ARCTIC
+    "terrain/arctic/border_SW_even.png",
+    "terrain/arctic/border_NW_odd.png",
+    "terrain/arctic/border_W_even.png",
+    "terrain/arctic/border_NE_odd.png",
+    "terrain/arctic/border_SE_even.png",
+    "terrain/arctic/border_W_odd.png",
+    "terrain/arctic/border_E_even.png",
+    "terrain/arctic/border_SW_odd.png",
+    "terrain/arctic/border_NW_even.png",
+    "terrain/arctic/center0.png",
+    "terrain/arctic/border_N_even.png",
+    "terrain/arctic/border_SE_odd.png",
+    "terrain/arctic/border_NE_even.png",
+    "terrain/arctic/border_S_odd.png",
+    "terrain/arctic/border_N_odd.png",
+    "terrain/arctic/center1.png",
+    "terrain/arctic/border_S_even.png",
+    "terrain/ocean/border_E_odd.png",//OCEAN
+    "terrain/ocean/border_SW_even.png",
+    "terrain/ocean/border_NW_odd.png",
+    "terrain/ocean/border_W_even.png",
+    "terrain/ocean/border_NE_odd.png",
+    "terrain/ocean/border_SE_even.png",
+    "terrain/ocean/border_W_odd.png",
+    "terrain/ocean/border_E_even.png",
+    "terrain/ocean/border_SW_odd.png",
+    "terrain/ocean/border_NW_even.png",
+    "terrain/ocean/center0.png",
+    "terrain/ocean/border_N_even.png",
+    "terrain/ocean/border_SE_odd.png",
+    "terrain/ocean/border_NE_even.png",
+    "terrain/ocean/border_S_odd.png",
+    "terrain/ocean/border_N_odd.png",
+    "terrain/ocean/center1.png",
+    "terrain/ocean/border_S_even.png"
+    "terrain/marsh/border_E_odd.png",//MARSH
+    "terrain/marsh/border_SW_even.png",
+    "terrain/marsh/border_NW_odd.png",
+    "terrain/marsh/border_W_even.png",
+    "terrain/marsh/border_NE_odd.png",
+    "terrain/marsh/border_SE_even.png",
+    "terrain/marsh/border_W_odd.png",
+    "terrain/marsh/border_E_even.png",
+    "terrain/marsh/border_SW_odd.png",
+    "terrain/marsh/border_NW_even.png",
+    "terrain/marsh/center0.png",
+    "terrain/marsh/border_N_even.png",
+    "terrain/marsh/border_SE_odd.png",
+    "terrain/marsh/border_NE_even.png",
+    "terrain/marsh/border_S_odd.png",
+    "terrain/marsh/border_N_odd.png",
+    "terrain/marsh/center1.png",
+    "terrain/marsh/border_S_even.png",
+    "terrain/savannah/border_E_odd.png",//SAVANNAH
+    "terrain/savannah/border_SW_even.png",
+    "terrain/savannah/border_NW_odd.png",
+    "terrain/savannah/border_W_even.png",
+    "terrain/savannah/border_NE_odd.png",
+    "terrain/savannah/border_SE_even.png",
+    "terrain/savannah/border_W_odd.png",
+    "terrain/savannah/border_E_even.png",
+    "terrain/savannah/border_SW_odd.png",
+    "terrain/savannah/border_NW_even.png",
+    "terrain/savannah/center0.png",
+    "terrain/savannah/border_N_even.png",
+    "terrain/savannah/border_SE_odd.png",
+    "terrain/savannah/border_NE_even.png",
+    "terrain/savannah/border_S_odd.png",
+    "terrain/savannah/border_N_odd.png",
+    "terrain/savannah/center1.png",
+    "terrain/savannah/border_S_even.png",
+    "terrain/plains/border_E_odd.png",//PLAINS
+    "terrain/plains/border_SW_even.png",
+    "terrain/plains/border_NW_odd.png",
+    "terrain/plains/border_W_even.png",
+    "terrain/plains/border_NE_odd.png",
+    "terrain/plains/border_SE_even.png",
+    "terrain/plains/border_W_odd.png",
+    "terrain/plains/border_E_even.png",
+    "terrain/plains/border_SW_odd.png",
+    "terrain/plains/border_NW_even.png",
+    "terrain/plains/center0.png",
+    "terrain/plains/border_N_even.png",
+    "terrain/plains/border_SE_odd.png",
+    "terrain/plains/border_NE_even.png",
+    "terrain/plains/border_S_odd.png",
+    "terrain/plains/border_N_odd.png",
+    "terrain/plains/center1.png",
+    "terrain/plains/border_S_even.png",
+    "terrain/prairie/border_E_odd.png",//PRAIRIE
+    "terrain/prairie/border_SW_even.png",
+    "terrain/prairie/border_NW_odd.png",
+    "terrain/prairie/border_W_even.png",
+    "terrain/prairie/border_NE_odd.png",
+    "terrain/prairie/border_SE_even.png",
+    "terrain/prairie/border_W_odd.png",
+    "terrain/prairie/border_E_even.png",
+    "terrain/prairie/border_SW_odd.png",
+    "terrain/prairie/border_NW_even.png",
+    "terrain/prairie/center0.png",
+    "terrain/prairie/border_N_even.png",
+    "terrain/prairie/border_SE_odd.png",
+    "terrain/prairie/border_NE_even.png",
+    "terrain/prairie/border_S_odd.png",
+    "terrain/prairie/border_N_odd.png",
+    "terrain/prairie/center1.png",
+    "terrain/prairie/border_S_even.png"
+  }
+
 
   /* Load static images: */
   for (i = 0; i < NUM_IMAGES; i++)
@@ -104,6 +323,26 @@ int load_image_data()
       return 0;
     }
   }
+
+  /* Load terrain tildes*/
+
+  j = 0;
+  k = 0;
+  for (i = 0; i < NUM_TERRAINS; i++)
+  {
+    terrain[j][k] = LoadImage(terrain_filenames[i], IMG_ALPHA);
+    if (++k > NUM_COMPTILDE)
+    {
+        k=0;
+        j++;
+    }
+    if (j > NUM_OF_TERRAINS)
+    {
+        break;
+    }
+   }
+
+
 
   glyph_offset = 0;
 
