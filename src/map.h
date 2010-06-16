@@ -23,5 +23,5 @@ void th_draw_map(void);
 //Generates the th_map from a XML string.
 th_map** th_make_map(char *);
 
-char* th_serialize_map(th_map **)
+char* th_serialize_map(th_map **);
 

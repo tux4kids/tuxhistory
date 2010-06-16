@@ -4,11 +4,10 @@
 
 arcticdir = $(pkgdatadir)/images/terrain/arctic
 
-dist_arctic_DATA = 
-border_E_even.png \
+dist_arctic_DATA = border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \
-border_NE_odd.png \
+border_NE_odd.png\
 border_N_even.png \
 border_N_odd.png \
 border_NW_even.png \

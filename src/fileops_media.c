@@ -215,7 +215,7 @@ int load_image_data()
     "terrain/ocean/border_S_odd.png",
     "terrain/ocean/border_N_odd.png",
     "terrain/ocean/center1.png",
-    "terrain/ocean/border_S_even.png"
+    "terrain/ocean/border_S_even.png",
     "terrain/marsh/border_E_odd.png",//MARSH
     "terrain/marsh/border_SW_even.png",
     "terrain/marsh/border_NW_odd.png",

@@ -14,7 +14,7 @@ Obsoletes: 	tuxmath_preview <= @VERSION@
 Provides:  	tuxmath_preview = @VERSION@
 %define         realname @PACKAGE@
 %define         progname @PACKAGE@
-Summary:        Tux Math - educational math game
+Summary:        Tux History - educational History game
 Version:        @VERSION@
 Release:        1
 License:        GPL

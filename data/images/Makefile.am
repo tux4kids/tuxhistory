@@ -1,7 +1,8 @@
-## Makefile.am for tuxmath data/images:
+## Makefile.am for TuxHistorudata/images:
 ## Process with AutoMake:
 
 SUBDIRS = backgrounds \
+  terrain \
   icons \
   penguins \
   status \

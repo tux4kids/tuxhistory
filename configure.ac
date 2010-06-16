@@ -425,6 +425,7 @@ data/images/penguins/Makefile
 data/images/status/Makefile
 data/images/title/Makefile
 data/images/tux/Makefile
+data/images/terrain/Makefile
 data/images/terrain/arctic/Makefile
 data/images/terrain/desert/Makefile
 data/images/terrain/grassland/Makefile

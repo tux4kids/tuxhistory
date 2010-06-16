@@ -4,8 +4,7 @@
 
 tundradir = $(pkgdatadir)/images/terrain/tundra
 
-dist_tundra_DATA = 
-border_E_even.png \
+dist_tundra_DATA = border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \
 border_NE_odd.png \

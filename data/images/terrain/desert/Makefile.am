@@ -4,8 +4,7 @@
 
 desertdir = $(pkgdatadir)/images/terrain/desert
 
-dist_desert_DATA = 
-border_E_even.png \
+dist_desert_DATA = border_E_even.png \
 border_E_odd.png \
 border_NE_even.png \
 border_NE_odd.png \
