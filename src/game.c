@@ -66,6 +66,9 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 
 /********** Static functions definitions *********/
 
+static int game_init(void);
+
+static void game_draw(void);
 static void game_handle_user_events(void);
 static int game_mouse_event(SDL_Event event);
 
@@ -80,6 +83,28 @@ static SDL_Surface* current_bkgd()
     return screen->flags & SDL_FULLSCREEN ? scaled_bkgd : bkgd; 
 }
 
+static int game_init(void)
+{
+    SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
+    SDL_Flip(screen);
+    quit = 0;
+
+    left_pressed = 0;
+    right_pressed = 0;
+    up_pressed = 0;
+    shift_pressed = 0;
+    shoot_pressed = 0;
+
+    game_status = 0;
+    paused = 0;
+    user_quit_received = 0;
+    SDL_quit_received = 0;
+    escape_received = 0;
+
+    return 1;
+}
+
+
 int game(void)
 {
     Uint32 last_time, now_time;
@@ -92,12 +117,20 @@ int game(void)
         ;//SwitchScreenMode();  //Huh??
     }
 
+    if(!game_init())
+    {
+        DEBUGMSG(debug_game, "Error loading game using game_init()\n");
+        return -1;
+    }
+
     while(game_status == GAME_IN_PROGRESS)
     {
         last_time = SDL_GetTicks();
         
         game_handle_user_events();
         game_status = check_exit_conditions();
+        game_draw();
+        SDL_Flip(screen);
 
         if(paused)
         {
@@ -116,6 +149,23 @@ int game(void)
         }
     }
     game_over(game_status);
+}
+
+static void game_draw(void)
+{
+    SDL_Surface* surf;
+    SDL_Rect dest;
+    
+    dest.x = 200;
+    dest.y = 200;
+
+    SDL_BlitSurface(terrain[TUNDRA_CENTER_1], NULL, screen, &dest);
+
+    dest.x = (screen->w - images[IMG_STOP]->w - 5);
+    dest.y = glyph_offset;
+    SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
+ 
+    
 }
 
 static int pause_game(void)
@@ -416,7 +466,7 @@ static int game_mouse_event(SDL_Event event)
     /* now can proceed as if keyboard was used */
     //game_key_event(key);
     return key;
-  }
+  
 }
 
 

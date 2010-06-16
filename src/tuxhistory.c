@@ -1,5 +1,5 @@
 /*
-  tuxmath.c
+  tuxhistory.c
 
   Main function for TuxHistory 
   Calls functions in other modules (eg, "setup", "title", "game", etc.)
