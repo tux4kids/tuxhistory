@@ -69,6 +69,7 @@ SDL_Surface* screen;
 SDL_Surface* images[NUM_IMAGES];
 sprite* sprites[NUM_SPRITES];
 SDL_Surface* terrain[NUM_TERRAINS];
+SDL_Surface* objects[NUM_OBJECTS];
 /* Need special handling to generate flipped versions of images. This
    is a slightly ugly hack arising from the use of the enum trick for
    NUM_IMAGES. */

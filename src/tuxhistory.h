@@ -64,6 +64,7 @@ extern SDL_Surface* images[];    /* declared in setup.c, used in same files as s
 extern sprite* sprites[];
 extern SDL_Surface* flipped_images[];
 extern SDL_Surface* terrain[];
+extern SDL_Surface* objects[];
 
 #define NUM_BLENDED_IGLOOS 15
 extern SDL_Surface* blended_igloos[];

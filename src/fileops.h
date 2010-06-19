@@ -358,6 +358,18 @@ enum {
     NUM_TERRAINS
 };
 
+enum{
+    OBJ_MIXED, // Forest images
+    OBJ_TROPICAL,
+    OBJ_CONIFER,
+    OBJ_SCRUB,
+    OBJ_BOREAL,
+    OBJ_WETLAND,
+    OBJ_RAIN,
+    OBJ_BROADLEAF,
+    NUM_OBJECTS // Must at the end.
+};
+
 /* Names for game sounds (formerly in sounds.h): */
 enum {
   SND_HARP,

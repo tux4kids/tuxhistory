@@ -291,6 +291,20 @@ int load_image_data()
   };
 
 
+  char *objects_filenames[] = 
+  {
+      "forest/mixed.png",//Forest Files
+      "forest/tropical.png",
+      "forest/conifer.png",
+      "forest/scrub.png",
+      "forest/boreal.png",
+      "forest/wetland.png",
+      "forest/rain.png",
+      "forest/broadleaf.png"
+  };
+
+
+
   /* Load static images: */
   for (i = 0; i < NUM_IMAGES; i++)
   {
@@ -326,7 +340,7 @@ int load_image_data()
   /* Load terrain tildes*/
 
   j = 0;
-  k = 0;
+  //k = 0;
   for (i = 0; i < NUM_TERRAINS; i++)
   {
     terrain[i] = LoadImage(terrain_filenames[i], IMG_ALPHA);
@@ -341,6 +355,10 @@ int load_image_data()
         break;
     }*/
    }
+  for (i = 0; i < NUM_OBJECTS; i++)
+  {
+      objects[i] = LoadImage(objects_filenames[i], IMG_ALPHA);
+  }
 
 
 

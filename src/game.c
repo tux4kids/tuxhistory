@@ -160,6 +160,7 @@ static void game_draw(void)
     dest.y = 200;
 
     SDL_BlitSurface(terrain[TUNDRA_CENTER_1], NULL, screen, &dest);
+    SDL_BlitSurface(objects[OBJ_TROPICAL], NULL, screen, &dest);
 
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
