@@ -2,9 +2,9 @@
 
 ## Process with AutoMake:
 
-forestndir = $(pkgdatadir)/images/forest
+forestdir = $(pkgdatadir)/images/forest
 
-dist_ocean_DATA = boreal.png \
+dist_forest_DATA = boreal.png \
 conifer.png  \
 mixed.png  \
 scrub.png \
