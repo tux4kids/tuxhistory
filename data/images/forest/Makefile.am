@@ -1,10 +1,14 @@
-## Makefile.am for tuxhistory - data/forests:
-## Process with Automake to create Makefile.in
+## Makefile.am for tuxhistory data/images/forest:
 
-SUBDIRS = fonts	\
-	images	\
-	menus \
-	maps \
-	sounds
+## Process with AutoMake:
 
-#EXTRA_DIST = options
+forestndir = $(pkgdatadir)/images/forest
+
+dist_ocean_DATA = boreal.png \
+conifer.png  \
+mixed.png  \
+scrub.png \
+wetland.png \
+broadleaf.png \
+rain.png \
+tropical.png
