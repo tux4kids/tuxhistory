@@ -47,7 +47,7 @@ void            fit_in_rectangle(int* width, int* height, int max_width, int max
 SDL_Surface*    set_format(SDL_Surface* img, int mode);
 sprite*         load_sprite(const char* name, int mode, int w, int h, bool proportional);
 
-
+FILE*           load_map(const char* file_name);
 
 /* check to see if file exists, if so return true */
 // int checkFile( const char *file ) {
@@ -652,5 +652,35 @@ Mix_Music* LoadMusic(char *datafile )
     printf("Error was: %s\n\n", Mix_GetError());
   }
   return tempMusic;
+}
+
+/* load_map: Load map from a XML datafile */
+FILE* load_map(const char* name)
+{
+  FILE *fp = NULL;
+  char fn[PATH_MAX];
+  int fn_len;
+  int i;
+
+  if(NULL == fp)
+  {
+    DEBUGMSG(debug_loaders, "load_image(): file_name is NULL, exiting.\n");
+    return NULL;
+  }
+
+
+  /* check if map file is present */
+  sprintf(fn, "%s/maps/%s.map", DATA_PREFIX, name);
+  fn_len = strlen(fn);
+
+  if(strcmp(fn + fn_len - 4, ".map"))
+  {
+    DEBUGMSG(debug_loaders, "load_map(): %s is not an TuxHistory XML Map file\n", fn);
+    return NULL;
+  }
+
+  fp = fopen(fn, "r");
+
+  return fp;
 }
 
