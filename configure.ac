@@ -153,6 +153,26 @@ AC_DEFINE([HAVE_LIBSDL_MIXER],[1],[Define to 1 if you have the `SDL_mixer` libra
 CFLAGS="$CFLAGS $SDL_MIXER_CFLAGS"
 LIBS="$LIBS $SDL_MIXER_LIBS"
 
+dnl Check for MiniXML: --------------------------------------------------------
+
+PKG_CHECK_MODULES([MXML],
+    [mxml],
+    ,
+    [
+      [echo "MXML not found via pkg_config, checking with AC_CHECK_LIB:"]
+      AC_CHECK_LIB([mxml],
+	 [mxmlNewXML],
+         ,
+         [AC_MSG_ERROR([MiniXML not found! http://www.minixml.org])]
+      )
+      [echo "MiniXML successfully located"]
+    ] 
+)
+
+AC_DEFINE([HAVE_LIBMXML],[1],[Define to 1 if you have the `mxml` library])
+CFLAGS="$CFLAGS $MXML_CFLAGS"
+LIBS="$LIBS $MXML_LIBS"
+
 
 
 dnl Check for SDL_Pango: --------------------------------------------------------
