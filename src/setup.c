@@ -12,14 +12,15 @@
 
   Modified by David Bruce
   davidstuartbruce@gmail.com
+  and Jesus Mager
+  fongog@gmail.com
 
   Part of "Tux4Kids" Project
   http://www.tux4kids.com/
-  Subversion repository:
-  https://svn.debian.alioth.org/tux4kids/tuxmath/
+  Git repository:
+  git://git.debian.org/git/tux4kids/tuxhistory.git
 
-
-  August 26, 2001 - Sept 18, 2007.
+  August 26, 2001 - June, 2010.
 */
 
 
