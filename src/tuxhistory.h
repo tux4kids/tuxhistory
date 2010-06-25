@@ -1,11 +1,12 @@
 /*
-  tuxmath.h
+  tuxhistory.h
 
-  For TuxMath
-  Contains global data for configuration of math questions and
-  for general game options, as well as constants and defaults.
+  For tuxhistory
+  Contains global data for configuration
 
   Author: David Bruce <davidstuartbruce@gmail.com>, (C) 2006
+  
+  Modified by Jesús Mager <fongog@gmail.com> 2010
 
 
   Part of "Tux4Kids" Project
@@ -19,8 +20,8 @@
 
 
 
-#ifndef TUXMATH_H
-#define TUXMATH_H
+#ifndef TUXHISTORY_H
+#define TUXHISTORY_H
 
 #include "globals.h"
 
