@@ -1,7 +1,7 @@
 /*
   setup.c
 
-  For TuxHistory
+  For TuxHistory (stolen from tuxmath)
   Contains some globals (screen surface, images, some option flags, etc.)
   as well as the function to load data files (images, sounds, music)
   and display a "Loading..." screen.
@@ -44,6 +44,7 @@
 #include "setup.h"
 #include "fileops.h"
 #include "loaders.h"
+#include "map.h"
 #include "game.h"
 #include "menu.h"
 #include "titlescreen.h"
@@ -56,7 +57,7 @@
 //#endif
 
 /* Global data used in setup.c:              */
-/* (These are now 'extern'd in "tuxmath.h") */
+/* (These are now 'extern'd in "tuxhsitory.h") */
 
 /* window size */
 int win_res_x = 640;
@@ -65,6 +66,12 @@ int win_res_y = 480;
 /* full screen size (set in initialize_SDL() ) */
 int fs_res_x = 0;
 int fs_res_y = 0;
+
+/*Global tuxhistory vars*/
+
+th_map map[MAX_X_TILDES][MAX_Y_TILDES]; //The map array.
+th_obj* object = NULL;
+
 
 SDL_Surface* screen;
 SDL_Surface* images[NUM_IMAGES];
@@ -88,12 +95,14 @@ void initialize_options(void);
 void handle_command_args(int argc, char* argv[]);
 void initialize_SDL(void);
 void load_data_files(void);
+void data_memory_alloc(void);
 
 //int initialize_game_options(void);
 void seticon(void);
 void usage(int err, char * cmd);
 
 void cleanup_memory(void);
+
 
 
 
@@ -587,6 +596,19 @@ void load_data_files(void)
   }
 }
 
+void data_memory_alloc(void)
+{
+    object = NULL;
+    object = (th_obj *)malloc(MAX_OBJECTS * sizeof(th_obj));
+    if object = NULL;
+    {
+        printf("Allocation of game objects filed!\n");
+        exit(0);
+    }
+}
+
+
+
 /* save options and free heap */
 /* use for successful exit */
 void cleanup(void)
@@ -623,6 +645,9 @@ void cleanup_memory(void)
   int frequency,channels,n_timesopened;
   Uint16 format;
 
+  /* Free global memory allocation ( from memory_data_alloc() )*/
+  free(object);
+
   /* Free all images and sounds used by SDL: */
   Cleanup_SDL_Text();
 
@@ -631,6 +656,20 @@ void cleanup_memory(void)
     if (images[i])
       SDL_FreeSurface(images[i]);
     images[i] = NULL;
+  }
+
+  for (i = 0; i < NUM_TERRAINS; i++)
+  {
+    if (terrain[i])
+      SDL_FreeSurface(terrain[i]);
+    terrain[i] = NULL;
+  }
+
+  for (i = 0; i < NUM_OBJECTS; i++)
+  {
+    if (objects[i])
+      SDL_FreeSurface(objects[i]);
+    objects[i] = NULL;
   }
 
   for (i = 0; i < NUM_SOUNDS; i++)

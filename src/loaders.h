@@ -53,4 +53,6 @@ void         NextFrame(sprite* s);
 Mix_Chunk*   LoadSound(char* datafile);
 Mix_Music*   LoadMusic(char *datafile);
 
+FILE*        LoadMap(const char* file_name);
+
 #endif /* LOADERS_H */

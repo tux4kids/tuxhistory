@@ -47,7 +47,7 @@ void            fit_in_rectangle(int* width, int* height, int max_width, int max
 SDL_Surface*    set_format(SDL_Surface* img, int mode);
 sprite*         load_sprite(const char* name, int mode, int w, int h, bool proportional);
 
-FILE*           load_map(const char* file_name);
+FILE*           LoadMap(const char* file_name);
 
 /* check to see if file exists, if so return true */
 // int checkFile( const char *file ) {
@@ -670,7 +670,7 @@ FILE* load_map(const char* name)
 
 
   /* check if map file is present */
-  sprintf(fn, "%s/maps/%s.map", DATA_PREFIX, name);
+  sprintf(fn, "%s/maps/%s.xml", DATA_PREFIX, name);
   fn_len = strlen(fn);
 
   if(strcmp(fn + fn_len - 4, ".map"))

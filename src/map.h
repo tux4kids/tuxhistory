@@ -5,9 +5,8 @@
  *  This data structure shoultn't be accesed
  *  directly.
  */
-
-#define MAX_X_TILDES
-#define MAX_Y_TILDES
+#ifndef MAP_H
+#define MAP_H
 
 // List of objects that can be used
 // in create_object. 
@@ -44,8 +43,6 @@ typedef struct th_obj{
     int move; 
 }th_obj;
 
-//The map array.
-th_map map[MAX_X_TILDES][MAX_Y_TILDES];
     
 void th_draw_map(void);
 
@@ -54,3 +51,4 @@ void th_draw_map(void);
 
 char* th_serialize_map(th_map **);
 
+#endif

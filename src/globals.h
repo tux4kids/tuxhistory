@@ -1,23 +1,20 @@
 /*
   globals.h
 
-  For TuxMath
+  For TuxHistory (stolen from TuxMath) 
 
   Contains global data for configuration of math questions and for
   general game options, as well as constants and defaults.  Nothing
   depending on SDL should be in here; put any SDL-related items into
-  tuxmath.h.
+  tuxhistory.h.
 
   Author: David Bruce <davidstuartbruce@gmail.com>, (C) 2006
-
 
   Part of "Tux4Kids" Project
   http://www.tux4kids.org/
 
-  Added March 2, 2006
-
   Copyright: See COPYING file that comes with this distribution
-  (briefly - GNU GPL v2 or later)
+  (briefly - GNU GPL v3 or later)
 */
 
 
@@ -112,6 +109,13 @@ extern const int debug_all;
 #define DEFAULT_CITY_EXPL_HANDICAP 0
 #define DEFAULT_LAST_SCORE 0
 
+/* MAX definition for the map handling...*/
+
+#define MAX_X_TILDES
+#define MAX_Y_TILDES
+
+#define MAX_OBJECTS
+
 /* These values are hard-coded and used 'as is' by the program */
 /* (i.e. these behaviors require recompilation to change)   */ 
 #define DEFAULT_NUM_CITIES 4   /* MUST BE AN EVEN NUMBER! */
@@ -140,29 +144,7 @@ extern const int debug_all;
 
 #define PIXEL_BITS 32
 
-enum {
-  CADET_HIGH_SCORE,
-  SCOUT_HIGH_SCORE,
-  RANGER_HIGH_SCORE,
-  ACE_HIGH_SCORE,
-  COMMANDO_HIGH_SCORE,
-  NUM_MATH_COMMAND_LEVELS
-};
-
-enum {
-  FACTORS_HIGH_SCORE = NUM_MATH_COMMAND_LEVELS,
-  FRACTIONS_HIGH_SCORE,
-  NUM_HIGH_SCORE_LEVELS
-};
-
-
 
 #define NAME_BUF_SIZE 200
-
-/* data for 'Training Academy' lessons: */
-extern char **lesson_list_titles;
-extern char **lesson_list_filenames;
-extern int* lesson_list_goldstars;
-extern int num_lessons;
 
 #endif

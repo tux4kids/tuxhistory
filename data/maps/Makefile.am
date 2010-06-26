@@ -1,9 +1,6 @@
-## Makefile.am for tuxmath - data:
-## Process with Automake to create Makefile.in
+## Makefile.am for tuxhistory data/maps:
 
-#SUBDIRS = fonts	\
-#	images	\
-#	menus \
-#	maps \
-#	sounds
+## Process with AutoMake:
+mapsdir = $(pkgdatadir)/maps
 
+dist_grassland_DATA = map.xml

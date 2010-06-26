@@ -66,6 +66,8 @@ extern sprite* sprites[];
 extern SDL_Surface* flipped_images[];
 extern SDL_Surface* terrain[];
 extern SDL_Surface* objects[];
+extern th_map map[][];
+extern th_obj* object;
 
 #define NUM_BLENDED_IGLOOS 15
 extern SDL_Surface* blended_igloos[];
