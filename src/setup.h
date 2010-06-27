@@ -1,7 +1,7 @@
 /*
   setup.h
 
-  For TuxMath
+  For TuxHistory 
   Contains functions to initialize the settings structs, 
   read in command-line arguments, and to clean up on exit.
   All code involving file I/O has been moved to fileops.h/fileops.c
@@ -23,12 +23,14 @@
   Modified by David Bruce
   davidstuartbruce@gmail.com
   September 1, 2006
+
+  And by Jesus Mager
+  June 2010
 */
 
 
 #ifndef SETUP_H
 #define SETUP_H
-
 
 void setup(int argc, char * argv[]);
 void cleanup(void);

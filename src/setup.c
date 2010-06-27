@@ -67,9 +67,7 @@ int win_res_y = 480;
 int fs_res_x = 0;
 int fs_res_y = 0;
 
-/*Global tuxhistory vars*/
-
-th_map map[MAX_X_TILDES][MAX_Y_TILDES]; //The map array.
+th_map **map; //The map array.
 th_obj* object = NULL;
 
 
@@ -103,9 +101,6 @@ void usage(int err, char * cmd);
 
 void cleanup_memory(void);
 
-
-
-
 /* --- Set-up function - now in four easier-to-digest courses! --- */
 /* --- Er - make that six courses! --- */
 /* --- Six is right out. Seven is much better. --- */
@@ -118,6 +113,10 @@ void setup(int argc, char * argv[])
   handle_command_args(argc, argv);
   /* SDL setup in own function:*/
   initialize_SDL();
+  
+  /*Alloc global vars fot tuxhistory*/
+  data_memory_alloc();
+
   /* Read image and sound files: */
   load_data_files();
   /* Note that the per-user options will be set after the call to
@@ -598,12 +597,30 @@ void load_data_files(void)
 
 void data_memory_alloc(void)
 {
+    int i;
     object = NULL;
-    object = (th_obj *)malloc(MAX_OBJECTS * sizeof(th_obj));
-    if object = NULL;
+    object = (th_obj*)malloc(MAX_OBJECTS * sizeof(th_obj));
+    if (object == NULL)
     {
         printf("Allocation of game objects filed!\n");
         exit(0);
+    }
+
+    map = NULL;
+    map = (th_map**)malloc(MAX_X_TILDES * sizeof(th_map *));
+    if(map == NULL)
+    {
+        printf("Error\n");
+        exit(0);
+    }
+    for(i = 0; i < MAX_X_TILDES; i++){
+        map[i] = NULL;
+        map[i] = (th_map*)malloc(MAX_Y_TILDES * sizeof(th_map));
+        if(map[i] == NULL)
+        {
+            printf("Error, no hay memoria suficinete\n");
+            exit(0);
+        }
     }
 }
 
@@ -639,14 +656,22 @@ void cleanup_on_error(void)
 /* need to check all pointers before freeing them, */
 /* and set them to NULL after freeing them, so we  */
 /* avoid segfaults at exit from double free()      */
-void cleanup_memory(void)
+void [MAX_X_TILDES]cleanup_memory(void)
 {
   int i;
   int frequency,channels,n_timesopened;
   Uint16 format;
 
   /* Free global memory allocation ( from memory_data_alloc() )*/
-  free(object);
+  FREE(object);
+
+  for(i = 0; i < MAX_X_TILDES; i++)
+  {
+      FREE(map[i]);
+  }
+  FREE(map);
+
+  
 
   /* Free all images and sounds used by SDL: */
   Cleanup_SDL_Text();
@@ -684,34 +709,6 @@ void cleanup_memory(void)
     if (musics[i])
       Mix_FreeMusic(musics[i]);
     musics[i] = NULL;
-  }
-
-  if (lesson_list_titles)
-  {
-    for (i = 0; i < num_lessons; i++)
-    {
-      if (lesson_list_titles[i])
-      {
-        free(lesson_list_titles[i]);
-        lesson_list_titles[i] = NULL;
-      }
-    }
-    free(lesson_list_titles);
-    lesson_list_titles = NULL;
-  }
-
-  if (lesson_list_filenames)
-  {
-    for (i = 0; i < num_lessons; i++)
-    {
-      if (lesson_list_filenames[i])
-      {
-        free(lesson_list_filenames[i]);
-        lesson_list_filenames[i] = NULL;
-      }
-    }
-    free(lesson_list_filenames);
-    lesson_list_filenames = NULL;
   }
 
   // Close the audio mixer. We have to do this at least as many times

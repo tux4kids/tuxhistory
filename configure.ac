@@ -459,6 +459,7 @@ data/images/terrain/swamp/Makefile
 data/images/terrain/tundra/Makefile
 data/images/terrain/unexplored/Makefile
 data/images/forest/Makefile
+data/maps/Makefile
 data/menus/Makefile
 data/sounds/Makefile
 doc/Makefile

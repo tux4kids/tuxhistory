@@ -1,4 +1,4 @@
-## Makefile.am for tuxmath - data:
+## Makefile.am for tuxhsitory - data:
 ## Process with Automake to create Makefile.in
 
 SUBDIRS = fonts	\

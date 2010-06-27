@@ -3,4 +3,4 @@
 ## Process with AutoMake:
 mapsdir = $(pkgdatadir)/maps
 
-dist_grassland_DATA = map.xml
+dist_maps_DATA = map.xml

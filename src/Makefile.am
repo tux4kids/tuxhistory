@@ -28,6 +28,7 @@ endif
 tuxhistory_SOURCES = tuxhistory.c \
 	setup.c 	\
 	titlescreen.c	\
+	map.c		\
 	menu.c		\
 	game.c 		\
 	fileops_media.c \
@@ -59,7 +60,7 @@ EXTRA_DIST = 	credits.h 	\
 	linewrap.h	\
 	loaders.h	\
 	titlescreen.h   \
-	menu.h		\
+	map.h		\
 	options.h	\
 	setup.h		\
 	tuxhistory.h	\

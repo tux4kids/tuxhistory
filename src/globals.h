@@ -39,6 +39,9 @@ typedef enum { false, true } bool;
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 
+// Free memory marco
+#define FREE(p)   do { free(p); (p) = NULL; } while(0)
+
 /* for Tim's feedback speed control code           */
 //#define FEEDBACK_DEBUG
 //#define LINEBREAK
