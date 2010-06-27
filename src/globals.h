@@ -114,10 +114,10 @@ extern const int debug_all;
 
 /* MAX definition for the map handling...*/
 
-#define MAX_X_TILDES
-#define MAX_Y_TILDES
+#define MAX_X_TILDES 100
+#define MAX_Y_TILDES 100
 
-#define MAX_OBJECTS
+#define MAX_OBJECTS 100
 
 /* These values are hard-coded and used 'as is' by the program */
 /* (i.e. these behaviors require recompilation to change)   */ 
@@ -147,7 +147,26 @@ extern const int debug_all;
 
 #define PIXEL_BITS 32
 
+enum {
+  CADET_HIGH_SCORE,
+  SCOUT_HIGH_SCORE,
+  RANGER_HIGH_SCORE,
+  ACE_HIGH_SCORE,
+  COMMANDO_HIGH_SCORE,
+  NUM_MATH_COMMAND_LEVELS
+};
+
+enum {
+  FACTORS_HIGH_SCORE = NUM_MATH_COMMAND_LEVELS,
+  FRACTIONS_HIGH_SCORE,
+  NUM_HIGH_SCORE_LEVELS
+};
+
 
 #define NAME_BUF_SIZE 200
-
+/* data for 'Training Academy' lessons: */
+extern char **lesson_list_titles;
+extern char **lesson_list_filenames;
+extern int* lesson_list_goldstars;
+extern int num_lessons;
 #endif

@@ -41,6 +41,7 @@
 
 #include "options.h"
 #include "tuxhistory.h"
+#include "globals.h"
 #include "setup.h"
 #include "fileops.h"
 #include "loaders.h"
@@ -67,7 +68,7 @@ int win_res_y = 480;
 int fs_res_x = 0;
 int fs_res_y = 0;
 
-th_map **map; //The map array.
+th_map **map = NULL; //The map array.
 th_obj* object = NULL;
 
 
@@ -656,7 +657,7 @@ void cleanup_on_error(void)
 /* need to check all pointers before freeing them, */
 /* and set them to NULL after freeing them, so we  */
 /* avoid segfaults at exit from double free()      */
-void [MAX_X_TILDES]cleanup_memory(void)
+void cleanup_memory(void)
 {
   int i;
   int frequency,channels,n_timesopened;

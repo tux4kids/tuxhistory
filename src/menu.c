@@ -297,12 +297,8 @@ int handle_activity(int act, int param)
     case RUN_ARCADE:
       game();
       break;
-    case RUN_HALL_OF_FAME:
-      DisplayHighScores(CADET_HIGH_SCORE);
-      break;
 
     case RUN_HELP:
-      game();
       break;
 
     case RUN_DEMO:
