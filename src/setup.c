@@ -73,6 +73,7 @@ th_obj* object = NULL;
 
 
 SDL_Surface* screen;
+SDL_Surface* map_image;
 SDL_Surface* images[NUM_IMAGES];
 sprite* sprites[NUM_SPRITES];
 SDL_Surface* terrain[NUM_TERRAINS];
@@ -562,7 +563,7 @@ void initialize_SDL(void)
 
     seticon();
 
-    SDL_WM_SetCaption("Tux, of Math Command", "TuxMath");
+    SDL_WM_SetCaption("Tu History", "TuxHistory");
   }
 
   /* --- Define the colors we use --- */
@@ -603,7 +604,7 @@ void data_memory_alloc(void)
     object = (th_obj*)malloc(MAX_OBJECTS * sizeof(th_obj));
     if (object == NULL)
     {
-        printf("Allocation of game objects filed!\n");
+        printf("Allocation of game objects faild!\n");
         exit(0);
     }
 
@@ -619,10 +620,20 @@ void data_memory_alloc(void)
         map[i] = (th_map*)malloc(MAX_Y_TILDES * sizeof(th_map));
         if(map[i] == NULL)
         {
-            printf("Error, no hay memoria suficinete\n");
+            printf("Error: Allocation of objects faild!\n");
             exit(0);
         }
     }
+
+    map_image = NULL;
+    map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, MAP_WIDTH, MAP_HEIGHT, 32,
+                           rmask, gmask, bmask, amask); //32 Bits are OK?
+    if(map_image == NULL)
+    {
+        printf("Couldn't Create img_image");
+        exit(0);
+    }
+
 }
 
 
@@ -672,7 +683,7 @@ void cleanup_memory(void)
   }
   FREE(map);
 
-  
+  SDL_FreeSurface(map_image);
 
   /* Free all images and sounds used by SDL: */
   Cleanup_SDL_Text();

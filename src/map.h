@@ -53,6 +53,13 @@ typedef struct {
     //th_obj *obj;// Pointer to object
 }th_map;
 
+int map_xml(FILE *fp);
+
+// generate a map from the basic xml input to a 
+// visual atractive one.
+
+int generate_map(void);
+
 // th_obj represent each object in the field, in 
 // each tilde there can be only one object.
 

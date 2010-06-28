@@ -655,7 +655,7 @@ Mix_Music* LoadMusic(char *datafile )
 }
 
 /* load_map: Load map from a XML datafile */
-FILE* load_map(const char* name)
+FILE* LoadMap(const char* name)
 {
   FILE *fp = NULL;
   char fn[PATH_MAX];
@@ -673,7 +673,7 @@ FILE* load_map(const char* name)
   sprintf(fn, "%s/maps/%s.xml", DATA_PREFIX, name);
   fn_len = strlen(fn);
 
-  if(strcmp(fn + fn_len - 4, ".map"))
+  if(strcmp(fn + fn_len - 4, ".xml"))
   {
     DEBUGMSG(debug_loaders, "load_map(): %s is not an TuxHistory XML Map file\n", fn);
     return NULL;

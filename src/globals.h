@@ -112,7 +112,8 @@ extern const int debug_all;
 #define DEFAULT_CITY_EXPL_HANDICAP 0
 #define DEFAULT_LAST_SCORE 0
 
-/* MAX definition for the map handling...*/
+/* MAX definition for the map handling...
+ * TODO: This are not the real values*/
 
 #define MAX_X_TILDES 100
 #define MAX_Y_TILDES 100

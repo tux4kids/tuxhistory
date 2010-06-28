@@ -101,6 +101,13 @@ static int game_init(void)
     SDL_quit_received = 0;
     escape_received = 0;
 
+    
+    if(!map_xml(LoadMap("map")))
+    {
+        DEBUGMSG(debug_game, "Error loading the map file.\n");
+        return 0;
+    }
+
     return 1;
 }
 

@@ -32,6 +32,12 @@
 #ifndef SETUP_H
 #define SETUP_H
 
+#include "fileops.h"
+
+int MAP_HEIGHT = MAX_X_TILDES * terrain[0]->h;
+int MAP_WIDTH = MAX_Y_TILDES * terrain[0]->w;
+
+
 void setup(int argc, char * argv[]);
 void cleanup(void);
 void cleanup_on_error(void);
