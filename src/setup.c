@@ -73,7 +73,6 @@ th_obj* object = NULL;
 
 
 SDL_Surface* screen;
-SDL_Surface* map_image;
 SDL_Surface* images[NUM_IMAGES];
 sprite* sprites[NUM_SPRITES];
 SDL_Surface* terrain[NUM_TERRAINS];
@@ -625,17 +624,6 @@ void data_memory_alloc(void)
         }
     }
 
-    map_image = NULL;
-    //printf("%d", terrain[TUNDRA_CENTER_1]->w);
-    
-    map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, 1000, 1000, 
-            32, rmask, gmask, bmask, amask); 
-    if(map_image == NULL)
-    {
-        DEBUGMSG(debug_setup,"Couldn't create img_image\n");
-        exit(1);
-    }
-
 }
 
 /* save options and free heap */
@@ -683,7 +671,7 @@ void cleanup_memory(void)
   }
   FREE(map);
 
-  SDL_FreeSurface(map_image);
+  free_map();
 
   /* Free all images and sounds used by SDL: */
   Cleanup_SDL_Text();

@@ -93,7 +93,8 @@ static int game_init(void)
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     SDL_Flip(screen);
 
-    SDL_FillRect(map_image, NULL, SDL_MapRGB(map_image->format, 0, 0 ,0));
+    generate_map();
+
     //SDL_Flip(map_image);
     quit = 0;
     
@@ -121,6 +122,7 @@ static int game_init(void)
         DEBUGMSG(debug_game, "File not found!");
         return 1;
     }
+
     
     if(map_xml(fp))
     {
@@ -128,6 +130,8 @@ static int game_init(void)
         DEBUGMSG(debug_game, "Error loading the map file.\n");
         return 1;
     }
+
+    generate_map();
 
     return 0;
 }
@@ -183,11 +187,7 @@ static void game_draw(void)
 {
     SDL_Rect dest;
 
-    dest.x = 200;
-    dest.y = 200;
 
-    SDL_BlitSurface(terrain[TUNDRA_CENTER_1], NULL, map_image, &dest);
-    SDL_BlitSurface(objects[OBJ_TROPICAL], NULL, map_image, &dest);
 
     origin.x = 0;
     origin.y = 0;

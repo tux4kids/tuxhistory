@@ -53,12 +53,20 @@ typedef struct {
     //th_obj *obj;// Pointer to object
 }th_map;
 
+int flag_map; // Map flag: is a map surface allocated? 
+int x_tildes;
+int y_tildes;
+
 int map_xml(FILE *fp);
 
-// generate a map from the basic xml input to a 
-// visual atractive one.
+// generate_map() generate a map from the basic
+// xml input to a visual atractive one and store 
+// the image in SDL_Surface *map_image.
+// NOTE: map_xml() need to be called before!
+// Use free_map() at the end of the program.
 
 int generate_map(void);
+void free_map(void);
 
 // th_obj represent each object in the field, in 
 // each tilde there can be only one object.

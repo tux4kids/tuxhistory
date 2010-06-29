@@ -12,12 +12,19 @@
  */
 
 #include "tuxhistory.h"
-#include "fileops.h"
 
 #include<ctype.h>
 #include<mxml.h>
 
+#include "SDL.h"
+#include "SDL_image.h"
+#include "SDL_extras.h"
+
+#include "fileops.h"
 #include "map.h"
+
+SDL_Surface* map_image;
+
 
 int get_terrain_enum(char *);
 void str_upper(char *string);
@@ -36,12 +43,16 @@ int map_xml(FILE *fp)
     x = 0;
     y = 0;
 
+    x_tildes = -1;
+    y_tildes = -1;
+
     for(inode = mxmlFindElement(tree, tree, "row", 
                 NULL, NULL, MXML_DESCEND);
             inode != NULL;
             inode = mxmlFindElement(inode, tree, "row",
                 NULL, NULL, MXML_DESCEND))
     {
+        y = 0;
         for(jnode = mxmlFindElement(inode, inode, "tilde",
                     NULL, NULL, MXML_DESCEND);
                 jnode != NULL;
@@ -73,8 +84,25 @@ int map_xml(FILE *fp)
 
             y++;
         }
+        if(y_tildes == -1)
+        {
+            y_tildes = y - 1;
+        }
+        else
+        {
+            if((y - 1) != y_tildes)
+            {
+                printf("\nBad map file...\n");
+                return 1;
+            }
+        }
         x++;
         printf("\n");
+    }
+
+    if(x_tildes == -1)
+    {
+        x_tildes = x - 1;
     }
     
     
@@ -119,6 +147,58 @@ int get_terrain_enum(char *terrain_string)
         return PRAIRIE;
     else
         return -1;
+}
+
+
+int generate_map(void)
+{
+    SDL_Rect dest;
+    int i,j;
+    int x, y;
+
+    map_image = NULL;
+    int w, h;
+    w = terrain[TUNDRA_CENTER_1]->w * x_tildes * 2;
+    h = terrain[TUNDRA_CENTER_1]->h * y_tildes * 2;
+    map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 
+            32, rmask, gmask, bmask, amask); 
+
+    if(map_image == NULL)
+    {
+        DEBUGMSG(debug_setup,"Couldn't create img_image\n");
+        return 1;
+    }
+
+    SDL_FillRect(map_image, NULL, SDL_MapRGB(map_image->format, 0, 0 ,0));
+
+    dest.x = (map_image->w/2)-(terrain[TUNDRA_CENTER_1]->w/2);
+    dest.y = terrain[TUNDRA_CENTER_1]->h/2;
+
+    printf("[%d,%d]\n", x_tildes, y_tildes);
+
+    x = dest.x;
+    y = dest.y;
+
+    for (i = 0; i <= x_tildes; i++)
+    {
+        for (j = 0; j <= y_tildes; j++)
+        {
+            printf(" (%d,%d) (%d,%d)\n", dest.x, dest.y, i, j);
+            SDL_BlitSurface(terrain[TUNDRA_CENTER_1], NULL, map_image, &dest);
+            dest.x = dest.x + (terrain[TUNDRA_CENTER_1]->w/2);
+            dest.y = dest.y + (terrain[TUNDRA_CENTER_1]->h/2);
+        }
+        x = x - (terrain[TUNDRA_CENTER_1]->w/2);
+        y = y + (terrain[TUNDRA_CENTER_1]->h/2);
+        dest.x = x;
+        dest.y = y;
+    }
+    return 0;
+}
+
+void free_map(void)
+{
+  SDL_FreeSurface(map_image);
 }
 
 // TODO: Segfault error still in this function!
