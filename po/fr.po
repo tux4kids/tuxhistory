@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 1.5.8\n"
 "Report-Msgid-Bugs-To: tuxmath-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-06-26 21:53-0500\n"
+"POT-Creation-Date: 2010-06-28 17:16-0500\n"
 "PO-Revision-Date: 2007-11-15 09:00+0100\n"
 "Last-Translator: Grumeau Rémi <remi@beosfrance.com>\n"
 "Language-Team: Dutch <LL@li.org>\n"
@@ -137,20 +137,20 @@ msgstr ""
 msgid "Enter Your Name:"
 msgstr ""
 
-#: src/menu.c:313
+#: src/menu.c:309
 msgid "TuxMath is free and open-source!"
 msgstr "TuxMath est gratuit et open-source!"
 
-#: src/menu.c:314
+#: src/menu.c:310
 #, fuzzy
 msgid "You can help make it better."
 msgstr "Participez à l'amélioration du jeu en nous signalant des problemes,"
 
-#: src/menu.c:315
+#: src/menu.c:311
 msgid "Suggestions, artwork, and code are all welcome!"
 msgstr ""
 
-#: src/menu.c:316
+#: src/menu.c:312
 #, fuzzy
 msgid "Discuss TuxMath at tuxmath-devel@lists.sourceforge.net"
 msgstr "Parlons-en sur tuxmath-devel@lists.sourceforge.net"

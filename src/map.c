@@ -26,12 +26,11 @@ int map_xml(FILE *fp)
 {
     int value;
     int x,y;
-    char *text;
     mxml_node_t *tree;
     mxml_node_t *node;
     mxml_node_t *inode;
     mxml_node_t *jnode;
-
+   
     tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
 
     x = 0;
@@ -70,15 +69,14 @@ int map_xml(FILE *fp)
                 map[x][y].height = node->child->value.integer;
             }
 
+            printf("%d ", map[x][y].terrain);
+
             y++;
         }
         x++;
         printf("\n");
     }
-
-    str_upper(text);
     
-    printf("%s\n",text);
     
 
     mxmlDelete(jnode);
@@ -86,6 +84,8 @@ int map_xml(FILE *fp)
     mxmlDelete(node);
 
     fclose(fp);
+
+    return 0;
 }
 
 // Returns the enum value for each terrain type. If the terrain
@@ -93,29 +93,29 @@ int map_xml(FILE *fp)
 
 int get_terrain_enum(char *terrain_string)
 {
-    if(strcmp(terrain_string, "HIGHSEA"))
+    if(strcmp(terrain_string, "HIGHSEA") == 0)
         return HIGHSEA;
-    else if(strcmp(terrain_string, "TUNDRA"))
+    else if(strcmp(terrain_string, "TUNDRA") == 0)
         return TUNDRA;
-    else if(strcmp(terrain_string, "SWAMP"))
+    else if(strcmp(terrain_string, "SWAMP") == 0)
         return SWAMP;
-    else if(strcmp(terrain_string, "UNEXPLORED"))
+    else if(strcmp(terrain_string, "UNEXPLORED") == 0)
         return UNEXPLORED;
-    else if(strcmp(terrain_string, "DESERT"))
+    else if(strcmp(terrain_string, "DESERT") == 0)
         return DESERT;
-    else if(strcmp(terrain_string, "GRASSLAND"))
+    else if(strcmp(terrain_string, "GRASSLAND") == 0)
         return GRASSLAND;
-    else if(strcmp(terrain_string, "ARCTIC"))
+    else if(strcmp(terrain_string, "ARCTIC") == 0)
         return ARCTIC;
-    else if(strcmp(terrain_string, "OCEAN"))
+    else if(strcmp(terrain_string, "OCEAN") == 0)
         return OCEAN;
-    else if(strcmp(terrain_string, "MARSH"))
+    else if(strcmp(terrain_string, "MARSH") == 0)
         return MARSH;
-    else if(strcmp(terrain_string, "SAVANNAH"))
+    else if(strcmp(terrain_string, "SAVANNAH") == 0)
         return SAVANNAH;
-    else if(strcmp(terrain_string, "PLAINS"))
+    else if(strcmp(terrain_string, "PLAINS") == 0)
         return PLAINS;
-    else if(strcmp(terrain_string, "PRAIRIE"))
+    else if(strcmp(terrain_string, "PRAIRIE") == 0)
         return PRAIRIE;
     else
         return -1;

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: nn\n"
 "Report-Msgid-Bugs-To: tuxmath-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-06-26 21:53-0500\n"
+"POT-Creation-Date: 2010-06-28 17:16-0500\n"
 "PO-Revision-Date: 2009-04-16 18:58+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <i18n-nn@lister.ping.uio.no>\n"
@@ -150,20 +150,20 @@ msgstr "Du fekk ein ny rekord!"
 msgid "Enter Your Name:"
 msgstr "Skriv inn namnet ditt:"
 
-#: src/menu.c:313
+#: src/menu.c:309
 msgid "TuxMath is free and open-source!"
 msgstr "TuxMath er fri programvare!"
 
-#: src/menu.c:314
+#: src/menu.c:310
 #, fuzzy
 msgid "You can help make it better."
 msgstr "Du kan vera med på å gjera spelet betre, ved å melda frå"
 
-#: src/menu.c:315
+#: src/menu.c:311
 msgid "Suggestions, artwork, and code are all welcome!"
 msgstr ""
 
-#: src/menu.c:316
+#: src/menu.c:312
 #, fuzzy
 msgid "Discuss TuxMath at tuxmath-devel@lists.sourceforge.net"
 msgstr "Diskuter framtida på tuxmath-devel@lists.sourceforge.net"

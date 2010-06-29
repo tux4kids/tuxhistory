@@ -64,6 +64,8 @@ static int escape_received;
 static SDL_Surface* bkgd = NULL; //640x480 background (windowed)
 static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 
+// Game vars
+static SDL_Rect origin;
 /********** Static functions definitions *********/
 
 static int game_init(void);
@@ -85,10 +87,22 @@ static SDL_Surface* current_bkgd()
 
 static int game_init(void)
 {
+    FILE *fp;
+
+    //SDL variables init
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     SDL_Flip(screen);
-    quit = 0;
 
+    SDL_FillRect(map_image, NULL, SDL_MapRGB(map_image->format, 0, 0 ,0));
+    //SDL_Flip(map_image);
+    quit = 0;
+    
+    origin.x = 0;
+    origin.y = 0;
+    origin.w = screen->w;
+    origin.h = screen->h;
+
+    //Control variables init
     left_pressed = 0;
     right_pressed = 0;
     up_pressed = 0;
@@ -100,15 +114,22 @@ static int game_init(void)
     user_quit_received = 0;
     SDL_quit_received = 0;
     escape_received = 0;
-
     
-    if(!map_xml(LoadMap("map")))
+    fp = LoadMap("map");
+    if(fp == NULL)
     {
+        DEBUGMSG(debug_game, "File not found!");
+        return 1;
+    }
+    
+    if(map_xml(fp))
+    {
+        printf("Error parsing file!");
         DEBUGMSG(debug_game, "Error loading the map file.\n");
-        return 0;
+        return 1;
     }
 
-    return 1;
+    return 0;
 }
 
 
@@ -124,7 +145,7 @@ int game(void)
         ;//SwitchScreenMode();  //Huh??
     }
 
-    if(!game_init())
+    if(game_init())
     {
         DEBUGMSG(debug_game, "Error loading game using game_init()\n");
         return -1;
@@ -160,15 +181,21 @@ int game(void)
 
 static void game_draw(void)
 {
-    SDL_Surface* surf;
     SDL_Rect dest;
-    
+
     dest.x = 200;
     dest.y = 200;
 
-    SDL_BlitSurface(terrain[TUNDRA_CENTER_1], NULL, screen, &dest);
-    SDL_BlitSurface(objects[OBJ_TROPICAL], NULL, screen, &dest);
+    SDL_BlitSurface(terrain[TUNDRA_CENTER_1], NULL, map_image, &dest);
+    SDL_BlitSurface(objects[OBJ_TROPICAL], NULL, map_image, &dest);
 
+    origin.x = 0;
+    origin.y = 0;
+    origin.w = screen->w;
+    origin.h = screen->h;
+    dest.x = 0;
+    dest.y = 0;
+    SDL_BlitSurface(map_image, &origin, screen, &dest);
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);

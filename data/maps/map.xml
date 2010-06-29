@@ -8,8 +8,8 @@
 
     <row>
         <tilde>
-            <height>1</height>
-            <terrain>grassland</terrain>
+            <height>0</height>
+            <terrain>OCEAN</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -24,6 +24,13 @@
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>SWAMP</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -46,7 +53,14 @@
         </tilde>
         <tilde>
             <height>1</height>
-            <terrain>GRASSLAND</terrain>
+            <terrain>SWAMP</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>SWAMP</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -69,11 +83,48 @@
         </tilde>
         <tilde>
             <height>1</height>
+            <terrain>SWAMP</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>SWAMP</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+    </row>    <row>
+        <tilde>
+            <height>1</height>
             <terrain>GRASSLAND</terrain>
             <object></object>
             <unit></unit>
             <building></building>
         </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+
     </row>
 </data>
 

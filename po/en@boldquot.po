@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tuxhistory 0.0.1\n"
 "Report-Msgid-Bugs-To: tuxmath-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-06-26 21:53-0500\n"
+"POT-Creation-Date: 2010-06-28 17:16-0500\n"
 "PO-Revision-Date: 2010-05-27 00:16-0500\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -168,19 +168,19 @@ msgstr "You Are In The Hall of Fame!"
 msgid "Enter Your Name:"
 msgstr "Enter Your Name:"
 
-#: src/menu.c:313
+#: src/menu.c:309
 msgid "TuxMath is free and open-source!"
 msgstr "TuxMath is free and open-source!"
 
-#: src/menu.c:314
+#: src/menu.c:310
 msgid "You can help make it better."
 msgstr "You can help make it better."
 
-#: src/menu.c:315
+#: src/menu.c:311
 msgid "Suggestions, artwork, and code are all welcome!"
 msgstr "Suggestions, artwork, and code are all welcome!"
 
-#: src/menu.c:316
+#: src/menu.c:312
 msgid "Discuss TuxMath at tuxmath-devel@lists.sourceforge.net"
 msgstr "Discuss TuxMath at tuxmath-devel@lists.sourceforge.net"
 

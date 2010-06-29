@@ -34,8 +34,8 @@
 
 #include "fileops.h"
 
-int MAP_HEIGHT = MAX_X_TILDES * terrain[0]->h;
-int MAP_WIDTH = MAX_Y_TILDES * terrain[0]->w;
+#define MAP_HEIGHT MAX_X_TILDES * terrain[0]->h
+#define MAP_WIDTH MAX_Y_TILDES * terrain[0]->w
 
 
 void setup(int argc, char * argv[]);

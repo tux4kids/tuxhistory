@@ -655,19 +655,12 @@ Mix_Music* LoadMusic(char *datafile )
 }
 
 /* load_map: Load map from a XML datafile */
-FILE* LoadMap(const char* name)
+FILE *LoadMap(const char* name)
 {
   FILE *fp = NULL;
   char fn[PATH_MAX];
   int fn_len;
   int i;
-
-  if(NULL == fp)
-  {
-    DEBUGMSG(debug_loaders, "load_image(): file_name is NULL, exiting.\n");
-    return NULL;
-  }
-
 
   /* check if map file is present */
   sprintf(fn, "%s/maps/%s.xml", DATA_PREFIX, name);
@@ -681,6 +674,12 @@ FILE* LoadMap(const char* name)
 
   fp = fopen(fn, "r");
 
+  if(fp == NULL)
+  {
+    DEBUGMSG(debug_loaders, "load_image(): file_name is NULL, exiting.\n");
+    printf("Error at trying to find map file!\n");
+    return NULL;
+  }
   return fp;
 }
 

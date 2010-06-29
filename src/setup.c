@@ -604,39 +604,39 @@ void data_memory_alloc(void)
     object = (th_obj*)malloc(MAX_OBJECTS * sizeof(th_obj));
     if (object == NULL)
     {
-        printf("Allocation of game objects faild!\n");
-        exit(0);
+        DEBUGMSG(debug_setup, "Allocation of game objects faild!\n");
+        exit(1);
     }
 
     map = NULL;
     map = (th_map**)malloc(MAX_X_TILDES * sizeof(th_map *));
     if(map == NULL)
     {
-        printf("Error\n");
-        exit(0);
+        DEBUGMSG(debug_setup,"Error\n");
+        exit(1);
     }
     for(i = 0; i < MAX_X_TILDES; i++){
         map[i] = NULL;
         map[i] = (th_map*)malloc(MAX_Y_TILDES * sizeof(th_map));
         if(map[i] == NULL)
         {
-            printf("Error: Allocation of objects faild!\n");
-            exit(0);
+            DEBUGMSG(debug_setup, "Error: Allocation of objects faild!\n");
+            exit(1);
         }
     }
 
     map_image = NULL;
-    map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, MAP_WIDTH, MAP_HEIGHT, 32,
-                           rmask, gmask, bmask, amask); //32 Bits are OK?
+    //printf("%d", terrain[TUNDRA_CENTER_1]->w);
+    
+    map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, 1000, 1000, 
+            32, rmask, gmask, bmask, amask); 
     if(map_image == NULL)
     {
-        printf("Couldn't Create img_image");
-        exit(0);
+        DEBUGMSG(debug_setup,"Couldn't create img_image\n");
+        exit(1);
     }
 
 }
-
-
 
 /* save options and free heap */
 /* use for successful exit */
