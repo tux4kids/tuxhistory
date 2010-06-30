@@ -40,7 +40,9 @@ typedef enum { false, true } bool;
 #define max(a,b) (((a) > (b)) ? (a) : (b))
 
 // Free memory marco
-#define FREE(p)   do { free(p); (p) = NULL; } while(0)
+#define FREE(p)   do { free(p); (p) = NULL; } while(0) 
+// Number of elements of a array
+#define NUM_ELEM(x) (sizeof (x) / sizeof (*(x))) 
 
 /* for Tim's feedback speed control code           */
 //#define FEEDBACK_DEBUG
