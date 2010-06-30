@@ -30,6 +30,7 @@ SDL_Surface* map_image;
 static int get_terrain_enum(char *);
 static int *get_context_tildes(int, int);
 static int *get_draw_tilde(int *, int);
+static int get_tile_num(int, int);
 static void str_upper(char *);
 
 
@@ -291,7 +292,9 @@ static int *get_context_tildes(int x, int y)
 static int *get_draw_tilde(int *array, int oe)
 {
     int *a;
+    int i,j;
 
+    // Allocate a as a dinamic array, please free it using FREE()
     a = (int *)malloc(3*sizeof(int));
     if( a == NULL )
     {
@@ -299,6 +302,8 @@ static int *get_draw_tilde(int *array, int oe)
         return NULL;
     }
 
+    // First we define the center tilde type, and define if it is
+    // odd or even.
     if(*array == HIGHSEA)
     {
         *a = ((oe%2)==0) ? HIGHSEAS_CENTER_0 : HIGHSEAS_CENTER_1;
@@ -353,12 +358,40 @@ static int *get_draw_tilde(int *array, int oe)
         return NULL;
 
     }
-    //*(a + 1) = -1;
-    //*(a + 2) = -1;
 
-    
-
+    for(i = 1; i < 9; i++)
+    {
+        if(*array != *(array+i))
+        {
+            if((j=get_tile_num(i,oe)) < 0)
+            {
+                printf("Error parsing tiles\n");
+                return NULL;
+            }
+            *(a + i) = *(array + i) * (NUM_COMPTILDE - 1) + j;
+        }
+        else
+        {
+            *(a + i) = -1;
+        }
+    }
     return a;
+}
+
+static int get_tile_num(int i, int k)
+{
+    int oe;
+    if (i >= NUM_COMPTILDE)
+        return -1;
+    oe = k%2;
+    if (i == 1) return (k) ? BORDER_NW_ODD : BORDER_NW_EVEN;
+    if (i == 2) return (k) ? BORDER_N_ODD : BORDER_N_EVEN;
+    if (i == 3) return (k) ? BORDER_NE_ODD : BORDER_NE_EVEN;
+    if (i == 4) return (k) ? BORDER_W_ODD : BORDER_W_EVEN;
+    if (i == 5) return (k) ? BORDER_E_ODD : BORDER_E_EVEN;
+    if (i == 6) return (k) ? BORDER_SW_ODD : BORDER_SW_EVEN;
+    if (i == 7) return (k) ? BORDER_S_ODD : BORDER_S_EVEN;
+    if (i == 8) return (k) ? BODER_SE_ODD : BORDER_SE_EVEN;
 }
 
 int generate_map(void)
