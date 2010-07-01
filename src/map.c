@@ -176,7 +176,7 @@ int get_terrain_enum(char *terrain_string)
 //Return array has 9 elements
 static int *get_context_tildes(int x, int y)
 {
-    //int i,j;
+    int i;
     int *a;
 
     a = (int *)malloc(9*sizeof(int));
@@ -208,14 +208,13 @@ static int *get_context_tildes(int x, int y)
             *(a + 8) = -1;
             *(a + 4) = map[x-1][y].terrain;
             *(a + 6) = map[x-1][y+1].terrain;
-            *(a + 7) = map[x+1][y].terrain;
+            *(a + 7) = map[x][y+1].terrain;
          }
         else
         {
             *(a + 4) = map[x-1][y].terrain;
             *(a + 5) = map[x+1][y].terrain;
             *(a + 6) = map[x-1][y+1].terrain;
-            *(a + 7) = map[x+1][y].terrain;
             *(a + 8) = map[x+1][y+1].terrain;
          }
     }
@@ -259,7 +258,7 @@ static int *get_context_tildes(int x, int y)
             *(a + 2) = map[x][y-1].terrain;
             *(a + 3) = map[x+1][y-1].terrain;
             *(a + 5) = map[x+1][y].terrain;
-            *(a + 7) = map[x+1][y].terrain;
+            *(a + 7) = map[x][y+1].terrain;
             *(a + 8) = map[x+1][y+1].terrain;
          }
         else if(x >= x_tildes)
@@ -271,7 +270,7 @@ static int *get_context_tildes(int x, int y)
             *(a + 2) = map[x][y-1].terrain;
             *(a + 4) = map[x-1][y].terrain;
             *(a + 6) = map[x-1][y+1].terrain;
-            *(a + 7) = map[x+1][y].terrain;
+            *(a + 7) = map[x][y+1].terrain;
          }
         else
         {
@@ -281,10 +280,16 @@ static int *get_context_tildes(int x, int y)
             *(a + 4) = map[x-1][y].terrain;
             *(a + 5) = map[x+1][y].terrain;
             *(a + 6) = map[x-1][y+1].terrain;
-            *(a + 7) = map[x+1][y].terrain;
+            *(a + 7) = map[x][y+1].terrain;
             *(a + 8) = map[x+1][y+1].terrain;
         }
     }
+    for (i=0; i<9; i++)
+    {
+        printf("%d ", *(a + i));
+    }
+    printf("\n");
+
     return a; 
 }        
 
@@ -295,7 +300,7 @@ static int *get_draw_tilde(int *array, int oe)
     int i,j;
 
     // Allocate a as a dinamic array, please free it using FREE()
-    a = (int *)malloc(3*sizeof(int));
+    a = (int *)malloc(9*sizeof(int));
     if( a == NULL )
     {
         printf("get_context_tildes: Error trying to allocate memory!");
@@ -359,16 +364,29 @@ static int *get_draw_tilde(int *array, int oe)
 
     }
 
-    for(i = 1; i < 9; i++)
+    for(i = 0; i < 9; i++)
     {
-        if(*array != *(array+i))
+        printf("I: %d ", i);
+        if(*(array+i) != -1)
         {
-            if((j=get_tile_num(i,oe)) < 0)
+            if(*array != *(array+i))
             {
-                printf("Error parsing tiles\n");
-                return NULL;
+                j=get_tile_num(i,oe);
+                printf("J: %d ", i, j);
+                if(j < 0)
+                {
+                    printf("Error parsing tiles\n");
+                    return NULL;
+                }
+                printf("NUM: %d, %d, %d\n", *(array + i), (NUM_COMPTILDE - 1), 
+                    *(array + i) * (NUM_COMPTILDE) + j);
+                *(a + i) = *(array + i) * (NUM_COMPTILDE) + j;
             }
-            *(a + i) = *(array + i) * (NUM_COMPTILDE - 1) + j;
+            else
+            {
+                *(a + i) = -1;
+            }
+
         }
         else
         {
@@ -384,20 +402,21 @@ static int get_tile_num(int i, int k)
     if (i >= NUM_COMPTILDE)
         return -1;
     oe = k%2;
-    if (i == 1) return (k) ? BORDER_NW_ODD : BORDER_NW_EVEN;
-    if (i == 2) return (k) ? BORDER_N_ODD : BORDER_N_EVEN;
-    if (i == 3) return (k) ? BORDER_NE_ODD : BORDER_NE_EVEN;
-    if (i == 4) return (k) ? BORDER_W_ODD : BORDER_W_EVEN;
-    if (i == 5) return (k) ? BORDER_E_ODD : BORDER_E_EVEN;
-    if (i == 6) return (k) ? BORDER_SW_ODD : BORDER_SW_EVEN;
-    if (i == 7) return (k) ? BORDER_S_ODD : BORDER_S_EVEN;
-    if (i == 8) return (k) ? BODER_SE_ODD : BORDER_SE_EVEN;
+    if (i == 1) return (k) ? BODER_SE_ODD : BORDER_SE_EVEN;
+    else if (i == 2) return (k) ? BORDER_S_ODD : BORDER_S_EVEN;
+    else if (i == 3) return (k) ? BORDER_SW_ODD : BORDER_SW_EVEN;
+    else if (i == 4) return (k) ? BORDER_E_ODD : BORDER_E_EVEN;
+    else if (i == 5) return (k) ? BORDER_W_ODD : BORDER_W_EVEN;
+    else if (i == 6) return (k) ? BORDER_NE_ODD : BORDER_NE_EVEN;
+    else if (i == 7) return (k) ? BORDER_N_ODD : BORDER_N_EVEN;
+    else if (i == 8) return (k) ? BORDER_NW_ODD : BORDER_NW_EVEN; 
+    else return -1;
 }
 
 int generate_map(void)
 {
     SDL_Rect dest;
-    int i, j, k;
+    int i, j, k, l;
     int oe;
     int x, y;
     int *context_array;
@@ -448,11 +467,19 @@ int generate_map(void)
             
             printf("ENUM: %d GRASSLAND: %d\n", *img_enums, GRASSLAND_CENTER_0);
             //Draw in the map buffer the resulting values
-            SDL_BlitSurface(terrain[*img_enums], NULL, map_image, &dest);
+            for(l = 0; l < 9; l++)
+            {
+                if (*(img_enums+l)!=-1)
+                {
+                    SDL_BlitSurface(terrain[*(img_enums+l)], NULL, map_image, &dest);
+                }
+            }
 
+            printf(".");
             //Prepare te new coords for the next tilde
             dest.x = dest.x - (terrain[*img_enums]->w/2);
             dest.y = dest.y - (terrain[*img_enums]->h/2);
+            
             FREE(context_array);
             FREE(img_enums);
 
