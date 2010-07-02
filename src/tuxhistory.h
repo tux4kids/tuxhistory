@@ -43,6 +43,11 @@ typedef struct {
   int cur;
 } sprite;
 
+typedef struct {
+    int x;
+    int y;
+} th_point;
+
 /* Global data gets 'externed' here: */
 
 /* declared in setup.c */

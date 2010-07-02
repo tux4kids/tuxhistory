@@ -40,6 +40,8 @@
 #define FPS 15               /* 15 frames per second */
 #define MS_PER_FRAME (1000 / FPS)
 
+#define IN_SCROLL 3 // Scroll speed
+#define OUT_SCROLL 6
 /************ Static Variable definitions ***********/
 //Game variables
 
@@ -66,18 +68,27 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 
 // Game vars
 static SDL_Rect origin;
+static int screen_x;
+static int screen_y;
+
+static th_point Pmouse;
+static th_point Pscreen;
+static int screen_margin_in;
+static int screen_margin_out;
 /********** Static functions definitions *********/
 
 static int game_init(void);
 
 static void game_draw(void);
 static void game_handle_user_events(void);
+static void game_handle_mouse(void);
 static int game_mouse_event(SDL_Event event);
 
 static int check_exit_conditions(void);
 static int game_over(int);
 static int pause_game(void);
 
+static void get_mouse_pos(int, int);
 /************** Implementation *******************/
 
 static SDL_Surface* current_bkgd()
@@ -98,10 +109,15 @@ static int game_init(void)
     //SDL_Flip(map_image);
     quit = 0;
     
-    origin.x = 0;
-    origin.y = 0;
+    Pscreen.x = 500;//map_image->w/2 - screen->w/2;
+    Pscreen.y = 100;//map_image->h/2 - screen->h/2;
+    origin.x = Pscreen.x;
+    origin.y = Pscreen.y;
     origin.w = screen->w;
     origin.h = screen->h;
+
+    screen_margin_in = (int)screen->w/15;
+    screen_margin_out= (int)screen->w/50;
 
     //Control variables init
     left_pressed = 0;
@@ -160,6 +176,8 @@ int game(void)
         last_time = SDL_GetTicks();
         
         game_handle_user_events();
+        game_handle_mouse();
+
         game_status = check_exit_conditions();
         game_draw();
         SDL_Flip(screen);
@@ -187,12 +205,19 @@ static void game_draw(void)
 {
     SDL_Rect dest;
 
-
-
-    origin.x = 0;
-    origin.y = 0;
+    origin.x = Pscreen.x;
+    origin.y = Pscreen.y;
+    
+    /*
     origin.w = screen->w;
     origin.h = screen->h;
+    
+    
+    origin.x = map_image->w/2 - screen->w/2;
+    origin.y = map_image->h/2 - screen->h/2;
+    origin.w = screen->w;
+    origin.h = screen->h;*/
+
     dest.x = 0;
     dest.y = 0;
     SDL_BlitSurface(map_image, &origin, screen, &dest);
@@ -201,6 +226,48 @@ static void game_draw(void)
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
  
     
+}
+static void game_handle_mouse(void)
+{
+    if( Pscreen.x < (map_image->w - screen->h) &&
+        Pscreen.x > 0 &&
+        Pscreen.y < (map_image->h - screen->h) &&
+        Pscreen.y > 0)
+    {
+        // Is the mouse close to the border? Move the
+        // map...
+        if(Pmouse.x < screen_margin_in && Pscreen.x > IN_SCROLL){
+            Pscreen.x = Pscreen.x - IN_SCROLL;
+        }
+        if(Pmouse.x > screen->w - screen_margin_in &&
+           (Pscreen.x + screen->w) < (map_image->w - IN_SCROLL)){
+            Pscreen.x = Pscreen.x + IN_SCROLL;
+        }
+        if(Pmouse.y < screen_margin_in && Pscreen.y > IN_SCROLL){
+            Pscreen.y = Pscreen.y - IN_SCROLL;
+        }
+        if(Pmouse.y > screen->h - screen_margin_in &&
+                (Pscreen.y + screen->h) < (map_image->h - IN_SCROLL)){
+            Pscreen.y = Pscreen.y + IN_SCROLL;
+        }
+
+        // Is the mouse VERY close to the border?
+        // Move the map faster!
+        if(Pmouse.x < screen_margin_out && Pscreen.x > OUT_SCROLL){
+            Pscreen.x = Pscreen.x - OUT_SCROLL;
+        }
+        if(Pmouse.x > screen->w - screen_margin_out &&
+           (Pscreen.x + screen->w) < (map_image->w - OUT_SCROLL)){
+            Pscreen.x = Pscreen.x + OUT_SCROLL;
+        }
+        if(Pmouse.y < screen_margin_out && Pscreen.y > OUT_SCROLL){
+            Pscreen.y = Pscreen.y - OUT_SCROLL;
+        }
+        if(Pmouse.y > screen->h - screen_margin_out &&
+                (Pscreen.y + screen->h) < (map_image->h - OUT_SCROLL)){
+            Pscreen.y = Pscreen.y + OUT_SCROLL;
+        }
+    }
 }
 
 static int pause_game(void)
@@ -389,11 +456,17 @@ static void game_handle_user_events(void)
 
   while (SDL_PollEvent(&event) > 0)
   {
+    //eval_mouse_pos(event.);
     if (event.type == SDL_QUIT)
     {
       SDL_quit_received = 1;
       quit = 1;
     }
+    if (event.type == SDL_MOUSEMOTION)
+    {
+        get_mouse_pos(event.motion.x, event.motion.y);
+    }
+
     if (event.type == SDL_MOUSEBUTTONDOWN)
     {
       key = game_mouse_event(event);
@@ -518,5 +591,11 @@ static int check_exit_conditions(void)
   }
   // TODO: Loose or win...
   return GAME_IN_PROGRESS;
+}
+
+static void get_mouse_pos(int x, int y)
+{
+    Pmouse.x = x;
+    Pmouse.y = y;
 }
 

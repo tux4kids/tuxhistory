@@ -364,7 +364,7 @@ static int *get_draw_tilde(int *array, int oe)
 
     }
 
-    for(i = 0; i < 9; i++)
+    for(i = 1; i < 9; i++)
     {
         printf("I: %d ", i);
         if(*(array+i) != -1)
@@ -424,8 +424,8 @@ int generate_map(void)
 
     map_image = NULL;
     int w, h;
-    w = terrain[TUNDRA_CENTER_1]->w * x_tildes * 2;
-    h = terrain[TUNDRA_CENTER_1]->h * y_tildes * 2;
+    w = terrain[TUNDRA_CENTER_1]->w * x_tildes + x_tildes;
+    h = terrain[TUNDRA_CENTER_1]->h * y_tildes + y_tildes;
     map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 
             32, rmask, gmask, bmask, amask); 
 
@@ -467,7 +467,7 @@ int generate_map(void)
             
             printf("ENUM: %d GRASSLAND: %d\n", *img_enums, GRASSLAND_CENTER_0);
             //Draw in the map buffer the resulting values
-            for(l = 0; l < 9; l++)
+            for(l = 0; l < 1; l++)
             {
                 if (*(img_enums+l)!=-1)
                 {
