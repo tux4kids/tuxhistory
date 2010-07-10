@@ -35,6 +35,7 @@ enum{
 
 /*Global tuxhistory vars*/
 typedef struct {
+    int id;
     int x, y; // (x,y) in the th_map array
     int type;
     int live; // 100 to 0 

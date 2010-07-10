@@ -37,7 +37,7 @@
 #include "map.h"
 
 
-#define FPS 15               /* 15 frames per second */
+#define FPS 15 /* 15 frames per second */
 #define MS_PER_FRAME (1000 / FPS)
 
 #define IN_SCROLL 3 // Scroll speed

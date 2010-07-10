@@ -424,8 +424,10 @@ int generate_map(void)
 
     map_image = NULL;
     int w, h;
-    w = terrain[TUNDRA_CENTER_1]->w * x_tildes + x_tildes;
-    h = terrain[TUNDRA_CENTER_1]->h * y_tildes + y_tildes;
+
+    //Create a SDL_Surface that contains the terrain._
+    w = terrain[TUNDRA_CENTER_1]->w * (x_tildes + 1);
+    h = terrain[TUNDRA_CENTER_1]->h * (y_tildes + 1);
     map_image = SDL_CreateRGBSurface(SDL_SWSURFACE, w, h, 
             32, rmask, gmask, bmask, amask); 
 
@@ -435,16 +437,19 @@ int generate_map(void)
         return 1;
     }
 
+    // Prepare the variables...
     SDL_FillRect(map_image, NULL, SDL_MapRGB(map_image->format, 0, 0 ,0));
 
     dest.x = (map_image->w/2)-(terrain[TUNDRA_CENTER_1]->w/2);
-    dest.y = (map_image->h/2);
+    dest.y = map_image->h-terrain[TUNDRA_CENTER_1]->h;
 
     printf("[%d,%d]\n", x_tildes, y_tildes);
 
     x = dest.x;
     y = dest.y;
     k = 0;
+    
+    //This loop blits all tildes to map_image.
     for (i = x_tildes; i >= 0; i--)
     {
         oe = k + 1;
