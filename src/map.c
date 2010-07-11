@@ -23,17 +23,50 @@
 #include "globals.h"
 #include "fileops.h"
 #include "map.h"
-#include "llist.c"
+#include "hashtable.h"
+#include "llist.h"
 
 SDL_Surface* map_image;
 
-
+static int init_map_hash(void);
+static void end_map_hash(void);
 static int get_terrain_enum(char *);
 static int *get_context_tildes(int, int);
 static int *get_draw_tilde(int *, int);
 static int get_tile_num(int, int);
 static void str_upper(char *);
 
+static int init_map_hash(void)
+{
+    map_table_hash = make_hashtable(hashtable_default_hash, 30);
+
+    if(map_table_hash == NULL)
+        return 1;
+
+    hashtable_add(map_table_hash, "FOREST_MIXED", FOREST_MIXED);
+    hashtable_add(map_table_hash, "FOREST_TROPICAL", FOREST_TROPICAL);
+    hashtable_add(map_table_hash, "FOREST_CONIFER", FOREST_CONIFER);
+    hashtable_add(map_table_hash, "FOREST_SCRUB", FOREST_SCRUB);
+    hashtable_add(map_table_hash, "FOREST_BOREAL", FOREST_BOREAL);
+    hashtable_add(map_table_hash, "FOREST_WETLAND", FOREST_WETLAND);
+    hashtable_add(map_table_hash, "FOREST_RAIN", FOREST_RAIN);
+    hashtable_add(map_table_hash, "FOREST_BROADLEAF", FOREST_BROADLEAF);
+
+    hashtable_add(map_table_hash, "HIGHSEA", HIGHSEA);
+    hashtable_add(map_table_hash, "TUNDRA", TUNDRA);
+    hashtable_add(map_table_hash, "SWAMP", SWAMP);
+    hashtable_add(map_table_hash, "UNEXPLORED", UNEXPLORED);
+    hashtable_add(map_table_hash, "DESERT", DESERT);
+    hashtable_add(map_table_hash, "GRASSLAND", GRASSLAND);
+    hashtable_add(map_table_hash, "ARCTIC", ARCTIC);
+    hashtable_add(map_table_hash, "OCEAN", OCEAN);
+    hashtable_add(map_table_hash, "MARSH", MARSH);
+    hashtable_add(map_table_hash, "SAVANNAH", SAVANNAH);
+    hashtable_add(map_table_hash, "PLAINS", PLAINS);
+    hashtable_add(map_table_hash, "PRAIRIE", PRAIRIE);
+
+    return 0;
+}
 
 int map_xml(FILE *fp)
 {
@@ -45,6 +78,8 @@ int map_xml(FILE *fp)
     mxml_node_t *jnode;
    
     tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+    if(init_map_hash())
+        return 1;
 
     x = 0;
     y = 0;
@@ -69,24 +104,21 @@ int map_xml(FILE *fp)
             node = mxmlFindElement(jnode, jnode, "terrain",
                     NULL, NULL, MXML_DESCEND);
     
-            value = get_terrain_enum(node->child->value.text.string);
+            //value = get_terrain_enum(node->child->value.text.string);
+
+            value = hashtable_lookup(map_table_hash, node->child->value.text.string);
             if(value != -1)
             {
                 map[x][y].terrain = value;
+                printf("%s",node->child->value.text.string);
             }
 
-            printf("%s",node->child->value.text.string);
             
-            // Get objects
-            node = mxmlFindElement(jnode, jnode, "object",
-                    NULL, NULL, MXML_DESCEND);
-
-            value = get_obj_enum(node->child->value.text.string);
              
             node = mxmlFindElement(jnode, jnode, "height",
                     NULL, NULL, MXML_DESCEND);
             
-            printf("%d",node->child->value.integer);
+            //printf("%d",node->child->value.integer);
 
             if(node->child->value.integer >= 0)
             {
@@ -94,6 +126,19 @@ int map_xml(FILE *fp)
             }
 
             printf("%d ", map[x][y].terrain);
+
+            // Get objects
+            node = mxmlFindElement(jnode, jnode, "object",
+                    NULL, NULL, MXML_DESCEND);
+
+            if(node->child != NULL)
+            {
+                if(node->child->value.text.string)
+                    printf("(%s", node->child->value.text.string);
+                value=hashtable_lookup(map_table_hash, node->child->value.text.string);
+                if(value!=-1)
+                    printf(" Hash object: %d) ", value);
+            }
 
             y++;
         }
@@ -124,6 +169,8 @@ int map_xml(FILE *fp)
         return 1;
     }
     
+    free_hashtable(map_table_hash);
+
     mxmlDelete(jnode);
     mxmlDelete(inode);
     mxmlDelete(node);
@@ -131,60 +178,6 @@ int map_xml(FILE *fp)
     fclose(fp);
 
     return 0;
-}
-
-// Returns the enum value for each terrain type. If the terrain
-// type don't exists it returns -1
-
-
-int get_obj_enum(char *terrain_string)
-{
-    if(strcmp(terrain_string, "FOREST_BOREAL") == 0)
-        return FOREST_BOREAL;
-    else if(strcmp(terrain_string, "FOREST_CONIFER") == 0)
-        return FOREST_CONFIER;
-    else if(strcmp(terrain_string, "FOREST_MIXED") == 0)
-        return FOREST_MIXED;
-    else if(strcmp(terrain_string, "FOREST_SCRUB") == 0)
-        return FOREST_SCRUB;
-    else if(strcmp(terrain_string, "BROADLEAF") == 0)
-        return FOREST_BROADLEAF;
-    else if(strcmp(terrain_string, "FOREST_RAIN") == 0)
-        return FOREST_RAIN;
-    else if(strcmp(terrain_string, "FOREST_TROPICAL") == 0)
-        return FOREST_TROPICAL;
-    else
-        return -1;
-}
-
-int get_terrain_enum(char *terrain_string)
-{
-    if(strcmp(terrain_string, "HIGHSEA") == 0)
-        return HIGHSEA;
-    else if(strcmp(terrain_string, "TUNDRA") == 0)
-        return TUNDRA;
-    else if(strcmp(terrain_string, "SWAMP") == 0)
-        return SWAMP;
-    else if(strcmp(terrain_string, "UNEXPLORED") == 0)
-        return UNEXPLORED;
-    else if(strcmp(terrain_string, "DESERT") == 0)
-        return DESERT;
-    else if(strcmp(terrain_string, "GRASSLAND") == 0)
-        return GRASSLAND;
-    else if(strcmp(terrain_string, "ARCTIC") == 0)
-        return ARCTIC;
-    else if(strcmp(terrain_string, "OCEAN") == 0)
-        return OCEAN;
-    else if(strcmp(terrain_string, "MARSH") == 0)
-        return MARSH;
-    else if(strcmp(terrain_string, "SAVANNAH") == 0)
-        return SAVANNAH;
-    else if(strcmp(terrain_string, "PLAINS") == 0)
-        return PLAINS;
-    else if(strcmp(terrain_string, "PRAIRIE") == 0)
-        return PRAIRIE;
-    else
-        return -1;
 }
 
 /*  ---------------------------
@@ -313,11 +306,11 @@ static int *get_context_tildes(int x, int y)
             *(a + 8) = map[x+1][y+1].terrain;
         }
     }
-    for (i=0; i<9; i++)
+    /*for (i=0; i<9; i++)
     {
         printf("%d ", *(a + i));
-    }
-    printf("\n");
+    }*/
+    ////printf("\n");
 
     return a; 
 }        
@@ -395,20 +388,20 @@ static int *get_draw_tilde(int *array, int oe)
 
     for(i = 1; i < 9; i++)
     {
-        printf("I: %d ", i);
+        //printf("I: %d ", i);
         if(*(array+i) != -1)
         {
             if(*array != *(array+i))
             {
                 j=get_tile_num(i,oe);
-                printf("J: %d ", i, j);
+                //printf("J: %d ", i, j);
                 if(j < 0)
                 {
                     printf("Error parsing tiles\n");
                     return NULL;
                 }
-                printf("NUM: %d, %d, %d\n", *(array + i), (NUM_COMPTILDE - 1), 
-                    *(array + i) * (NUM_COMPTILDE) + j);
+                //printf("NUM: %d, %d, %d\n", *(array + i), (NUM_COMPTILDE - 1), 
+                //    *(array + i) * (NUM_COMPTILDE) + j);
                 *(a + i) = *(array + i) * (NUM_COMPTILDE) + j;
             }
             else
@@ -472,7 +465,7 @@ int generate_map(void)
     dest.x = (map_image->w/2)-(terrain[TUNDRA_CENTER_1]->w/2);
     dest.y = map_image->h-terrain[TUNDRA_CENTER_1]->h;
 
-    printf("[%d,%d]\n", x_tildes, y_tildes);
+    //printf("[%d,%d]\n", x_tildes, y_tildes);
 
     x = dest.x;
     y = dest.y;
@@ -499,7 +492,7 @@ int generate_map(void)
                 return 1;
             }
             
-            printf("ENUM: %d GRASSLAND: %d\n", *img_enums, GRASSLAND_CENTER_0);
+            //printf("ENUM: %d GRASSLAND: %d\n", *img_enums, GRASSLAND_CENTER_0);
             //Draw in the map buffer the resulting values
             for(l = 0; l < 1; l++)
             {

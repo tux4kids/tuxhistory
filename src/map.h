@@ -21,6 +21,8 @@
 #ifndef MAP_H
 #define MAP_H
 
+//#include "hashtable.h"
+
 // List of objects that can be used
 // in create_object. 
 // TODO: (maybe this should be in game.c
@@ -58,6 +60,7 @@ typedef struct {
     //th_obj *obj;// Pointer to object
 }th_map;
 
+struct hashtable *map_table_hash; //Values of Terrains and objects
 int flag_map; // Map flag: is a map surface allocated? 
 int x_tildes;
 int y_tildes;

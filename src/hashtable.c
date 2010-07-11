@@ -157,7 +157,7 @@ void *hashtable_lookup(const struct hashtable *table,
         entry = entry->next;
     }
     
-    return entry ? entry->value : NULL;
+    return entry ? entry->value : -1;
 }
     
 /** Create a hash table.

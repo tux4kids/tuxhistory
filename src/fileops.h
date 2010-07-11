@@ -367,7 +367,6 @@ enum{
     FOREST_WETLAND,
     FOREST_RAIN,
     FOREST_BROADLEAF,
-    FOREST_OBJECTS, // Must be at end of forest enums
     NUM_OBJECTS // Must be at the end.
 };
 

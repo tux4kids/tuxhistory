@@ -1,7 +1,18 @@
+/*
+ * llist.h
+ *
+ * Description: Linked list implementations 
+ * 
+ * Author: Jesús Manuel Mager Hois (fongog@gmail.com) (C) 2010
+ * Copyright: GPL v3 or later
+ *
+ * Part of "Tux4Kids Project
+ * http://www.tux4kids.com
+ * 
+ */
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "tuxhistory.h"
 #include "llist.h"
 
 list_node *list_add(list_node **ptr, th_obj obj)
