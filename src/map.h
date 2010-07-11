@@ -29,15 +29,19 @@
 //       
 
 enum{
-    TREE,
-    NUM_OF_OBJECTS
+    FOREST,
+    GOLD,
+    STONE,
+    BUILDING,
+    UNI,
+    NUM_OF_TYPES
 };
 
 /*Global tuxhistory vars*/
 typedef struct {
     int id;
     int x, y; // (x,y) in the th_map array
-    int type;
+    int type; // using the enum NUM_OF_TYPES of map.h
     int live; // 100 to 0 
     char name[30];
     int defence;

@@ -23,6 +23,7 @@
 #include "globals.h"
 #include "fileops.h"
 #include "map.h"
+#include "llist.c"
 
 SDL_Surface* map_image;
 
@@ -64,9 +65,10 @@ int map_xml(FILE *fp)
                 jnode = mxmlFindElement(jnode, inode, "tilde",
                     NULL, NULL, MXML_DESCEND))
         {
+            // Get terrain value
             node = mxmlFindElement(jnode, jnode, "terrain",
                     NULL, NULL, MXML_DESCEND);
-
+    
             value = get_terrain_enum(node->child->value.text.string);
             if(value != -1)
             {
@@ -75,6 +77,12 @@ int map_xml(FILE *fp)
 
             printf("%s",node->child->value.text.string);
             
+            // Get objects
+            node = mxmlFindElement(jnode, jnode, "object",
+                    NULL, NULL, MXML_DESCEND);
+
+            value = get_obj_enum(node->child->value.text.string);
+             
             node = mxmlFindElement(jnode, jnode, "height",
                     NULL, NULL, MXML_DESCEND);
             
@@ -127,6 +135,27 @@ int map_xml(FILE *fp)
 
 // Returns the enum value for each terrain type. If the terrain
 // type don't exists it returns -1
+
+
+int get_obj_enum(char *terrain_string)
+{
+    if(strcmp(terrain_string, "FOREST_BOREAL") == 0)
+        return FOREST_BOREAL;
+    else if(strcmp(terrain_string, "FOREST_CONIFER") == 0)
+        return FOREST_CONFIER;
+    else if(strcmp(terrain_string, "FOREST_MIXED") == 0)
+        return FOREST_MIXED;
+    else if(strcmp(terrain_string, "FOREST_SCRUB") == 0)
+        return FOREST_SCRUB;
+    else if(strcmp(terrain_string, "BROADLEAF") == 0)
+        return FOREST_BROADLEAF;
+    else if(strcmp(terrain_string, "FOREST_RAIN") == 0)
+        return FOREST_RAIN;
+    else if(strcmp(terrain_string, "FOREST_TROPICAL") == 0)
+        return FOREST_TROPICAL;
+    else
+        return -1;
+}
 
 int get_terrain_enum(char *terrain_string)
 {

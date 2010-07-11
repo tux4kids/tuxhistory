@@ -359,15 +359,16 @@ enum {
 };
 
 enum{
-    OBJ_MIXED, // Forest images
-    OBJ_TROPICAL,
-    OBJ_CONIFER,
-    OBJ_SCRUB,
-    OBJ_BOREAL,
-    OBJ_WETLAND,
-    OBJ_RAIN,
-    OBJ_BROADLEAF,
-    NUM_OBJECTS // Must at the end.
+    FOREST_MIXED, // Forest images
+    FOREST_TROPICAL,
+    FOREST_CONIFER,
+    FOREST_SCRUB,
+    FOREST_BOREAL,
+    FOREST_WETLAND,
+    FOREST_RAIN,
+    FOREST_BROADLEAF,
+    FOREST_OBJECTS, // Must be at end of forest enums
+    NUM_OBJECTS // Must be at the end.
 };
 
 /* Names for game sounds (formerly in sounds.h): */

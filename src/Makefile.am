@@ -34,6 +34,7 @@ tuxhistory_SOURCES = tuxhistory.c \
 	fileops_media.c \
 	options.c	\
 	credits.c	\
+	hashtable.c \
 	highscore.c	\
 	llist.c		\
 	linewrap.c	\
@@ -57,6 +58,7 @@ EXTRA_DIST = 	credits.h 	\
 	game.h		\
 	menu.h		\
 	globals.h	\
+	hashtable.h \
 	highscore.h 	\
 	linewrap.h	\
 	llist.h		\
