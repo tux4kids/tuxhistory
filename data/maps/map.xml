@@ -9,7 +9,7 @@
     <row>
         <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
+            <terrain>GRASSLAND</terrain>
             <object>FOREST_MIXED</object>
             <unit></unit>
             <building></building>
@@ -23,7 +23,7 @@
         </tilde>
         <tilde>
             <height>1</height>
-            <terrain>GRASSLAND</terrain>
+            <terrain>SWAMP</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -36,35 +36,35 @@
             <building></building>
         </tilde>        <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
-        </tilde>
-        <tilde>
-            <height>1</height>
-            <terrain>GRASSLAND</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
-        </tilde>
-        <tilde>
-            <height>1</height>
-            <terrain>GRASSLAND</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
-        </tilde>
-        <tilde>
-            <height>1</height>
             <terrain>SWAMP</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
             <object></object>
             <unit></unit>
             <building></building>
         </tilde>        
         <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
+            <terrain>GRASSLAND</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -92,7 +92,7 @@
         </tilde>
         <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
+            <terrain>SWAMP</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -151,7 +151,7 @@
             <building></building>
         </tilde>        <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
+            <terrain>SWAMP</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -179,28 +179,28 @@
         </tilde>        
         <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
-        </tilde>
-        <tilde>
-            <height>1</height>
-            <terrain>GRASSLAND</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
-        </tilde>
-        <tilde>
-            <height>1</height>
-            <terrain>GRASSLAND</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
-        </tilde>
-        <tilde>
-            <height>1</height>
             <terrain>SWAMP</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>GRASSLAND</terrain>
+            <object></object>
+            <unit></unit>
+            <building></building>
+        </tilde>
+        <tilde>
+            <height>1</height>
+            <terrain>OCEAN</terrain>
             <object></object>
             <unit></unit>
             <building></building>

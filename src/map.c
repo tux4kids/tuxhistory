@@ -38,10 +38,18 @@ static void str_upper(char *);
 
 static int init_map_hash(void)
 {
+    th_obj object_types[NUM_OF_TYPES];
+
     map_table_hash = make_hashtable(hashtable_default_hash, 30);
 
     if(map_table_hash == NULL)
         return 1;
+
+    object_types[FOREST].type = FOREST;
+    object_types[FOREST].live = 30;
+    object_types[FOREST].defence = 0;
+    object_types[FOREST].attack = 0;
+    object_types[FOREST].move = 0;
 
     hashtable_add(map_table_hash, "FOREST_MIXED", FOREST_MIXED);
     hashtable_add(map_table_hash, "FOREST_TROPICAL", FOREST_TROPICAL);
@@ -55,7 +63,6 @@ static int init_map_hash(void)
     hashtable_add(map_table_hash, "HIGHSEA", HIGHSEA);
     hashtable_add(map_table_hash, "TUNDRA", TUNDRA);
     hashtable_add(map_table_hash, "SWAMP", SWAMP);
-    hashtable_add(map_table_hash, "UNEXPLORED", UNEXPLORED);
     hashtable_add(map_table_hash, "DESERT", DESERT);
     hashtable_add(map_table_hash, "GRASSLAND", GRASSLAND);
     hashtable_add(map_table_hash, "ARCTIC", ARCTIC);
@@ -462,8 +469,8 @@ int generate_map(void)
     // Prepare the variables...
     SDL_FillRect(map_image, NULL, SDL_MapRGB(map_image->format, 0, 0 ,0));
 
-    dest.x = (map_image->w/2)-(terrain[TUNDRA_CENTER_1]->w/2);
-    dest.y = map_image->h-terrain[TUNDRA_CENTER_1]->h;
+    dest.x = map_image->w/2-terrain[TUNDRA_CENTER_1]->w/2;
+    dest.y = 0;
 
     //printf("[%d,%d]\n", x_tildes, y_tildes);
 
@@ -471,11 +478,11 @@ int generate_map(void)
     y = dest.y;
     k = 0;
     
-    //This loop blits all tildes to map_image.
-    for (i = x_tildes; i >= 0; i--)
+    //This loop blits all tiles to map_image.
+    for (i = 0; i <= x_tildes; i++)
     {
         oe = k + 1;
-        for (j = y_tildes; j >= 0; j--)
+        for (j = 0; j <= y_tildes; j++)
         {
             k++;
 
@@ -503,16 +510,16 @@ int generate_map(void)
             }
 
             printf(".");
-            //Prepare te new coords for the next tilde
+            //Prepare te new coords for the next tile
             dest.x = dest.x - (terrain[*img_enums]->w/2);
-            dest.y = dest.y - (terrain[*img_enums]->h/2);
+            dest.y = dest.y + (terrain[*img_enums]->h/2);
             
             FREE(context_array);
             FREE(img_enums);
 
         }
         x = x + (terrain[TUNDRA_CENTER_1]->w/2);
-        y = y - (terrain[TUNDRA_CENTER_1]->h/2);
+        y = y + (terrain[TUNDRA_CENTER_1]->h/2);
         dest.x = x;
         dest.y = y;
 

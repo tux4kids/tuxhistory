@@ -39,6 +39,8 @@ enum{
     NUM_OF_TYPES
 };
 
+
+
 /*Global tuxhistory vars*/
 typedef struct {
     int id;
@@ -48,7 +50,8 @@ typedef struct {
     char name[30];
     int defence;
     int attack;
-    int move; 
+    int move;
+    int player;
 }th_obj;
 // th_map is the main data strucutre
 // th_map_tilde specifies the terrain
@@ -57,10 +60,10 @@ typedef struct {
 typedef struct {
     int height; //Height of this tilde
     int terrain;
-    //th_obj *obj;// Pointer to object
 }th_map;
 
 struct hashtable *map_table_hash; //Values of Terrains and objects
+list_node *list_nodes;
 int flag_map; // Map flag: is a map surface allocated? 
 int x_tildes;
 int y_tildes;
