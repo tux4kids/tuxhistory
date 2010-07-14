@@ -27,18 +27,16 @@
     ISO_SE
 }
 
-typedef struct gelement{
+typedef struct gnode{
     int anchor_x, anchor_y; //Anchors in main map surface.
+    int visible;
+    struct gnode *nodes[8];
     th_obj *object;
-    th_map *terrain;
+    int terrain;
 }gelement;
 
+gnode ***gmaps;
 
-typedef struct gnode{
-    struct gnode *nodes[8];
-    gelement *data;
-}gnode;
-
-
+int gmaps_alloc(void);
 
 #define GRAPHS_H

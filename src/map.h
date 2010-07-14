@@ -89,4 +89,6 @@ void th_draw_map(void);
 
 //char *th_serialize_map(th_map **);
 
+th_vector get_context_tildes(th_point point, int iso_dir);
+
 #endif

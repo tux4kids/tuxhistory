@@ -32,6 +32,7 @@ static int init_map_hash(void);
 static void end_map_hash(void);
 static int get_terrain_enum(char *);
 static int *get_context_tildes(int, int);
+static th_vector get_iso_vector(int dir)
 static int *get_draw_tilde(int *, int);
 static int get_tile_num(int, int);
 static void str_upper(char *);
@@ -321,6 +322,89 @@ static int *get_context_tildes(int x, int y)
 
     return a; 
 }        
+
+// Returns a th_vector that contains a vector
+// representing the tile walking of a isometric
+// direction
+static th_vector get_iso_vector(int dir)
+{
+    th_vector vector;
+    if(dir == ISO_NW)
+    {
+        vector.x = -1;
+        vector.y = -1;
+    }
+    else if(dir == ISO_N)
+    {
+        vector.x = 0;
+        vector.y = -1;
+    }
+    else if(dir == ISO_NE)
+    {
+        vector.x = 1;
+        vector.y = -1;
+    }
+    else if(dir == ISO_W)
+    {
+        vector.x = -1;
+        vector.y = 0;
+    }
+    else if(dir == ISO_E)
+    {
+        vector.x = 1;
+        vector.y = 0;
+    }
+    else if(dir == ISO_SW)
+    {
+        vector.x = -1;
+        vector.y = 1;
+    }
+    else if(dir == ISO_S)
+    {
+        vector.x = 0;
+        vector.y = 1;
+    }
+    else if(dir == ISO_SE)
+    {
+        vector.x = 1;
+        vector.y = 1;
+    }
+    else
+    {
+        vector.x = -2;
+        vector.y = -2;
+    }
+    return vector;
+}
+
+//Uses th_map and returns a vector datatype that gives
+//the move if posible. -2 if the move is not possible
+//in this direction, 1,0, and -1 are valid moves.
+
+th_vector get_context_tildes(th_point point, int iso_dir)
+{
+    int i;
+    th_vector vector;
+
+    vector = get_iso_vector(iso_dir);
+    point.x = point.x + vector.x;
+    point.y = point.y + vector.y;
+
+    if (point.x < 0 || 
+        point.x > x_tildes)
+    {
+        vector.x = -2;
+        vector.y = -2;
+    }
+    if (point.y < 0 ||
+        point.y > y_tildes)
+    {
+        vector.x = -2;
+        vector.y = -2;
+    }
+    return vector;
+}
+        
 
 // return a array with the terrain enum values to draw the map.
 static int *get_draw_tilde(int *array, int oe)

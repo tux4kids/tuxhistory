@@ -43,10 +43,16 @@ typedef struct {
   int cur;
 } sprite;
 
-typedef struct {
+typedef struct th_point{
     int x;
     int y;
 } th_point;
+
+typedef struct th_vector{
+    int x;
+    int y;
+} th_vector;
+
 
 /* Global data gets 'externed' here: */
 
