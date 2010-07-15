@@ -17,13 +17,15 @@
 #include "graphs.h"
 #include "players.h"
 
+static int gmaps_alloc(int xsize, int ysize, int maps);
+
 //gmaps is a tree dimensional array og gnode's, each 
 //gnode must be linked with their niehboors.
 static int gmaps_alloc(int xsize, int ysize, int maps)
 {
     int i,j;
     gmaps = (gnode ***)malloc(maps * sizeof(gnode **));
-    if(map[i] == NULL)
+    if(gmaps[i] == NULL)
     {
         printf("Error: Allocation of objects faild!\n");
         return 1; 
@@ -32,7 +34,7 @@ static int gmaps_alloc(int xsize, int ysize, int maps)
     for(i = 0; i < maps; i++)
     {
         gmaps[i] = (gnode **)malloc(xsize * sizeof(gnode *));
-        if(map[i] == NULL)
+        if(gmaps[i] == NULL)
         {
             printf("Error: Allocation of objects faild!\n");
             return 1; 
@@ -40,7 +42,7 @@ static int gmaps_alloc(int xsize, int ysize, int maps)
         for(j = 0; j < ysize; j++)
         {
             gmaps[i][j] = (gnode *)malloc(ysize * sizeof(gnode));
-            if(map[i][j] == NULL)
+            if(gmaps[i][j] == NULL)
             {
                 printf("Error: Allocation of objects faild!\n");
                 return 1; 
@@ -53,7 +55,10 @@ static int gmaps_alloc(int xsize, int ysize, int maps)
 
 int create_gmaps(int players)
 {
-    int i,j,k;
+    int i,j,k,l;
+    int count;
+    th_point point;
+    th_vector vector;
     
     players++;
     if(gmaps_alloc(x_tildes, y_tildes, players))
@@ -62,11 +67,34 @@ int create_gmaps(int players)
         return 1;
     }
 
-    for(i = 0; i < players; i++)
+    for(i = 1; i < players; i++)
     {
+        count = 0;
         for(j = 0; j < x_tildes; j++)
         {
-            for
+            for(k = 0; k < y_tildes; k++)
+            {
+                count++;
+                gmaps[i][j][k].visible = 1;
+                for(l = 0; l < NUM_DIRS; l++)
+                {
+                    point.x = j;
+                    point.y = k;
+                    vector = get_vector(point, l);
+                    if(vector.x != -2 && vector.y != -2)
+                        gmaps[i][j][k].nodes[l] = &gmaps[0][j+vector.x][k+vector.y];
+                    else
+                        gmaps[i][j][k].nodes[l] = NULL; 
+                    if(i > 0)
+                        gmaps[i][j][k].visible = 1;
+                    else
+                        gmaps[i][j][k].visible = 0;
+                }
+                gmaps[i][j][k].id = count;
+            }
+        }
+    }
+}
 
     
 

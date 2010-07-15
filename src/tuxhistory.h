@@ -4,10 +4,7 @@
   For tuxhistory
   Contains global data for configuration
 
-  Author: David Bruce <davidstuartbruce@gmail.com>, (C) 2006
-  
-  Modified by Jesús Mager <fongog@gmail.com> 2010
-
+  Author:  Jesús Mager <fongog@gmail.com> 2010
 
   Part of "Tux4Kids" Project
   http://www.tux4kids.org/
@@ -42,16 +39,6 @@ typedef struct {
   int num_frames;
   int cur;
 } sprite;
-
-typedef struct th_point{
-    int x;
-    int y;
-} th_point;
-
-typedef struct th_vector{
-    int x;
-    int y;
-} th_vector;
 
 
 /* Global data gets 'externed' here: */

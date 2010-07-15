@@ -13,6 +13,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+#include "map.h"
 #include "llist.h"
 
 list_node *list_add(list_node **ptr, th_obj obj)
@@ -30,7 +31,7 @@ list_node *list_add(list_node **ptr, th_obj obj)
 
     node->next = *ptr;
     *ptr = node;
-    node->object = obj;
+    node->obj = obj;
     return node;
 }
 
@@ -53,7 +54,7 @@ list_node **list_search(list_node **node, int data)
 
     while(*node != NULL)
     {
-        if((*node)->object.id == data)
+        if((*node)->obj.id == data)
         {
             return node;
         }

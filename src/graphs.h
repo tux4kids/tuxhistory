@@ -16,6 +16,7 @@
 
 #include "map.h"
 
+enum
 {
     ISO_NW,
     ISO_N,
@@ -24,19 +25,25 @@
     ISO_E,
     ISO_SW,
     ISO_S,
-    ISO_SE
-}
+    ISO_SE,
+    NUM_DIRS
+};
 
 typedef struct gnode{
+    int id;
     int anchor_x, anchor_y; //Anchors in main map surface.
     int visible;
     struct gnode *nodes[8];
     th_obj *object;
     int terrain;
-}gelement;
+}gnode;
 
+//gnode gmaps[player][x][y]
 gnode ***gmaps;
 
-int gmaps_alloc(void);
+//Introduce the number of players for a game, abt create_gmaps()
+//will create a new graphs mesh in a 3 dimensional array: 
+//This function uses **map as reference and x_size y_size
+int create_gmaps(int players);
 
-#define GRAPHS_H
+#endif GRAPHS_H

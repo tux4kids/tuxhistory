@@ -25,6 +25,7 @@
 #include "map.h"
 #include "hashtable.h"
 #include "llist.h"
+#include "graphs.h"
 
 SDL_Surface* map_image;
 
@@ -32,7 +33,7 @@ static int init_map_hash(void);
 static void end_map_hash(void);
 static int get_terrain_enum(char *);
 static int *get_context_tildes(int, int);
-static th_vector get_iso_vector(int dir)
+static th_vector get_iso_vector(int dir);
 static int *get_draw_tilde(int *, int);
 static int get_tile_num(int, int);
 static void str_upper(char *);
@@ -314,12 +315,6 @@ static int *get_context_tildes(int x, int y)
             *(a + 8) = map[x+1][y+1].terrain;
         }
     }
-    /*for (i=0; i<9; i++)
-    {
-        printf("%d ", *(a + i));
-    }*/
-    ////printf("\n");
-
     return a; 
 }        
 
@@ -381,7 +376,7 @@ static th_vector get_iso_vector(int dir)
 //the move if posible. -2 if the move is not possible
 //in this direction, 1,0, and -1 are valid moves.
 
-th_vector get_context_tildes(th_point point, int iso_dir)
+th_vector get_vector(th_point point, int iso_dir)
 {
     int i;
     th_vector vector;

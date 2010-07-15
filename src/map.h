@@ -21,7 +21,8 @@
 #ifndef MAP_H
 #define MAP_H
 
-//#include "hashtable.h"
+#include "hashtable.h"
+#include "globals.h"
 
 // List of objects that can be used
 // in create_object. 
@@ -39,10 +40,8 @@ enum{
     NUM_OF_TYPES
 };
 
-
-
 /*Global tuxhistory vars*/
-typedef struct {
+typedef struct th_obj{
     int id;
     int x, y; // (x,y) in the th_map array
     int type; // using the enum NUM_OF_TYPES of map.h
@@ -53,17 +52,17 @@ typedef struct {
     int move;
     int player;
 }th_obj;
+
 // th_map is the main data strucutre
 // th_map_tilde specifies the terrain
 // of the isometric map
 
-typedef struct {
+typedef struct th_map{
     int height; //Height of this tilde
     int terrain;
 }th_map;
 
 struct hashtable *map_table_hash; //Values of Terrains and objects
-list_node *list_nodes;
 int flag_map; // Map flag: is a map surface allocated? 
 int x_tildes;
 int y_tildes;
@@ -84,11 +83,7 @@ void free_map(void);
 
 void th_draw_map(void);
 
-//Generates the th_map from a XML string.
-//th_map** th_make_map(char *);
 
-//char *th_serialize_map(th_map **);
-
-th_vector get_context_tildes(th_point point, int iso_dir);
+th_vector get_vector(th_point point, int iso_dir);
 
 #endif

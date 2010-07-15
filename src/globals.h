@@ -165,6 +165,17 @@ enum {
   NUM_HIGH_SCORE_LEVELS
 };
 
+typedef struct th_point{
+    int x;
+    int y;
+} th_point;
+
+typedef struct th_vector{
+    int x;
+    int y;
+} th_vector;
+
+
 
 #define NAME_BUF_SIZE 200
 /* data for 'Training Academy' lessons: */
