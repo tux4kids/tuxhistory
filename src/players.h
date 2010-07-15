@@ -1,18 +1,33 @@
 #ifndef PLAYERS_H
 #define PLAYERS_H
 
+#include "globals.h"
 #include "graphs.h"
 
-typedef struct players{
-    char name[50];
+#define NAME_LEN 50
+
+typedef struct th_players{
+    char name[NAME_LEN];
     int player_num;
     int civ;
     int max_pop;
+    int pop;
+    int stone;
+    int wood;
+    int food;
+    int gold;
     gnode *pos;
-}players;
+}th_players;
 
 int num_of_players;
+int last_player;
+th_players *player;
 
-players *player;
+int init_players(int players);
+int add_player(char *name, int civ, int max_pop, int stone, 
+                int wood, int food, int gold, th_point pos);
+void clean_players(int);
+
+
 
 #endif

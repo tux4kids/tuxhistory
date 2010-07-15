@@ -486,8 +486,6 @@ static int *get_draw_tilde(int *array, int oe)
                     printf("Error parsing tiles\n");
                     return NULL;
                 }
-                //printf("NUM: %d, %d, %d\n", *(array + i), (NUM_COMPTILDE - 1), 
-                //    *(array + i) * (NUM_COMPTILDE) + j);
                 *(a + i) = *(array + i) * (NUM_COMPTILDE) + j;
             }
             else

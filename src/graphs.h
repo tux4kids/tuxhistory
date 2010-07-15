@@ -33,6 +33,8 @@ typedef struct gnode{
     int id;
     int anchor_x, anchor_y; //Anchors in main map surface.
     int visible;
+    int explored;
+    int usable;
     struct gnode *nodes[8];
     th_obj *object;
     int terrain;
@@ -45,5 +47,12 @@ gnode ***gmaps;
 //will create a new graphs mesh in a 3 dimensional array: 
 //This function uses **map as reference and x_size y_size
 int create_gmaps(int players);
+
+int init_gmaps(void);
+
+int update_gmaps(void);
+
+// Use this function to cleanup after a game.
+void clean_gmaps(int players);
 
 #endif GRAPHS_H

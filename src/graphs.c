@@ -18,6 +18,7 @@
 #include "players.h"
 
 static int gmaps_alloc(int xsize, int ysize, int maps);
+static void gmaps_free(int xsize, int ysize, int maps);
 
 //gmaps is a tree dimensional array og gnode's, each 
 //gnode must be linked with their niehboors.
@@ -47,10 +48,22 @@ static int gmaps_alloc(int xsize, int ysize, int maps)
                 printf("Error: Allocation of objects faild!\n");
                 return 1; 
             }
-
         }
     }
     return 0;
+}
+
+static void gmaps_free(int xsize, int ysize, int maps)
+{
+    int i, j;
+    for(i = 0; i < maps; i++)
+    {
+        for(j = 0; j < xsize; j++)
+        {
+            FREE(gmaps[i][j]);
+        }
+        FREE(gmaps[i]);
+    }
 }
 
 int create_gmaps(int players)
@@ -82,13 +95,23 @@ int create_gmaps(int players)
                     point.y = k;
                     vector = get_vector(point, l);
                     if(vector.x != -2 && vector.y != -2)
+                    {
                         gmaps[i][j][k].nodes[l] = &gmaps[0][j+vector.x][k+vector.y];
+                    }
                     else
-                        gmaps[i][j][k].nodes[l] = NULL; 
+                    {
+                        gmaps[i][j][k].nodes[l] = NULL;
+                    }
                     if(i > 0)
+                    {
                         gmaps[i][j][k].visible = 1;
+                        gmaps[i][j][k].explored = 1;
+                    }
                     else
+                    {
                         gmaps[i][j][k].visible = 0;
+                        gmaps[i][j][k].explored = 0;
+                    }
                 }
                 gmaps[i][j][k].id = count;
             }
@@ -96,26 +119,22 @@ int create_gmaps(int players)
     }
 }
 
-    
-
-
-
-
-
-
-void cleanup_gmaps(int maps, int xsize)
+static void gmaps_free(int xsize, int ysize, int maps)
 {
-    int i,j;
+    int i, j;
     for(i = 0; i < maps; i++)
     {
         for(j = 0; j < xsize; j++)
         {
             FREE(gmaps[i][j]);
         }
+        FREE(gmaps[i]);
     }
 }
 
-
-
+void clean_gmaps(int players)
+{
+   gmaps_free(x_tildes, y_tildes, players);
+}
 
 
