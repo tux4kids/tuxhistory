@@ -175,6 +175,8 @@ int objects_xml(FILE *fp)
 
     fclose(fp);
 
+    object_counter = 0;
+
     return 0;
 }
 

@@ -23,6 +23,7 @@
 
 #include "hashtable.h"
 #include "globals.h"
+#include "objects.h"
 
 
 /*Global tuxhistory vars*/
@@ -34,6 +35,7 @@
 typedef struct th_map{
     int height; //Height of this tilde
     int terrain;
+    //int obj_id;
 }th_map;
 
 struct hashtable *map_table_hash; //Values of Terrains and objects

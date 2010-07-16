@@ -84,7 +84,7 @@ int map_xml(FILE *fp)
 
     object_ptr = NULL;
     list_nodes = NULL;
-   
+
     tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
     if(init_map_hash())
     {
@@ -157,7 +157,14 @@ int map_xml(FILE *fp)
                     
                     printf(" *%s ", object_ptr->description);
                     tmp_obj = *object_ptr;
+                    tmp_obj.id = object_counter;
+                    tmp_obj.x = x;
+                    tmp_obj.y = y;
                     list_add(&list_nodes, tmp_obj);
+
+                    //map[i][j].obj_id = object_counter;
+
+                    object_counter++;
                 }
                 else
                 {
@@ -585,7 +592,6 @@ int generate_map(void)
         {
             k++;
 
-            printf(" (%d,%d) (%d,%d)\n", dest.x, dest.y, i, j);
 
             context_array = get_context_tildes(i,j);
             if (context_array == NULL)
@@ -612,6 +618,9 @@ int generate_map(void)
             //Write values to gmaps
             anchor.x = dest.x + terrain[*img_enums]->w/2;
             anchor.y = dest.y + terrain[*img_enums]->h/2;
+
+            printf(" Tile dest in px: (%d,%d) from: (%d,%d) with anchori (%d,%d)\n", 
+                    dest.x, dest.y, i, j, anchor.x, anchor.y);
 
             gmaps[0][i][j].anchor = anchor;
             

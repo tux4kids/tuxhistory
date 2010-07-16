@@ -197,14 +197,14 @@ struct hashtable *make_hashtable(unsigned int (*hash) (const char*),
     if(table) {
         table->bucket = NEWARRAY(struct hashtable_entry*,
                                 nbuckets);
-        if(!table->bucket) {
-        free(table);
-        return NULL;
+        if(!table->bucket) 
+        {
+            free(table);
+            return NULL;
+        }
+        table->hash = hash;
+        table->nbuckets = nbuckets;
     }
-    table->hash = hash;
-    table->nbuckets = nbuckets;
-    }
-    
     return table;
-    }
+}
 

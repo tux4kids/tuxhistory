@@ -34,8 +34,10 @@
 #include "options.h"
 #include "SDL_extras.h"
 #include "pixels.h"
+#include "graphs.h"
 #include "map.h"
 #include "objects.h"
+#include "llist.h"
 
 
 #define FPS 15 /* 15 frames per second */
@@ -224,6 +226,7 @@ int game(void)
 static void game_draw(void)
 {
     SDL_Rect dest;
+    list_node *obj_node;
 
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
@@ -240,7 +243,46 @@ static void game_draw(void)
 
     dest.x = 0;
     dest.y = 0;
+
+    /*TODO: Separate each Layer drawing in different functions.*/
+
+
+    /*First layer: terrain*/
     SDL_BlitSurface(map_image, &origin, screen, &dest);
+
+    /*Second layer: objects*/
+
+    obj_node = list_nodes;
+    if(obj_node != NULL)
+    {
+        do{
+            //Debug...
+            //printf("Nodes: (%d, %d)\n", obj_node->obj.x, obj_node->obj.y);
+            if( gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x > origin.x -
+                    objects[obj_node->obj.name_enum]->w/2&&
+                gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y > origin.y - 
+                    objects[obj_node->obj.name_enum]->w/2&&
+                gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x < origin.x + origin.w &&
+                gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y < origin.y + origin.w)
+            {
+                dest.x = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x - 
+                    origin.x - objects[obj_node->obj.name_enum]->w/2;
+                dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
+                    origin.y - objects[obj_node->obj.name_enum]->h/2;
+                SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
+                /*printf("x: %d y: %d anchors, x: %d y: %d",
+                        obj_node->obj.x,
+                        obj_node->obj.y,
+                        gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x,
+                        gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y);*/
+            }
+            obj_node = obj_node->next;
+        }while(obj_node != NULL);
+    }
+   
+
+
+    /*Third layer: User Interface*/
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
