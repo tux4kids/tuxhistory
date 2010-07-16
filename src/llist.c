@@ -66,6 +66,20 @@ list_node **list_search(list_node **node, int data)
     return NULL;
 }
 
+void list_print(list_node *node)
+{
+    if (node == NULL)
+    {
+        printf("list is empty\n");
+    }
+    while (node != NULL)
+    {
+        printf("print %p %p %s\n", node, node->next, node->obj.name);
+        node = node->next;
+    }
+}
+
+
 void list_clean(list_node **node)
 {
     while(*node != NULL)

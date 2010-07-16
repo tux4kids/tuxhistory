@@ -132,46 +132,46 @@ static int game_init(void)
     user_quit_received = 0;
     SDL_quit_received = 0;
     escape_received = 0;
-    
-    fp = LoadMap("map");
-    if(fp == NULL)
-    {
-        DEBUGMSG(debug_game, "File not found!");
-        return 1;
-    }
-
-    
-    if(map_xml(fp))
-    {
-        printf("Error parsing file!");
-        DEBUGMSG(debug_game, "Error loading the map file.\n");
-        return 1;
-    }
 
     fp = LoadObj("objects");
     if(fp == NULL)
     {
+        printf("File not found!\n");
         DEBUGMSG(debug_game, "File not found!");
         return 1;
     }
+    printf("Object files in memory!\n");
     if(objects_xml(fp))
     {
         printf("Error parsing file!");
         DEBUGMSG(debug_game, "Error loading the objects description file.\n");
         return 1;
     }
+    printf("Object file parsed.\n");
+   
+    fp = LoadMap("map");
+    if(fp == NULL)
+    {
+        DEBUGMSG(debug_game, "File not found!");
+        return 1;
+    }
+    printf("Map file in memory.\n");
 
+    if(map_xml(fp))
+    {
+        printf("Error parsing file!");
+        DEBUGMSG(debug_game, "Error loading the map file.\n");
+        return 1;
+    }
+    printf("Map file parsed!\n");
     if(create_gmaps(2))
     {
         printf("Couldn't generate grpah mesh!\n");
     }
     generate_map();
 
-    
-
     return 0;
 }
-
 
 int game(void)
 {

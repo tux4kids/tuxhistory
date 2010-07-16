@@ -120,7 +120,8 @@ extern const int debug_all;
 #define MAX_X_TILDES 100
 #define MAX_Y_TILDES 100
 
-#define MAX_OBJECTS 100
+#define MAX_OBJECTS 100000
+#define MAX_DEF_OBJECTS 1000
 
 /* These values are hard-coded and used 'as is' by the program */
 /* (i.e. these behaviors require recompilation to change)   */ 

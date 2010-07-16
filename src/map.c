@@ -22,6 +22,7 @@
 
 #include "globals.h"
 #include "fileops.h"
+#include "objects.h"
 #include "map.h"
 #include "hashtable.h"
 #include "llist.h"
@@ -78,11 +79,18 @@ int map_xml(FILE *fp)
     mxml_node_t *inode;
     mxml_node_t *jnode;
 
+    th_obj *object_ptr;
+    th_obj tmp_obj;
+
+    object_ptr = NULL;
     list_nodes = NULL;
    
     tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
     if(init_map_hash())
+    {
+        printf("Couldn't initalize init_map_hash()\n");
         return 1;
+    }
 
     x = 0;
     y = 0;
@@ -106,21 +114,28 @@ int map_xml(FILE *fp)
             // Get terrain value
             node = mxmlFindElement(jnode, jnode, "terrain",
                     NULL, NULL, MXML_DESCEND);
-    
-            //value = get_terrain_enum(node->child->value.text.string);
-
+            
+            if(node == NULL)
+            {
+                printf("Error: No terrain field...");
+                return 0;
+            }
+            value = NULL;
             value = (int)hashtable_lookup(map_table_hash, node->child->value.text.string);
-            if(value != (int)-1)
+            if(value != NULL)
             {
                 map[x][y].terrain = value;
                 printf("%s",node->child->value.text.string);
             }
 
-            
-             
             node = mxmlFindElement(jnode, jnode, "height",
                     NULL, NULL, MXML_DESCEND);
             
+            if(node == NULL)
+            {
+                printf("Error: field not found...");
+                //return 0;
+            }
             //printf("%d",node->child->value.integer);
 
             if(node->child->value.integer >= 0)
@@ -133,11 +148,22 @@ int map_xml(FILE *fp)
             // Get objects
             node = mxmlFindElement(jnode, jnode, "object",
                     NULL, NULL, MXML_DESCEND);
-
             if(node->child != NULL)
             {
-                if(node->child->value.text.string)
+                object_ptr = hashtable_lookup(objects_hash, node->child->value.text.string);
+                if(object_ptr != NULL)
+                {
                     printf("(%s", node->child->value.text.string);
+                    
+                    printf(" *%s ", object_ptr->description);
+                    tmp_obj = *object_ptr;
+                    list_add(&list_nodes, tmp_obj);
+                }
+                else
+                {
+                    printf("Wrong object name\n");
+                }
+                
                 value=(int)hashtable_lookup(map_table_hash, node->child->value.text.string);
                 if(value!=-1)
                 {
@@ -174,6 +200,7 @@ int map_xml(FILE *fp)
         return 1;
     }
     
+    list_print(list_nodes);
     free_hashtable(map_table_hash);
 
     mxmlDelete(jnode);

@@ -600,7 +600,7 @@ void data_memory_alloc(void)
 {
     int i;
     object = NULL;
-    object = (th_obj*)malloc(MAX_OBJECTS * sizeof(th_obj));
+    object = (th_obj*)malloc(MAX_DEF_OBJECTS * sizeof(th_obj));
     if (object == NULL)
     {
         DEBUGMSG(debug_setup, "Allocation of game objects faild!\n");

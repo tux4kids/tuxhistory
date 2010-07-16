@@ -24,6 +24,7 @@ typedef struct list_node{
 list_node *list_add(list_node **, th_obj);
 void list_remove(list_node **);
 list_node **list_search(list_node **, int);
+void list_print(list_node *);
 void list_clean(list_node **);
  
 // This list contains all objects that we load

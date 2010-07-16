@@ -31,6 +31,7 @@ typedef struct th_obj{
 int object_counter;
 struct hashtable *obj_table_hash; //Strings to enums
 struct hashtable *objects_hash; //Names to objects
+th_obj *object;
 
 int objects_xml(FILE *fp);
 

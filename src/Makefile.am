@@ -36,7 +36,7 @@ tuxhistory_SOURCES = tuxhistory.c \
 	options.c	\
 	credits.c	\
 	hashtable.c \
-	highscore.c	\
+	highscore.c	*/\
 	llist.c		\
 	graphs.c	\
 	linewrap.c	\

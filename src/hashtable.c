@@ -180,7 +180,7 @@ void *hashtable_lookup(const struct hashtable *table,
         entry = entry->next;
     }
     
-    return entry ? entry->value : -1;
+    return entry ? entry->value : NULL;
 }
     
 /** Create a hash table.
