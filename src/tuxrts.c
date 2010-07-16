@@ -2,8 +2,11 @@
 #include "loaders.h"
 #include "graphs.h"
 
-int tuxrts_mapinit(char *map_name, th_players *players)
+int tuxrts_init(char *map_name, th_players *players)
 {
+
+    object_counter = 0;
+
     fp = LoadMap("map");
     if(fp == NULL)
     {
@@ -19,6 +22,10 @@ int tuxrts_mapinit(char *map_name, th_players *players)
         return 1;
     }
 
+    if(create_gmaps(2))
+    {
+        return 1;
+    }
     generate_map();
     return 0;
 }

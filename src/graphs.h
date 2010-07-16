@@ -14,6 +14,7 @@
 #ifndef GRAPHS_H
 #define GRAPHS_H
 
+#include "globals.h"
 #include "map.h"
 
 enum
@@ -31,10 +32,10 @@ enum
 
 typedef struct gnode{
     int id;
-    int anchor_x, anchor_y; //Anchors in main map surface.
+    th_point anchor; //Anchors in main map surface.
     int visible;
     int explored;
-    int usable;
+    int usable; 
     struct gnode *nodes[8];
     th_obj *object;
     int terrain;

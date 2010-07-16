@@ -13,7 +13,7 @@
 #ifndef DSTRUCTS_H 
 #define DSTRUCTS_H
 
-#include "map.h"
+#include "objects.h"
 #include "tuxhistory.h"
 
 typedef struct list_node{

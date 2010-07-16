@@ -47,12 +47,6 @@ static int init_map_hash(void)
     if(map_table_hash == NULL)
         return 1;
 
-    object_types[FOREST].type = FOREST;
-    object_types[FOREST].live = 30;
-    object_types[FOREST].defence = 0;
-    object_types[FOREST].attack = 0;
-    object_types[FOREST].move = 0;
-
     hashtable_add(map_table_hash, "FOREST_MIXED", FOREST_MIXED);
     hashtable_add(map_table_hash, "FOREST_TROPICAL", FOREST_TROPICAL);
     hashtable_add(map_table_hash, "FOREST_CONIFER", FOREST_CONIFER);
@@ -85,6 +79,8 @@ int map_xml(FILE *fp)
     mxml_node_t *node;
     mxml_node_t *inode;
     mxml_node_t *jnode;
+
+    list_nodes = NULL;
    
     tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
     if(init_map_hash())
@@ -115,8 +111,8 @@ int map_xml(FILE *fp)
     
             //value = get_terrain_enum(node->child->value.text.string);
 
-            value = hashtable_lookup(map_table_hash, node->child->value.text.string);
-            if(value != -1)
+            value = (int)hashtable_lookup(map_table_hash, node->child->value.text.string);
+            if(value != (int)-1)
             {
                 map[x][y].terrain = value;
                 printf("%s",node->child->value.text.string);
@@ -146,7 +142,9 @@ int map_xml(FILE *fp)
                     printf("(%s", node->child->value.text.string);
                 value=hashtable_lookup(map_table_hash, node->child->value.text.string);
                 if(value!=-1)
+                {
                     printf(" Hash object: %d) ", value);
+                }
             }
 
             y++;
@@ -522,6 +520,7 @@ static int get_tile_num(int i, int k)
 int generate_map(void)
 {
     SDL_Rect dest;
+    th_point anchor;
     int i, j, k, l;
     int oe;
     int x, y;
@@ -586,7 +585,29 @@ int generate_map(void)
                 }
             }
 
-            printf(".");
+            
+            //Write values to gmaps
+            anchor.x = dest.x + terrain[*img_enums]->w/2;
+            anchor.y = dest.y + terrain[*img_enums]->h/2;
+
+            gmap[0][i][j].anchor = anchor;
+            
+            // TODO: This is better in graph.h
+            if(map[i][j].terrain == HIGHSEA ||
+               map[i][j].terrain == OCEAN)
+            {
+                gmap[0][i][j].usable = 0;
+            }
+            else
+            {
+                gmap[0][i][j].usable = 1;
+            }
+
+            gmap[0][i][j].terrain = map[i][j].terrain;
+
+
+            
+
             //Prepare te new coords for the next tile
             dest.x = dest.x - (terrain[*img_enums]->w/2);
             dest.y = dest.y + (terrain[*img_enums]->h/2);

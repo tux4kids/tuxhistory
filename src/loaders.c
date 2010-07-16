@@ -654,7 +654,7 @@ Mix_Music* LoadMusic(char *datafile )
   return tempMusic;
 }
 
-/* load_map: Load map from a XML datafile */
+/* LoadMap: Load map from a XML datafile */
 FILE *LoadMap(const char* name)
 {
   FILE *fp = NULL;
@@ -668,7 +668,7 @@ FILE *LoadMap(const char* name)
 
   if(strcmp(fn + fn_len - 4, ".xml"))
   {
-    DEBUGMSG(debug_loaders, "load_map(): %s is not an TuxHistory XML Map file\n", fn);
+    DEBUGMSG(debug_loaders, "LoadMap(): %s is not an TuxHistory XML Map file\n", fn);
     return NULL;
   }
 
@@ -676,10 +676,38 @@ FILE *LoadMap(const char* name)
 
   if(fp == NULL)
   {
-    DEBUGMSG(debug_loaders, "load_image(): file_name is NULL, exiting.\n");
+    DEBUGMSG(debug_loaders, "LoadMap(): file_name is NULL, exiting.\n");
     printf("Error at trying to find map file!\n");
     return NULL;
   }
   return fp;
 }
 
+/* LoadObj: Load object decription from a XML datafile */
+FILE *LoadObj(const char* name)
+{
+  FILE *fp = NULL;
+  char fn[PATH_MAX];
+  int fn_len;
+  int i;
+
+  /* check if objects file is present */
+  sprintf(fn, "%s/objects/%s.xml", DATA_PREFIX, name);
+  fn_len = strlen(fn);
+
+  if(strcmp(fn + fn_len - 4, ".xml"))
+  {
+    DEBUGMSG(debug_loaders, "LoadObj(): %s is not an TuxHistory XML objects description file\n", fn);
+    return NULL;
+  }
+
+  fp = fopen(fn, "r");
+
+  if(fp == NULL)
+  {
+    DEBUGMSG(debug_loaders, "LoadObj(): file_name is NULL, exiting.\n");
+    printf("Error at trying to find objects file!\n");
+    return NULL;
+  }
+  return fp;
+}

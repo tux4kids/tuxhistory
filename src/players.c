@@ -57,7 +57,7 @@ int add_player(char *name, int civ, int max_pop, int stone,
         printf("add_player(): gmap isn't allocated, cant giva a position in map to player!\n");
         return 1;
     }
-    player[last_player].pos = &gmap[0][point.x][point.y];
+    player[last_player].pos = &gmap[0][pos.x][pos.y];
 
     return 0;
 }   

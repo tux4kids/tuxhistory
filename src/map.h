@@ -24,34 +24,8 @@
 #include "hashtable.h"
 #include "globals.h"
 
-// List of objects that can be used
-// in create_object. 
-// TODO: (maybe this should be in game.c
-//          with int create_object(int type, int x, int y)
-//          prototype...)
-//       
-
-enum{
-    FOREST,
-    GOLD,
-    STONE,
-    BUILDING,
-    UNI,
-    NUM_OF_TYPES
-};
 
 /*Global tuxhistory vars*/
-typedef struct th_obj{
-    int id;
-    int x, y; // (x,y) in the th_map array
-    int type; // using the enum NUM_OF_TYPES of map.h
-    int live; // 100 to 0 
-    char name[30];
-    int defence;
-    int attack;
-    int move;
-    int player;
-}th_obj;
 
 // th_map is the main data strucutre
 // th_map_tilde specifies the terrain

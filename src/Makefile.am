@@ -29,6 +29,7 @@ tuxhistory_SOURCES = tuxhistory.c \
 	setup.c 	\
 	titlescreen.c	\
 	map.c		\
+	objects.c	\
 	menu.c		\
 	game.c 		\
 	fileops_media.c \
@@ -43,6 +44,7 @@ tuxhistory_SOURCES = tuxhistory.c \
 	audio.c 	\
 	fileops.c	\
 	convert_utf.c	\
+	players.c	  	\
 	SDL_extras.c	\
 	SDL_rotozoom.c	\
 	scandir.c	\
@@ -67,10 +69,12 @@ EXTRA_DIST = 	credits.h 	\
 	loaders.h	\
 	titlescreen.h   \
 	map.h		\
+	objects.h	\
 	options.h	\
 	setup.h		\
 	tuxhistory.h	\
 	convert_utf.h	\
+	players.h		\
 	SDL_extras.h	\
 	SDL_rotozoom.h	\
 	gettext.h	\

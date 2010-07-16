@@ -32,6 +32,9 @@ list_node *list_add(list_node **ptr, th_obj obj)
     node->next = *ptr;
     *ptr = node;
     node->obj = obj;
+
+    object_counter++;
+
     return node;
 }
 

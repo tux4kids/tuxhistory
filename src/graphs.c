@@ -53,19 +53,6 @@ static int gmaps_alloc(int xsize, int ysize, int maps)
     return 0;
 }
 
-static void gmaps_free(int xsize, int ysize, int maps)
-{
-    int i, j;
-    for(i = 0; i < maps; i++)
-    {
-        for(j = 0; j < xsize; j++)
-        {
-            FREE(gmaps[i][j]);
-        }
-        FREE(gmaps[i]);
-    }
-}
-
 int create_gmaps(int players)
 {
     int i,j,k,l;
@@ -117,6 +104,11 @@ int create_gmaps(int players)
             }
         }
     }
+}
+
+int update_gmaps(void)
+{
+    return 0;
 }
 
 static void gmaps_free(int xsize, int ysize, int maps)
