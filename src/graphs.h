@@ -15,6 +15,7 @@
 #define GRAPHS_H
 
 #include "globals.h"
+#include "objects.h"
 #include "map.h"
 
 enum
@@ -56,4 +57,4 @@ int update_gmaps(void);
 // Use this function to cleanup after a game.
 void clean_gmaps(int players);
 
-#endif GRAPHS_H
+#endif 

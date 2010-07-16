@@ -25,8 +25,8 @@ th_players *player;
 
 int init_players(int players);
 int add_player(char *name, int civ, int max_pop, int stone, 
-                int wood, int food, int gold, th_point pos);
-void clean_players(int);
+               int wood, int food, int gold, th_point pos);
+void clean_players(void);
 
 
 

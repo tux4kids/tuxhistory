@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+
+<data>
+    <object>
+        <type>FOREST</type>
+        <name>FOREST_MIXED</name>
+        <rname>"Mixed Forest"</rname>
+        <description>Cut this trees and get 375 woods</description>
+        <live>375</live>
+    </object>
+    <object>
+        <type>FOREST</type>
+        <name>FOREST_TROPICAL</name>
+        <rname>Tropical forest</rname>
+        <description>Cut this trees and get 350 woods</description>
+        <live>350</live>
+    </object>
+    <object>
+        <type>FOREST</type>
+        <name>FOREST_SCRUB</name>
+        <rname>Scrub Forest</rname>
+        <description>Cut this trees and get 250 woods</description>
+        <live>250</live>
+    </object>
+    <object>
+        <type>FOREST</type>
+        <name>FOREST_CONIFER</name>
+        <rname>Conifer Forest</rname>
+        <description>Cut this trees and get 400 woods</description>
+        <live>400</live>
+    </object>
+    <object>
+        <type>FOREST</type>
+        <name>FOREST_RAIN</name>
+        <rname>Rain Forest</rname>
+        <description>Cut this trees and get 300 woods</description>
+        <live>300</live>
+    </object>
+</data>
+

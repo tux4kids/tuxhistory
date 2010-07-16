@@ -40,8 +40,6 @@ static void str_upper(char *);
 
 static int init_map_hash(void)
 {
-    th_obj object_types[NUM_OF_TYPES];
-
     map_table_hash = make_hashtable(hashtable_default_hash, 30);
 
     if(map_table_hash == NULL)
@@ -140,7 +138,7 @@ int map_xml(FILE *fp)
             {
                 if(node->child->value.text.string)
                     printf("(%s", node->child->value.text.string);
-                value=hashtable_lookup(map_table_hash, node->child->value.text.string);
+                value=(int)hashtable_lookup(map_table_hash, node->child->value.text.string);
                 if(value!=-1)
                 {
                     printf(" Hash object: %d) ", value);
@@ -205,7 +203,6 @@ int map_xml(FILE *fp)
 //Return array has 9 elements
 static int *get_context_tildes(int x, int y)
 {
-    int i;
     int *a;
 
     a = (int *)malloc(9*sizeof(int));
@@ -376,7 +373,6 @@ static th_vector get_iso_vector(int dir)
 
 th_vector get_vector(th_point point, int iso_dir)
 {
-    int i;
     th_vector vector;
 
     vector = get_iso_vector(iso_dir);
@@ -590,23 +586,20 @@ int generate_map(void)
             anchor.x = dest.x + terrain[*img_enums]->w/2;
             anchor.y = dest.y + terrain[*img_enums]->h/2;
 
-            gmap[0][i][j].anchor = anchor;
+            gmaps[0][i][j].anchor = anchor;
             
             // TODO: This is better in graph.h
             if(map[i][j].terrain == HIGHSEA ||
                map[i][j].terrain == OCEAN)
             {
-                gmap[0][i][j].usable = 0;
+                gmaps[0][i][j].usable = 0;
             }
             else
             {
-                gmap[0][i][j].usable = 1;
+                gmaps[0][i][j].usable = 1;
             }
 
-            gmap[0][i][j].terrain = map[i][j].terrain;
-
-
-            
+            gmaps[0][i][j].terrain = map[i][j].terrain;
 
             //Prepare te new coords for the next tile
             dest.x = dest.x - (terrain[*img_enums]->w/2);

@@ -4,7 +4,7 @@
 
 #include "globals.h"
 #include "players.h"
-#include "graph.h"
+#include "graphs.h"
 
 static int players_alloc(int players);
 
@@ -32,7 +32,7 @@ int init_players(int players)
 int add_player(char *name, int civ, int max_pop, int stone, 
                 int wood, int food, int gold, th_point pos)
 {
-    last_payer++;
+    last_player++;
     if(last_player > num_of_players)
     {
         printf("add_player(): player out of limit\n");
@@ -52,12 +52,12 @@ int add_player(char *name, int civ, int max_pop, int stone,
     player[last_player].gold = gold;
     player[last_player].pop = 0;
     player[last_player].player_num = last_player;
-    if(gmap == NULL)
+    if(gmaps == NULL)
     {
-        printf("add_player(): gmap isn't allocated, cant giva a position in map to player!\n");
+        printf("add_player(): gmaps isn't allocated, cant giva a position in map to player!\n");
         return 1;
     }
-    player[last_player].pos = &gmap[0][pos.x][pos.y];
+    player[last_player].pos = &gmaps[0][pos.x][pos.y];
 
     return 0;
 }   

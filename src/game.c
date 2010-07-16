@@ -35,6 +35,7 @@
 #include "SDL_extras.h"
 #include "pixels.h"
 #include "map.h"
+#include "objects.h"
 
 
 #define FPS 15 /* 15 frames per second */
@@ -147,7 +148,26 @@ static int game_init(void)
         return 1;
     }
 
+    fp = LoadObj("objects");
+    if(fp == NULL)
+    {
+        DEBUGMSG(debug_game, "File not found!");
+        return 1;
+    }
+    if(objects_xml(fp))
+    {
+        printf("Error parsing file!");
+        DEBUGMSG(debug_game, "Error loading the objects description file.\n");
+        return 1;
+    }
+
+    if(create_gmaps(2))
+    {
+        printf("Couldn't generate grpah mesh!\n");
+    }
     generate_map();
+
+    
 
     return 0;
 }

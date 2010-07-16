@@ -17,6 +17,7 @@
 #include "graphs.h"
 #include "players.h"
 
+
 static int gmaps_alloc(int xsize, int ysize, int maps);
 static void gmaps_free(int xsize, int ysize, int maps);
 
@@ -25,6 +26,8 @@ static void gmaps_free(int xsize, int ysize, int maps);
 static int gmaps_alloc(int xsize, int ysize, int maps)
 {
     int i,j;
+    xsize++;
+    ysize++;
     gmaps = (gnode ***)malloc(maps * sizeof(gnode **));
     if(gmaps[i] == NULL)
     {
@@ -67,6 +70,7 @@ int create_gmaps(int players)
         return 1;
     }
 
+    printf("x_tiles: %d, y_tiles: %d\n", x_tildes, y_tildes);
     for(i = 1; i < players; i++)
     {
         count = 0;
@@ -104,6 +108,7 @@ int create_gmaps(int players)
             }
         }
     }
+    return 0;
 }
 
 int update_gmaps(void)

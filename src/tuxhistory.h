@@ -15,8 +15,6 @@
   (briefly - GNU GPL v2 or later)
 */
 
-
-
 #ifndef TUXHISTORY_H
 #define TUXHISTORY_H
 
@@ -30,6 +28,7 @@
 #endif
 
 #include "map.h"
+#include "objects.h"
 
 #define MAX_SPRITE_FRAMES   30
 

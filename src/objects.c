@@ -3,6 +3,7 @@
 #include<ctype.h>
 #include<mxml.h>
 
+#include "fileops.h"
 #include "objects.h"
 
 static int init_obj_hash(void);
@@ -41,7 +42,7 @@ int objects_xml(FILE *fp)
 
     th_obj object;
 
-    tree = mxmlLoadFile(NULL, fp, MXML_TEXT_CALLBACK);
+    tree = mxmlLoadFile(NULL, fp, MXML_OPAQUE_CALLBACK);
     if(init_obj_hash())
         return 1;
 
@@ -51,13 +52,13 @@ int objects_xml(FILE *fp)
             inode = mxmlFindElement(inode, tree, "object",
                 NULL, NULL, MXML_DESCEND))
     {
-        node = mxmlFindElement(jnode, jnode, "type",
+        node = mxmlFindElement(inode, inode, "type",
                                NULL, NULL, MXML_DESCEND);
         if(node != NULL)
         {
             if(value != -1)
             {
-                value = (int)hashtable_lookup(map_table_hash, node->child->value.text.string);
+                value = (int)hashtable_lookup(obj_table_hash, node->child->value.opaque);
                 object.type = value;
             }
         }
@@ -68,15 +69,15 @@ int objects_xml(FILE *fp)
             return 1;
         }
 
-        node = mxmlFindElement(jnode, jnode, "name",
+        node = mxmlFindElement(inode, inode, "name",
                                NULL, NULL, MXML_DESCEND);
         if(node != NULL)
         {
-            value = (int)hashtable_lookup(map_table_hash, node->child->value.text.string);
+            value = (int)hashtable_lookup(obj_table_hash, node->child->value.opaque);
             if(value != -1)
             {
                 object.name_enum = value;
-                strcpy(object.name, node->child->value.text.string);    
+                strcpy(object.name, node->child->value.opaque);    
             }
         }
         else
@@ -86,11 +87,11 @@ int objects_xml(FILE *fp)
             return 1;
         }
 
-        node = mxmlFindElement(jnode, jnode, "rname",
+        node = mxmlFindElement(inode, inode, "rname",
                                NULL, NULL, MXML_DESCEND);
         if(node != NULL)
         {
-            strcpy(object.rname, node->child->value.text.string);
+            strcpy(object.rname, node->child->value.opaque);
         }
         else
         {
@@ -98,11 +99,12 @@ int objects_xml(FILE *fp)
             printf("objects_xml: Error loading objects description file");
             return 1;
         }
-        node = mxmlFindElement(jnode, jnode, "description",
+        node = mxmlFindElement(inode, inode, "description",
                                NULL, NULL, MXML_DESCEND);
         if(node != NULL)
         {
-            strcpy(object.description, node->child->value.text.string);
+            strcpy(object.description, node->child->value.opaque);
+            printf(" string: %s\n", node->child->value.opaque);
         }
         else
         {
@@ -111,12 +113,12 @@ int objects_xml(FILE *fp)
             return 1;
         }
 
-        node = mxmlFindElement(jnode, jnode, "live",
+        node = mxmlFindElement(inode, inode, "live",
                     NULL, NULL, MXML_DESCEND);
             
-        if(node->child->value.integer >= 0)
+        if(atoi(node->child->value.opaque) >= 0)
         {
-            object.live = node->child->value.integer;
+            object.live = atoi(node->child->value.opaque);
         }
         else
         {
@@ -132,13 +134,12 @@ int objects_xml(FILE *fp)
                 object.name_enum,
                 object.rname,
                 object.description,
-                object.lives);
+                object.live);
     }
 
         
-    free_hashtable(map_table_hash);
+    free_hashtable(obj_table_hash);
 
-    mxmlDelete(jnode);
     mxmlDelete(inode);
     mxmlDelete(node);
 
