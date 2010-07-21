@@ -5,6 +5,7 @@ SUBDIRS = backgrounds \
   terrain \
   forest \
   icons \
+  others \
   penguins \
   status \
   title \

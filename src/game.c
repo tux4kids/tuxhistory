@@ -87,6 +87,8 @@ static void game_handle_user_events(void);
 static void game_handle_mouse(void);
 static int game_mouse_event(SDL_Event event);
 
+static th_point mouse_map(th_point mouse_p, th_point screen_p);
+
 static int check_exit_conditions(void);
 static int game_over(int);
 static int pause_game(void);
@@ -256,8 +258,6 @@ static void game_draw(void)
     if(obj_node != NULL)
     {
         do{
-            //Debug...
-            //printf("Nodes: (%d, %d)\n", obj_node->obj.x, obj_node->obj.y);
             if( gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x > origin.x -
                     objects[obj_node->obj.name_enum]->w/2&&
                 gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y > origin.y - 
@@ -270,18 +270,11 @@ static void game_draw(void)
                 dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
                     origin.y - objects[obj_node->obj.name_enum]->h/2;
                 SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
-                /*printf("x: %d y: %d anchors, x: %d y: %d",
-                        obj_node->obj.x,
-                        obj_node->obj.y,
-                        gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x,
-                        gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y);*/
-            }
+             }
             obj_node = obj_node->next;
         }while(obj_node != NULL);
     }
    
-
-
     /*Third layer: User Interface*/
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
@@ -291,6 +284,8 @@ static void game_draw(void)
 }
 static void game_handle_mouse(void)
 {
+    th_point Pmousemap;
+
     if( Pscreen.x < (map_image->w - screen->h) &&
         Pscreen.x > 0 &&
         Pscreen.y < (map_image->h - screen->h) &&
@@ -330,6 +325,16 @@ static void game_handle_mouse(void)
             Pscreen.y = Pscreen.y + OUT_SCROLL;
         }
     }
+    mouse_map(Pmouse, Pscreen);
+}
+
+static th_point mouse_map(th_point mouse_p, th_point screen_p)
+{
+    th_point Pmousemap;
+    Pmousemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
+    Pmousemap.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
+    printf("Mouse Maping: %d, %d\n", Pmousemap.x, Pmousemap.y);
+    return Pmousemap;
 }
 
 static int pause_game(void)

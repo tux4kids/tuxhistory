@@ -549,6 +549,8 @@ static int get_tile_num(int i, int k)
 
 int generate_map(void)
 {
+    SDL_Surface* orig = NULL;
+
     SDL_Rect dest;
     th_point anchor;
     int i, j, k, l;
@@ -656,6 +658,13 @@ int generate_map(void)
            (((oe%2)!=0) && (((k+1)%2)!=0))) 
             k++;
     }
+
+    orig = map_image;
+
+    SDL_SetAlpha(orig, SDL_RLEACCEL, SDL_ALPHA_OPAQUE);
+    map_image = SDL_DisplayFormat(orig); /* optimize the format */
+    SDL_FreeSurface(orig);
+
     return 0;
 }
 

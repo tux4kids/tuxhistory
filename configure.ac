@@ -138,8 +138,7 @@ dnl Check for SDL_mixer: -------------------------------------------------------
 PKG_CHECK_MODULES([SDL_MIXER],
     [SDL_mixer],
     ,
-    [
-      [echo "SDL_MIXER not found via pkg_config, checking with AC_CHECK_LIB:"]
+    [ [echo "SDL_MIXER not found via pkg_config, checking with AC_CHECK_LIB:"]
       AC_CHECK_LIB([SDL_mixer],
 	 [Mix_OpenAudio],
          ,
@@ -441,6 +440,7 @@ data/fonts/Makefile
 data/images/Makefile
 data/images/backgrounds/Makefile
 data/images/icons/Makefile
+data/images/others/Makefile
 data/images/penguins/Makefile
 data/images/status/Makefile
 data/images/title/Makefile
