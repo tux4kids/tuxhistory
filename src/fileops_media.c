@@ -61,6 +61,8 @@ int load_image_data()
   "status/numbers.png",
   "status/gameover.png",
   "status/gameover_won.png",
+  "others/isomapper.png",
+  "others/select.png"
   };
 
 

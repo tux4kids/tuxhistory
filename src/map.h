@@ -38,6 +38,7 @@ typedef struct th_map{
     //int obj_id;
 }th_map;
 
+th_point **anchor_map;
 struct hashtable *map_table_hash; //Values of Terrains and objects
 int flag_map; // Map flag: is a map surface allocated? 
 int x_tildes;
@@ -61,5 +62,8 @@ void th_draw_map(void);
 
 
 th_vector get_vector(th_point point, int iso_dir);
+
+int generate_anchormap(void);
+void free_anchormap(void);
 
 #endif

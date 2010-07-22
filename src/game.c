@@ -71,6 +71,7 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 
 // Game vars
 static SDL_Rect origin;
+static SDL_Rect select_rect;
 static int screen_x;
 static int screen_y;
 
@@ -274,6 +275,8 @@ static void game_draw(void)
             obj_node = obj_node->next;
         }while(obj_node != NULL);
     }
+
+    SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &select_rect);
    
     /*Third layer: User Interface*/
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
@@ -285,6 +288,7 @@ static void game_draw(void)
 static void game_handle_mouse(void)
 {
     th_point Pmousemap;
+    int i, j;
 
     if( Pscreen.x < (map_image->w - screen->h) &&
         Pscreen.x > 0 &&
@@ -325,15 +329,54 @@ static void game_handle_mouse(void)
             Pscreen.y = Pscreen.y + OUT_SCROLL;
         }
     }
-    mouse_map(Pmouse, Pscreen);
+
+    Pmousemap = mouse_map(Pmouse, Pscreen);
+    select_rect.x = ((Pmousemap.x * terrain[0]->w) - terrain[0]->w/2)-Pscreen.x;
+    select_rect.y = (Pmousemap.y * terrain[0]->h)-Pscreen.y;
 }
+/*
+static th_point generate_mousemap(th_point mouse_p, th_point screen_p)
+{
+    int i, j;
+    int **anchor_map;
+    th_point point;
+
+    for(point.x = terrain[TUNDRA_CENTER_1]->w/2; 
+        point.x <= map_image->w;
+        point.x = point.x + terrain[0]->w){
+        for(j = 0; j <= y_tildes; i++){
+            if((mouse_p.x + screen_p.x) < gmap[0][i][j].anchor &&
+               (mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w) > gmap[0][i][j].anchor &&
+               (mouse_p.x + screen_p.x) < gmap[0][i][j].anchor &&
+               (mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w) > gmap[0][i][j].anchor)
+            {
+            }
+        }
+    }
+    point.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
+    point.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
+    //printf("Mouse Maping: %d, %d\n", Pmousemap.x, Pmousemap.y);
+    return point;
+    }*/
+
 
 static th_point mouse_map(th_point mouse_p, th_point screen_p)
 {
+    int i, j;
+    int terr_e;
+    th_point *anchor_p;
     th_point Pmousemap;
+
     Pmousemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
     Pmousemap.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
-    printf("Mouse Maping: %d, %d\n", Pmousemap.x, Pmousemap.y);
+    
+    anchor_p = &anchor_map[Pmousemap.x][Pmousemap.y];
+    if(anchor_p->x != -1 && anchor_p->y != -1)
+        terr_e = gmaps[0][anchor_p->x][anchor_p->y].terrain;
+    else
+        terr_e = -1;
+
+    printf("Mouse Maping: %d, %d Terrain %d\n", Pmousemap.x, Pmousemap.y, terr_e);
     return Pmousemap;
 }
 

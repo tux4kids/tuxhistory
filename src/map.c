@@ -547,6 +547,73 @@ static int get_tile_num(int i, int k)
     else return -1;
 }
 
+int generate_anchormap(void)
+{
+    int x, y;
+    int i,j;
+    int ii, jj;
+    x = (int)((map_image->w - terrain[0]->h/2) / terrain[0]->w);
+    y = (int)(map_image->h / terrain[0]->h);
+
+    printf("Grid size: %d %d\n", x, y);
+    anchor_map = (th_point **)malloc(x * sizeof(th_point *));
+    
+    if(anchor_map == NULL)
+    {
+        printf("Error: out of memory!\n");
+        return 1;
+    }
+
+    for(i=0;i<x;i++)
+    {
+        anchor_map[i] = (th_point *)malloc(y * sizeof(th_point));
+        if(anchor_map[i] == NULL)
+        {
+            printf("Error: out of memoy!\n");
+            return 1;
+        }
+    }
+    for(i = 0; i < x; i++)
+    {
+        for(j = 0; j < y; j++)
+        {
+            anchor_map[i][j].x = -1;
+            anchor_map[i][j].y = -1;
+            //printf("X Point: %d ", terrain[0]->w*i);
+            //printf("Y Point: %d\n", terrain[0]->h*j);
+            for(ii = 0; ii < x_tildes; ii++)
+            {
+                for(jj = 0; jj < y_tildes; jj++)
+                {
+                    if( gmaps[0][ii][jj].anchor.x > (terrain[0]->w*i) - terrain[0]->h/2&&
+                        gmaps[0][ii][jj].anchor.x < (terrain[0]->w*i + terrain[0]->w) - terrain[0]->h/2&&
+                        gmaps[0][ii][jj].anchor.y > (terrain[0]->h*j) &&
+                        gmaps[0][ii][jj].anchor.y < (terrain[0]->h*j + terrain[0]->h))
+                    {
+                        anchor_map[i][j].x = ii;
+                        anchor_map[i][j].y = jj;
+                        goto endineriter;
+                    }
+                }
+            }
+endineriter:
+            if(anchor_map[i][j].x != -1 && anchor_map[i][j].y != -1)
+                printf("%d", gmaps[0][i][j].terrain);
+            else
+                printf("-");
+        }
+        printf("\n");
+    }
+    return 0;
+}
+void free_anchormap(void)
+{
+    int i;
+    for(i = 0; i < (int)(map_image->w / terrain[0]->w); i++)
+        FREE(anchor_map[i]);
+    FREE(anchor_map);
+}
+
 int generate_map(void)
 {
     SDL_Surface* orig = NULL;
@@ -639,6 +706,7 @@ int generate_map(void)
 
             gmaps[0][i][j].terrain = map[i][j].terrain;
 
+
             //Prepare te new coords for the next tile
             dest.x = dest.x - (terrain[*img_enums]->w/2);
             dest.y = dest.y + (terrain[*img_enums]->h/2);
@@ -659,11 +727,15 @@ int generate_map(void)
             k++;
     }
 
+    // Optimizing img_map
     orig = map_image;
 
     SDL_SetAlpha(orig, SDL_RLEACCEL, SDL_ALPHA_OPAQUE);
     map_image = SDL_DisplayFormat(orig); /* optimize the format */
     SDL_FreeSurface(orig);
+    
+    // Create a anchors map and allocates int **anchor_map
+    generate_anchormap(); 
 
     return 0;
 }

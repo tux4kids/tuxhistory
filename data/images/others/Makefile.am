@@ -4,4 +4,5 @@
 
 othersdir = $(pkgdatadir)/images/others
 
-dist_others_DATA = isomapper.png
+dist_others_DATA = isomapper.png \
+select.png
