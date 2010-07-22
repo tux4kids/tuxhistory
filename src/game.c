@@ -72,11 +72,16 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 // Game vars
 static SDL_Rect origin;
 static SDL_Rect select_rect;
+static SDL_Rect select_rect_dest;
 static int screen_x;
 static int screen_y;
 
 static th_point Pmouse;
 static th_point Pscreen;
+static th_point Prclick;
+static th_point Plclick;
+static int mousedown_flag;
+static int mouseclicked_flag;
 static int screen_margin_in;
 static int screen_margin_out;
 /********** Static functions definitions *********/
@@ -87,8 +92,6 @@ static void game_draw(void);
 static void game_handle_user_events(void);
 static void game_handle_mouse(void);
 static int game_mouse_event(SDL_Event event);
-
-static th_point mouse_map(th_point mouse_p, th_point screen_p);
 
 static int check_exit_conditions(void);
 static int game_over(int);
@@ -233,18 +236,8 @@ static void game_draw(void)
 
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
-    
-    /*
-    origin.w = screen->w;
-    origin.h = screen->h;
-    
-    
-    origin.x = map_image->w/2 - screen->w/2;
-    origin.y = map_image->h/2 - screen->h/2;
-    origin.w = screen->w;
-    origin.h = screen->h;*/
-
     dest.x = 0;
+
     dest.y = 0;
 
     /*TODO: Separate each Layer drawing in different functions.*/
@@ -276,28 +269,26 @@ static void game_draw(void)
         }while(obj_node != NULL);
     }
 
-    SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &select_rect);
+    if(select_rect_dest.x != -1 && select_rect_dest.y != -1)
+        SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &select_rect_dest);
    
     /*Third layer: User Interface*/
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
- 
-    
 }
+
 static void game_handle_mouse(void)
 {
     th_point Pmousemap;
+    th_point Pdtmap;
     int i, j;
 
     Pmousemap = mouse_map(Pmouse, Pscreen);
+    Pdtmap = Pscreen;
     if(Pmousemap.x != -1 && Pmousemap.y != -1)
     {
-        select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x - Pscreen.x; 
-        select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y - Pscreen.y;
-        printf("Draw select: %d %d ", select_rect.x, select_rect.y);
-    
-
+   
         if( Pscreen.x < (map_image->w - screen->h) &&
             Pscreen.x > 0 &&
             Pscreen.y < (map_image->h - screen->h) &&
@@ -336,81 +327,34 @@ static void game_handle_mouse(void)
                     (Pscreen.y + screen->h) < (map_image->h - OUT_SCROLL)){
                 Pscreen.y = Pscreen.y + OUT_SCROLL;
             }
+            
+        }
+        if( select_rect.x > Pscreen.x &&
+            select_rect.x < Pscreen.x + screen->w &&
+            select_rect.y > Pscreen.y &&
+            select_rect.y < Pscreen.y + screen->h)
+        {
+            select_rect_dest.x = select_rect.x - Pscreen.x;
+            select_rect_dest.y = select_rect.y - Pscreen.y;
+            printf("ScreenP: %d, %d Select: %d, %d \n", Pscreen.x, Pscreen.y, select_rect.x, select_rect.y);
+        }
+        else
+        {
+            select_rect_dest.x = -1;
+            select_rect_dest.y = -1;
         }
     }
-
-}
-
-Uint32 get_pcolor(SDL_Surface *surface, int x, int y)
-{
-    Uint32 *pixels = (Uint32 *)surface->pixels;
-    return pixels[ ( y * surface->w ) + x ];
-}
-
-
-// TODO: This function should be in map.c
-//       give the mouse point and the creen point as arguments 
-//       and returns the actual tile in ***gmaps
-static th_point mouse_map(th_point mouse_p, th_point screen_p)
-{
-    int i, j;
-    int terr_e;
-    Uint32 color;
-    Uint32 iso_colors[4];
-    th_point *anchor_p;
-    th_point Pmousemap;
-    th_point Ptilemap;
-
-    Pmousemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
-    Pmousemap.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
-    
-    Ptilemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)%terrain[TUNDRA_CENTER_1]->w;
-    Ptilemap.y = (int)(mouse_p.y + screen_p.y)%terrain[TUNDRA_CENTER_1]->h;
-    
-
-    anchor_p = &anchor_map[Pmousemap.x][Pmousemap.y];
-    if(anchor_p->x != -1 && anchor_p->y != -1)
-        terr_e = gmaps[0][anchor_p->x][anchor_p->y].terrain;
-    else
-        terr_e = -1;
-
-
-    Pmousemap.x = anchor_p->x;
-    Pmousemap.y = anchor_p->y; 
-
-    iso_colors[1] = get_pcolor(images[IMG_ISOMAPPER], 2, 2);
-    iso_colors[2] = get_pcolor(images[IMG_ISOMAPPER], images[IMG_ISOMAPPER]->w-2, 2);
-    iso_colors[3] = get_pcolor(images[IMG_ISOMAPPER], 2 , images[IMG_ISOMAPPER]->h-2);
-    iso_colors[4] = get_pcolor(images[IMG_ISOMAPPER], images[IMG_ISOMAPPER]->w-2, images[IMG_ISOMAPPER]->h-2);
-
-    color = get_pcolor(images[IMG_ISOMAPPER], Ptilemap.x, Ptilemap.y);
-
-
-    // NW
-    if(color == iso_colors[1])
+    if(mousedown_flag != 0)
     {
-        Pmousemap.x--;
+        if(mouseclicked_flag != 0)
+        {
+            Pmousemap = mouse_map(Prclick, Pscreen);
+            mousedown_flag = 0;
+            select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+            select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
+            printf("Draw select: %d %d ", select_rect.x, select_rect.y);
+        }
     }
-    //NE
-    if(color == iso_colors[2])
-    {
-        Pmousemap.y--;
-    }
-    //SW
-    if(color == iso_colors[3])
-    {
-        Pmousemap.y++;
-    }
-    //SE
-    if(color == iso_colors[4])
-    {
-        //Pmousemap.y++;
-        Pmousemap.x++;
-    }
-
-    printf("Mouse Maping: %d, %d Terrain: %d Color: %d\n", Pmousemap.x, Pmousemap.y, terr_e, color);
-
-    return Pmousemap;
 }
 
 static int pause_game(void)
@@ -485,7 +429,6 @@ static int game_over(int game_status)
     case GAME_OVER_WON:
     {
       int looping = 1;
-//      int frame;
       /* set up victory message: */
       dest_message.x = (screen->w - images[IMG_GAMEOVER_WON]->w) / 2;
       dest_message.y = (screen->h - images[IMG_GAMEOVER_WON]->h) / 2;
@@ -590,8 +533,6 @@ static int game_over(int game_status)
   }
 }
 
-
-
 static void game_handle_user_events(void)
 {
   SDL_Event event;
@@ -607,13 +548,35 @@ static void game_handle_user_events(void)
     }
     if (event.type == SDL_MOUSEMOTION)
     {
-        get_mouse_pos(event.motion.x, event.motion.y);
+        Pmouse.x = event.button.x;
+        Pmouse.y = event.button.y;
     }
-
     if (event.type == SDL_MOUSEBUTTONDOWN)
     {
-      key = game_mouse_event(event);
+        if(event.button.button == SDL_BUTTON_LEFT)
+        {
+            Plclick.x = event.button.x;
+            Plclick.y = event.button.y;
+            mousedown_flag = 1;
+            mouseclicked_flag = 1;
+        }
+
+        if(event.button.button == SDL_BUTTON_LEFT)
+        {
+            Prclick.x = event.button.x;
+            Prclick.y = event.button.y;
+        }
+
+        key = game_mouse_event(event);
     }
+    if(event.type == SDL_MOUSEBUTTONUP)
+    {
+        if(event.button.button == SDL_BUTTON_LEFT)
+        {
+            mousedown_flag = 0;
+        }
+    }
+
     if (event.type == SDL_KEYDOWN ||
 	event.type == SDL_KEYUP)
     {
@@ -625,9 +588,8 @@ static void game_handle_user_events(void)
 	    {
             // Return to menu! 
             escape_received = 1;
+        }
 
-	    }
-	  
 	    // Key press... 
 	 
 	    if (key == SDLK_RIGHT)
@@ -736,9 +698,5 @@ static int check_exit_conditions(void)
   return GAME_IN_PROGRESS;
 }
 
-static void get_mouse_pos(int x, int y)
-{
-    Pmouse.x = x;
-    Pmouse.y = y;
-}
+
 

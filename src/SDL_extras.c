@@ -1099,5 +1099,12 @@ static TTF_Font* load_font(const char* font_name, int font_size)
    return NULL;
   }
 }
+
+Uint32 get_pcolori(SDL_Surface *surface, int x, int y)
+{
+    Uint32 *pixels = (Uint32 *)surface->pixels;
+    return pixels[ ( y * surface->w ) + x ];
+}
+
 #endif
 

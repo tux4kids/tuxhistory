@@ -54,6 +54,6 @@ void            Cleanup_SDL_Text(void);
 SDL_Surface*    BlackOutline(const char* t, int size, SDL_Color* c);
 SDL_Surface*    SimpleText(const char *t, int size, SDL_Color* col);
 SDL_Surface*    SimpleTextWithOffset(const char *t, int size, SDL_Color* col, int *glyph_offset);
-
+Uint32          get_pcolori(SDL_Surface *surface, int x, int y);
 
 #endif

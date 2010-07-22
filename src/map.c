@@ -11,7 +11,6 @@
  * 
  */
 
-#include "tuxhistory.h"
 
 #include<ctype.h>
 #include<mxml.h>
@@ -20,6 +19,7 @@
 #include "SDL_image.h"
 #include "SDL_extras.h"
 
+#include "tuxhistory.h"
 #include "globals.h"
 #include "fileops.h"
 #include "objects.h"
@@ -30,7 +30,7 @@
 
 SDL_Surface* map_image;
 
-static int init_map_hash(void);
+static int  init_map_hash(void);
 static void end_map_hash(void);
 static int get_terrain_enum(char *);
 static int *get_context_tildes(int, int);
@@ -38,6 +38,7 @@ static th_vector get_iso_vector(int dir);
 static int *get_draw_tilde(int *, int);
 static int get_tile_num(int, int);
 static void str_upper(char *);
+static Uint32 get_pcolor(SDL_Surface *surface, int x, int y);
 
 static int init_map_hash(void)
 {
@@ -552,6 +553,13 @@ int generate_anchormap(void)
     int x, y;
     int i,j;
     int ii, jj;
+
+    // Set mapping colors
+    iso_colors[1] = get_pcolor(images[IMG_ISOMAPPER], 2, 2);
+    iso_colors[2] = get_pcolor(images[IMG_ISOMAPPER], images[IMG_ISOMAPPER]->w-2, 2);
+    iso_colors[3] = get_pcolor(images[IMG_ISOMAPPER], 2 , images[IMG_ISOMAPPER]->h-2);
+    iso_colors[4] = get_pcolor(images[IMG_ISOMAPPER], images[IMG_ISOMAPPER]->w-2, images[IMG_ISOMAPPER]->h-2);
+
     x = (int)((map_image->w - terrain[0]->w/2) / terrain[0]->w) + 2;
     y = (int)(map_image->h / terrain[0]->h);
 
@@ -746,7 +754,8 @@ int generate_map(void)
 
 void free_map(void)
 {
-  SDL_FreeSurface(map_image);
+    SDL_FreeSurface(map_image);
+    free_anchormap();
 }
 
 // TODO: Segfault error still in this function!
@@ -761,4 +770,62 @@ void str_upper(char *string)
     }
 }
 
+static Uint32 get_pcolor(SDL_Surface *surface, int x, int y)
+{
+    Uint32 *pixels = (Uint32 *)surface->pixels;
+    return pixels[ ( y * surface->w ) + x ];
+}
 
+th_point mouse_map(th_point mouse_p, th_point screen_p)
+{
+    int i, j;
+    int terr_e;
+    Uint32 color;
+    th_point *anchor_p;
+    th_point Pmousemap;
+    th_point Ptilemap;
+
+    Pmousemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
+    Pmousemap.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
+    
+    Ptilemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)%terrain[TUNDRA_CENTER_1]->w;
+    Ptilemap.y = (int)(mouse_p.y + screen_p.y)%terrain[TUNDRA_CENTER_1]->h;
+    
+
+    anchor_p = &anchor_map[Pmousemap.x][Pmousemap.y];
+    if(anchor_p->x != -1 && anchor_p->y != -1)
+        terr_e = gmaps[0][anchor_p->x][anchor_p->y].terrain;
+    else
+        terr_e = -1;
+
+
+    Pmousemap.x = anchor_p->x;
+    Pmousemap.y = anchor_p->y; 
+
+
+    color = get_pcolor(images[IMG_ISOMAPPER], Ptilemap.x, Ptilemap.y);
+
+    // NW
+    if(color == iso_colors[1])
+    {
+        Pmousemap.x--;
+    }
+    //NE
+    if(color == iso_colors[2])
+    {
+        Pmousemap.y--;
+    }
+    //SW
+    if(color == iso_colors[3])
+    {
+        Pmousemap.y++;
+    }
+    //SE
+    if(color == iso_colors[4])
+    {
+        Pmousemap.x++;
+    }
+    //printf("Mouse Maping: %d, %d Terrain: %d Color: %d\n", Pmousemap.x, Pmousemap.y, terr_e, color);
+
+    return Pmousemap;
+}

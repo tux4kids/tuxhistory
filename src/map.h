@@ -21,6 +21,7 @@
 #ifndef MAP_H
 #define MAP_H
 
+#include "SDL.h"
 #include "hashtable.h"
 #include "globals.h"
 #include "objects.h"
@@ -43,8 +44,9 @@ struct hashtable *map_table_hash; //Values of Terrains and objects
 int flag_map; // Map flag: is a map surface allocated? 
 int x_tildes;
 int y_tildes;
+Uint32 iso_colors[4];
 
-int map_xml(FILE *fp);
+int         map_xml(FILE *fp);
 
 // generate_map() generate a map from the basic
 // xml input to a visual atractive one and store 
@@ -52,18 +54,24 @@ int map_xml(FILE *fp);
 // NOTE: map_xml() need to be called before!
 // Use free_map() at the end of the program.
 
-int generate_map(void);
-void free_map(void);
+int         generate_map(void);
+void        free_map(void);
 
 // th_obj represent each object in the field, in 
 // each tilde there can be only one object.
 
-void th_draw_map(void);
+void        th_draw_map(void);
 
 
-th_vector get_vector(th_point point, int iso_dir);
+th_vector   get_vector(th_point point, int iso_dir);
 
 int generate_anchormap(void);
 void free_anchormap(void);
 
+
+//mouse_map(): returns a th_point with the (x,y) pair
+//             in gmaps[][x][y] from the actual coordinate
+//             of the mouse and the screen.
+
+th_point    mouse_map(th_point mouse_p, th_point screen_p);
 #endif
