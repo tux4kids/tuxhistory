@@ -552,7 +552,7 @@ int generate_anchormap(void)
     int x, y;
     int i,j;
     int ii, jj;
-    x = (int)((map_image->w - terrain[0]->h/2) / terrain[0]->w);
+    x = (int)((map_image->w - terrain[0]->w/2) / terrain[0]->w) + 2;
     y = (int)(map_image->h / terrain[0]->h);
 
     printf("Grid size: %d %d\n", x, y);
@@ -581,12 +581,12 @@ int generate_anchormap(void)
             anchor_map[i][j].y = -1;
             //printf("X Point: %d ", terrain[0]->w*i);
             //printf("Y Point: %d\n", terrain[0]->h*j);
-            for(ii = 0; ii < x_tildes; ii++)
+            for(ii = 0; ii <= x_tildes; ii++)
             {
-                for(jj = 0; jj < y_tildes; jj++)
+                for(jj = 0; jj <= y_tildes; jj++)
                 {
-                    if( gmaps[0][ii][jj].anchor.x > (terrain[0]->w*i) - terrain[0]->h/2&&
-                        gmaps[0][ii][jj].anchor.x < (terrain[0]->w*i + terrain[0]->w) - terrain[0]->h/2&&
+                    if( gmaps[0][ii][jj].anchor.x > (terrain[0]->w*i) - terrain[0]->w/2&&
+                        gmaps[0][ii][jj].anchor.x < (terrain[0]->w*i + terrain[0]->w) - terrain[0]->w/2&&
                         gmaps[0][ii][jj].anchor.y > (terrain[0]->h*j) &&
                         gmaps[0][ii][jj].anchor.y < (terrain[0]->h*j + terrain[0]->h))
                     {
@@ -606,6 +606,7 @@ endineriter:
     }
     return 0;
 }
+
 void free_anchormap(void)
 {
     int i;
@@ -688,10 +689,13 @@ int generate_map(void)
             anchor.x = dest.x + terrain[*img_enums]->w/2;
             anchor.y = dest.y + terrain[*img_enums]->h/2;
 
+
             printf(" Tile dest in px: (%d,%d) from: (%d,%d) with anchori (%d,%d)\n", 
                     dest.x, dest.y, i, j, anchor.x, anchor.y);
 
             gmaps[0][i][j].anchor = anchor;
+            gmaps[0][i][j].rect.x = dest.x;
+            gmaps[0][i][j].rect.y = dest.y;
             
             // TODO: This is better in graph.h
             if(map[i][j].terrain == HIGHSEA ||

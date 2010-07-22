@@ -290,93 +290,126 @@ static void game_handle_mouse(void)
     th_point Pmousemap;
     int i, j;
 
-    if( Pscreen.x < (map_image->w - screen->h) &&
-        Pscreen.x > 0 &&
-        Pscreen.y < (map_image->h - screen->h) &&
-        Pscreen.y > 0)
-    {
-        // Is the mouse close to the border? Move the
-        // map...
-        if(Pmouse.x < screen_margin_in && Pscreen.x > IN_SCROLL){
-            Pscreen.x = Pscreen.x - IN_SCROLL;
-        }
-        if(Pmouse.x > screen->w - screen_margin_in &&
-           (Pscreen.x + screen->w) < (map_image->w - IN_SCROLL)){
-            Pscreen.x = Pscreen.x + IN_SCROLL;
-        }
-        if(Pmouse.y < screen_margin_in && Pscreen.y > IN_SCROLL){
-            Pscreen.y = Pscreen.y - IN_SCROLL;
-        }
-        if(Pmouse.y > screen->h - screen_margin_in &&
-                (Pscreen.y + screen->h) < (map_image->h - IN_SCROLL)){
-            Pscreen.y = Pscreen.y + IN_SCROLL;
-        }
-
-        // Is the mouse VERY close to the border?
-        // Move the map faster!
-        if(Pmouse.x < screen_margin_out && Pscreen.x > OUT_SCROLL){
-            Pscreen.x = Pscreen.x - OUT_SCROLL;
-        }
-        if(Pmouse.x > screen->w - screen_margin_out &&
-           (Pscreen.x + screen->w) < (map_image->w - OUT_SCROLL)){
-            Pscreen.x = Pscreen.x + OUT_SCROLL;
-        }
-        if(Pmouse.y < screen_margin_out && Pscreen.y > OUT_SCROLL){
-            Pscreen.y = Pscreen.y - OUT_SCROLL;
-        }
-        if(Pmouse.y > screen->h - screen_margin_out &&
-                (Pscreen.y + screen->h) < (map_image->h - OUT_SCROLL)){
-            Pscreen.y = Pscreen.y + OUT_SCROLL;
-        }
-    }
-
     Pmousemap = mouse_map(Pmouse, Pscreen);
-    select_rect.x = ((Pmousemap.x * terrain[0]->w) - terrain[0]->w/2)-Pscreen.x;
-    select_rect.y = (Pmousemap.y * terrain[0]->h)-Pscreen.y;
-}
-/*
-static th_point generate_mousemap(th_point mouse_p, th_point screen_p)
-{
-    int i, j;
-    int **anchor_map;
-    th_point point;
+    if(Pmousemap.x != -1 && Pmousemap.y != -1)
+    {
+        select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x - Pscreen.x; 
+        select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y - Pscreen.y;
+        printf("Draw select: %d %d ", select_rect.x, select_rect.y);
+    
 
-    for(point.x = terrain[TUNDRA_CENTER_1]->w/2; 
-        point.x <= map_image->w;
-        point.x = point.x + terrain[0]->w){
-        for(j = 0; j <= y_tildes; i++){
-            if((mouse_p.x + screen_p.x) < gmap[0][i][j].anchor &&
-               (mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w) > gmap[0][i][j].anchor &&
-               (mouse_p.x + screen_p.x) < gmap[0][i][j].anchor &&
-               (mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w) > gmap[0][i][j].anchor)
-            {
+        if( Pscreen.x < (map_image->w - screen->h) &&
+            Pscreen.x > 0 &&
+            Pscreen.y < (map_image->h - screen->h) &&
+            Pscreen.y > 0)
+        {
+            // Is the mouse close to the border? Move the
+            // map...
+            if(Pmouse.x < screen_margin_in && Pscreen.x > IN_SCROLL){
+                Pscreen.x = Pscreen.x - IN_SCROLL;
+            }
+            if(Pmouse.x > screen->w - screen_margin_in &&
+                (Pscreen.x + screen->w) < (map_image->w - IN_SCROLL)){
+                Pscreen.x = Pscreen.x + IN_SCROLL;
+            }
+            if(Pmouse.y < screen_margin_in && Pscreen.y > IN_SCROLL){
+                Pscreen.y = Pscreen.y - IN_SCROLL;
+            }
+            if(Pmouse.y > screen->h - screen_margin_in &&
+                    (Pscreen.y + screen->h) < (map_image->h - IN_SCROLL)){
+                Pscreen.y = Pscreen.y + IN_SCROLL;
+            }
+
+            // Is the mouse VERY close to the border?
+            // Move the map faster!
+            if(Pmouse.x < screen_margin_out && Pscreen.x > OUT_SCROLL){
+                Pscreen.x = Pscreen.x - OUT_SCROLL;
+            }
+            if(Pmouse.x > screen->w - screen_margin_out &&
+            (Pscreen.x + screen->w) < (map_image->w - OUT_SCROLL)){
+                Pscreen.x = Pscreen.x + OUT_SCROLL;
+            }
+            if(Pmouse.y < screen_margin_out && Pscreen.y > OUT_SCROLL){
+                Pscreen.y = Pscreen.y - OUT_SCROLL;
+            }
+            if(Pmouse.y > screen->h - screen_margin_out &&
+                    (Pscreen.y + screen->h) < (map_image->h - OUT_SCROLL)){
+                Pscreen.y = Pscreen.y + OUT_SCROLL;
             }
         }
     }
-    point.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
-    point.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
-    //printf("Mouse Maping: %d, %d\n", Pmousemap.x, Pmousemap.y);
-    return point;
-    }*/
+
+}
+
+Uint32 get_pcolor(SDL_Surface *surface, int x, int y)
+{
+    Uint32 *pixels = (Uint32 *)surface->pixels;
+    return pixels[ ( y * surface->w ) + x ];
+}
 
 
+// TODO: This function should be in map.c
+//       give the mouse point and the creen point as arguments 
+//       and returns the actual tile in ***gmaps
 static th_point mouse_map(th_point mouse_p, th_point screen_p)
 {
     int i, j;
     int terr_e;
+    Uint32 color;
+    Uint32 iso_colors[4];
     th_point *anchor_p;
     th_point Pmousemap;
+    th_point Ptilemap;
 
     Pmousemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
     Pmousemap.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
     
+    Ptilemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)%terrain[TUNDRA_CENTER_1]->w;
+    Ptilemap.y = (int)(mouse_p.y + screen_p.y)%terrain[TUNDRA_CENTER_1]->h;
+    
+
     anchor_p = &anchor_map[Pmousemap.x][Pmousemap.y];
     if(anchor_p->x != -1 && anchor_p->y != -1)
         terr_e = gmaps[0][anchor_p->x][anchor_p->y].terrain;
     else
         terr_e = -1;
 
-    printf("Mouse Maping: %d, %d Terrain %d\n", Pmousemap.x, Pmousemap.y, terr_e);
+
+    Pmousemap.x = anchor_p->x;
+    Pmousemap.y = anchor_p->y; 
+
+    iso_colors[1] = get_pcolor(images[IMG_ISOMAPPER], 2, 2);
+    iso_colors[2] = get_pcolor(images[IMG_ISOMAPPER], images[IMG_ISOMAPPER]->w-2, 2);
+    iso_colors[3] = get_pcolor(images[IMG_ISOMAPPER], 2 , images[IMG_ISOMAPPER]->h-2);
+    iso_colors[4] = get_pcolor(images[IMG_ISOMAPPER], images[IMG_ISOMAPPER]->w-2, images[IMG_ISOMAPPER]->h-2);
+
+    color = get_pcolor(images[IMG_ISOMAPPER], Ptilemap.x, Ptilemap.y);
+
+
+    // NW
+    if(color == iso_colors[1])
+    {
+        Pmousemap.x--;
+    }
+    //NE
+    if(color == iso_colors[2])
+    {
+        Pmousemap.y--;
+    }
+    //SW
+    if(color == iso_colors[3])
+    {
+        Pmousemap.y++;
+    }
+    //SE
+    if(color == iso_colors[4])
+    {
+        //Pmousemap.y++;
+        Pmousemap.x++;
+    }
+
+    printf("Mouse Maping: %d, %d Terrain: %d Color: %d\n", Pmousemap.x, Pmousemap.y, terr_e, color);
+
     return Pmousemap;
 }
 
