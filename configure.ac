@@ -186,7 +186,7 @@ PKG_CHECK_MODULES([LUA],
     [
       [echo "LUA not found via pkg_config, checking with AC_CHECK_LIB:"]
 	AC_CHECK_LIB(lua50, lua_open, [
-           LUA_LIBS="-llualin50 -llua50"
+           LUA_LIBS="-llua50"
            ],[AC_MSG_ERROR([LUA not found! http://www.lua.org])])
 
       [echo "LUA successfully located"]
