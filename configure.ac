@@ -172,6 +172,32 @@ AC_DEFINE([HAVE_LIBMXML],[1],[Define to 1 if you have the `mxml` library])
 CFLAGS="$CFLAGS $MXML_CFLAGS"
 LIBS="$LIBS $MXML_LIBS"
 
+dnl Check for (somewhat) higher-level math functions - needed for SDL_extras
+AC_CHECK_LIB([m],
+              [csin],
+              ,
+              [AC_MSG_ERROR([Math library not found - functions in <math.h> may not be available.])])
+
+dnl Check for LibLua: --------------------------------------------------------
+
+PKG_CHECK_MODULES([LUA],
+    [lua],
+    ,
+    [
+      [echo "LUA not found via pkg_config, checking with AC_CHECK_LIB:"]
+	AC_CHECK_LIB(lua50, lua_open, [
+           LUA_LIBS="-llualin50 -llua50"
+           ],[AC_MSG_ERROR([LUA not found! http://www.lua.org])])
+
+      [echo "LUA successfully located"]
+    ] 
+)
+
+AC_DEFINE([HAVE_LIBLUA],[1],[Define to 1 if you have the `lua` library])
+CFLAGS="$CFLAGS $LUA_CFLAGS"
+LIBS="$LIBS $LUA_LIBS"
+
+
 
 
 dnl Check for SDL_Pango: --------------------------------------------------------
@@ -255,11 +281,6 @@ if test "x$with_rsvg" = xyes; then
   AC_DEFINE([HAVE_RSVG],[1],[Define to 1 if you have the `libRSVG` library])
 fi
 
-dnl Check for (somewhat) higher-level math functions - needed for SDL_extras
-AC_CHECK_LIB([m],
-              [csin],
-              ,
-              [AC_MSG_ERROR([Math library not found - functions in <math.h> may not be available.])])
 
 
 
@@ -272,7 +293,7 @@ AC_ARG_WITH([sdlnet],
 	    [AS_HELP_STRING([--without-sdlnet],
 	    [Do not use SDL_net even if available])],
 	    [],
-	    [with_sdlnet=yes]
+	    [with_sdlnet=no]
 )
 
 if test "x$with_sdlnet" != xno; then
