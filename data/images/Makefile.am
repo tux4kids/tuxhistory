@@ -9,5 +9,6 @@ SUBDIRS = backgrounds \
   penguins \
   status \
   title \
-  tux
+  tux \
+  units
 

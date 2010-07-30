@@ -71,6 +71,8 @@ enum {
   IMG_GAMEOVER_WON,
   IMG_ISOMAPPER,
   IMG_ISOSELECT,
+  IMG_ISOGO,
+  IMG_ISOWRONG,
   NUM_IMAGES
 };
 
@@ -369,6 +371,7 @@ enum{
     FOREST_WETLAND,
     FOREST_RAIN,
     FOREST_BROADLEAF,
+    VILLAGER_MILKMAID,
     NUM_OBJECTS // Must be at the end.
 };
 

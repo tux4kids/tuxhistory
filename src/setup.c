@@ -315,7 +315,8 @@ void handle_command_args(int argc, char* argv[])
     else if (strcmp(argv[i], "--fullscreen") == 0 ||
              strcmp(argv[i], "-f") == 0)
     {
-      Opts_SetGlobalOpt(FULLSCREEN, 1);
+        printf("Fullscreen is not now supported...");
+        Opts_SetGlobalOpt(FULLSCREEN, 0);
     }
     else if (strcmp(argv[i], "--windowed") == 0 ||
              strcmp(argv[i], "-w") == 0)

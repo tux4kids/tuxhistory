@@ -114,7 +114,7 @@ int Opts_Initialize(void)
   global_options->iopts[USE_SOUND] = DEFAULT_USE_SOUND;
   global_options->iopts[MENU_SOUND] = DEFAULT_MENU_SOUND;
   global_options->iopts[MENU_MUSIC] = DEFAULT_MENU_MUSIC;
-  global_options->iopts[FULLSCREEN] = DEFAULT_FULLSCREEN;
+  global_options->iopts[FULLSCREEN] = 0;
   global_options->iopts[USE_KEYPAD] = DEFAULT_USE_KEYPAD;
   global_options->iopts[USE_IGLOOS] = DEFAULT_USE_IGLOOS;
   strncpy(game_options->current_font_name, DEFAULT_FONT_NAME,

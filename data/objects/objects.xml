@@ -36,5 +36,15 @@
         <description>Cut this trees and get 300 woods</description>
         <live>300</live>
     </object>
+    <object>
+        <type>UNIT</type>
+        <name>VILLAGER_MILKMAID</name>
+        <rname>Vilager</rname>
+        <description>This unit can create buildings, and recolect resources.</description>
+        <live>25</live>
+        <defence>1</defence>
+        <attack>3</attack>
+        <move>1</move>
+    </object>
 </data>
 

@@ -194,8 +194,8 @@
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object></object>
-            <unit></unit>
+            <object>VILLAGER_MILKMAID</object>
+            <unit>VILLAGER_MILKMAID</unit>
             <building></building>
         </tilde>
         <tilde>

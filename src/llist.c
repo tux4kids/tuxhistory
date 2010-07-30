@@ -74,7 +74,7 @@ void list_print(list_node *node)
     }
     while (node != NULL)
     {
-        printf("print %p %p %s\n", node, node->next, node->obj.name);
+        printf("in List objecin List object: %p %p %s\n", node, node->next, node->obj.name);
         node = node->next;
     }
 }

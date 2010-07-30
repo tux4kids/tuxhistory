@@ -71,19 +71,32 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 
 // Game vars
 static SDL_Rect origin;
-static SDL_Rect select_rect;
-static SDL_Rect select_rect_dest;
 static int screen_x;
 static int screen_y;
 
-static th_point Pmouse;
 static th_point Pscreen;
-static th_point Prclick;
-static th_point Plclick;
-static int mousedown_flag;
-static int mouseclicked_flag;
 static int screen_margin_in;
 static int screen_margin_out;
+
+typedef struct io_vars
+{
+    th_point Pmouse;
+    th_point Prclick;
+    th_point Plclick;
+    int mousedown_flag;
+    int mousedownr_flag;
+    int mouseclicked_flag;
+    SDL_Rect select_xy;
+    SDL_Rect select_rect;
+    SDL_Rect select_rect_dest;
+    th_point go_xy;
+    SDL_Rect go_rect;
+    SDL_Rect go_rect_dest;
+    int go_valid_flag;
+}io_vars;
+
+io_vars io;
+
 /********** Static functions definitions *********/
 
 static int game_init(void);
@@ -92,6 +105,7 @@ static void game_draw(void);
 static void game_handle_user_events(void);
 static void game_handle_mouse(void);
 static int game_mouse_event(SDL_Event event);
+static void game_proces(void);
 
 static int check_exit_conditions(void);
 static int game_over(int);
@@ -207,6 +221,7 @@ int game(void)
         game_handle_mouse();
 
         game_status = check_exit_conditions();
+        game_proces();
         game_draw();
         SDL_Flip(screen);
 
@@ -268,14 +283,72 @@ static void game_draw(void)
             obj_node = obj_node->next;
         }while(obj_node != NULL);
     }
+// User interaction
+    if(io.select_rect_dest.x != -1 && io.select_rect_dest.y != -1)
+        SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &io.select_rect_dest);
 
-    if(select_rect_dest.x != -1 && select_rect_dest.y != -1)
-        SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &select_rect_dest);
+    if((io.go_rect.x != -1 && io.go_rect.y != -1) &&
+        io.go_valid_flag == 1)
+    {
+        SDL_BlitSurface(images[IMG_ISOGO], NULL, screen, &io.go_rect_dest);
+        io.go_rect.x = -1;
+        io.go_rect.y = -1;
+    } 
+    else if((io.go_rect.x != -1 && io.go_rect.y != -1) &&
+            !io.go_valid_flag)
+    {
+        SDL_BlitSurface(images[IMG_ISOWRONG], NULL, screen, &io.go_rect_dest);
+        io.go_rect.x = -1;
+        io.go_rect.y = -1;
+    }
    
     /*Third layer: User Interface*/
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
+}
+
+static void game_proces(void)
+{
+    // TODO: Need to proces per player
+    int i, j;
+    //io.go_xy.x = 0;
+    //io.go_xy.y = 0;
+    if( io.go_rect.x != -1 &&
+        io.go_rect.y != -1 )
+    {
+        if( io.go_rect_dest.x != -1 &&
+            io.go_rect_dest.y != -1 )
+        {
+            if(gmaps[0][io.go_xy.x][io.go_xy.y].terrain == OCEAN)
+            {
+                io.go_valid_flag = 0;
+            }
+            else if(gmaps[0][io.go_xy.x][io.go_xy.y].terrain == HIGHSEA)
+            {
+                io.go_valid_flag = 0;
+            }
+            else if(gmaps[0][io.go_xy.x][io.go_xy.y].object != NULL)
+            {
+                if( gmaps[0][io.go_xy.x][io.go_xy.y].object->type == FOREST   ||
+                    gmaps[0][io.go_xy.x][io.go_xy.y].object->type == GOLD     ||
+                    gmaps[0][io.go_xy.x][io.go_xy.y].object->type == STONE ) 
+                {
+                    io.go_valid_flag = 0;
+                    // From to condition... Ships may use wather, 
+                    // pawns may une FOREST, GOLD, AND STONE
+                }
+                else
+                {
+                    io.go_valid_flag = 1;
+                }
+            }
+            else
+            {
+                io.go_valid_flag = 1;
+            }
+        }
+    }
 }
 
 static void game_handle_mouse(void)
@@ -284,7 +357,7 @@ static void game_handle_mouse(void)
     th_point Pdtmap;
     int i, j;
 
-    Pmousemap = mouse_map(Pmouse, Pscreen);
+    Pmousemap = mouse_map(io.Pmouse, Pscreen);
     Pdtmap = Pscreen;
     if(Pmousemap.x != -1 && Pmousemap.y != -1)
     {
@@ -296,64 +369,94 @@ static void game_handle_mouse(void)
         {
             // Is the mouse close to the border? Move the
             // map...
-            if(Pmouse.x < screen_margin_in && Pscreen.x > IN_SCROLL){
+            if(io.Pmouse.x < screen_margin_in && Pscreen.x > IN_SCROLL){
                 Pscreen.x = Pscreen.x - IN_SCROLL;
             }
-            if(Pmouse.x > screen->w - screen_margin_in &&
+            if(io.Pmouse.x > screen->w - screen_margin_in &&
                 (Pscreen.x + screen->w) < (map_image->w - IN_SCROLL)){
                 Pscreen.x = Pscreen.x + IN_SCROLL;
             }
-            if(Pmouse.y < screen_margin_in && Pscreen.y > IN_SCROLL){
+            if(io.Pmouse.y < screen_margin_in && Pscreen.y > IN_SCROLL){
                 Pscreen.y = Pscreen.y - IN_SCROLL;
             }
-            if(Pmouse.y > screen->h - screen_margin_in &&
+            if(io.Pmouse.y > screen->h - screen_margin_in &&
                     (Pscreen.y + screen->h) < (map_image->h - IN_SCROLL)){
                 Pscreen.y = Pscreen.y + IN_SCROLL;
             }
 
             // Is the mouse VERY close to the border?
             // Move the map faster!
-            if(Pmouse.x < screen_margin_out && Pscreen.x > OUT_SCROLL){
+            if(io.Pmouse.x < screen_margin_out && Pscreen.x > OUT_SCROLL){
                 Pscreen.x = Pscreen.x - OUT_SCROLL;
             }
-            if(Pmouse.x > screen->w - screen_margin_out &&
+            if(io.Pmouse.x > screen->w - screen_margin_out &&
             (Pscreen.x + screen->w) < (map_image->w - OUT_SCROLL)){
                 Pscreen.x = Pscreen.x + OUT_SCROLL;
             }
-            if(Pmouse.y < screen_margin_out && Pscreen.y > OUT_SCROLL){
+            if(io.Pmouse.y < screen_margin_out && Pscreen.y > OUT_SCROLL){
                 Pscreen.y = Pscreen.y - OUT_SCROLL;
             }
-            if(Pmouse.y > screen->h - screen_margin_out &&
+            if(io.Pmouse.y > screen->h - screen_margin_out &&
                     (Pscreen.y + screen->h) < (map_image->h - OUT_SCROLL)){
                 Pscreen.y = Pscreen.y + OUT_SCROLL;
             }
             
         }
-        if( select_rect.x > Pscreen.x &&
-            select_rect.x < Pscreen.x + screen->w &&
-            select_rect.y > Pscreen.y &&
-            select_rect.y < Pscreen.y + screen->h)
+        if( io.select_rect.x > Pscreen.x &&
+            io.select_rect.x < Pscreen.x + screen->w &&
+            io.select_rect.y > Pscreen.y &&
+            io.select_rect.y < Pscreen.y + screen->h)
         {
-            select_rect_dest.x = select_rect.x - Pscreen.x;
-            select_rect_dest.y = select_rect.y - Pscreen.y;
-            printf("ScreenP: %d, %d Select: %d, %d \n", Pscreen.x, Pscreen.y, select_rect.x, select_rect.y);
+            io.select_rect_dest.x = io.select_rect.x - Pscreen.x;
+            io.select_rect_dest.y = io.select_rect.y - Pscreen.y;
         }
         else
         {
-            select_rect_dest.x = -1;
-            select_rect_dest.y = -1;
+            io.select_rect_dest.x = -1;
+            io.select_rect_dest.y = -1;
         }
     }
-    if(mousedown_flag != 0)
+    if(io.mousedown_flag != 0)
     {
-        if(mouseclicked_flag != 0)
+        if(io.mouseclicked_flag != 0)
         {
-            Pmousemap = mouse_map(Prclick, Pscreen);
-            mousedown_flag = 0;
-            select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
-            select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-            printf("Draw select: %d %d ", select_rect.x, select_rect.y);
+            Pmousemap = mouse_map(io.Plclick, Pscreen);
+            io.mousedown_flag = 0;
+            io.select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+            io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
+            io.select_xy.x = Pmousemap.x;
+            io.select_xy.y = Pmousemap.y;
+            printf("Draw select: %d %d \n", io.select_rect.x, io.select_rect.y);
         }
+    }
+    if(io.mousedownr_flag != 0)
+    {
+        Pmousemap = mouse_map(io.Prclick, Pscreen);
+        io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+        io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
+        printf("Go select: %d %d \n", io.go_rect.x, io.go_rect.y);
+        io.mousedownr_flag = 0;
+        if( io.go_rect.x > Pscreen.x &&
+            io.go_rect.x < Pscreen.x + screen->w &&
+            io.go_rect.y > Pscreen.y &&
+            io.go_rect.y < Pscreen.y + screen->h)
+        {
+            io.go_rect_dest.x = io.go_rect.x - Pscreen.x;
+            io.go_rect_dest.y = io.go_rect.y - Pscreen.y;
+            io.go_xy.x = Pmousemap.x;
+            io.go_xy.y = Pmousemap.y;
+            printf("ScreenP: %d, %d go: %d, %d \n", Pscreen.x, Pscreen.y, io.go_rect.x, io.go_rect.y);
+        }
+        else
+        {
+            io.go_rect_dest.x = -1;
+            io.go_rect_dest.y = -1;
+        }
+    }
+    else
+    {
+        io.go_rect.x = -1;
+        io.go_rect.y = -1;
     }
 }
 
@@ -548,23 +651,24 @@ static void game_handle_user_events(void)
     }
     if (event.type == SDL_MOUSEMOTION)
     {
-        Pmouse.x = event.button.x;
-        Pmouse.y = event.button.y;
+        io.Pmouse.x = event.button.x;
+        io.Pmouse.y = event.button.y;
     }
     if (event.type == SDL_MOUSEBUTTONDOWN)
     {
         if(event.button.button == SDL_BUTTON_LEFT)
         {
-            Plclick.x = event.button.x;
-            Plclick.y = event.button.y;
-            mousedown_flag = 1;
-            mouseclicked_flag = 1;
+            io.Plclick.x = event.button.x;
+            io.Plclick.y = event.button.y;
+            io.mousedown_flag = 1;
+            io.mouseclicked_flag = 1;
         }
 
-        if(event.button.button == SDL_BUTTON_LEFT)
+        if(event.button.button == SDL_BUTTON_RIGHT)
         {
-            Prclick.x = event.button.x;
-            Prclick.y = event.button.y;
+            io.mousedownr_flag = 1;
+            io.Prclick.x = event.button.x;
+            io.Prclick.y = event.button.y;
         }
 
         key = game_mouse_event(event);
@@ -573,7 +677,7 @@ static void game_handle_user_events(void)
     {
         if(event.button.button == SDL_BUTTON_LEFT)
         {
-            mousedown_flag = 0;
+            io.mousedown_flag = 0;
         }
     }
 

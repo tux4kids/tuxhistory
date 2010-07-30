@@ -80,6 +80,7 @@ int create_gmaps(int players)
             {
                 count++;
                 gmaps[i][j][k].visible = 1;
+                gmaps[i][j][k].terrain = map[j][k].terrain;
                 for(l = 0; l < NUM_DIRS; l++)
                 {
                     point.x = j;

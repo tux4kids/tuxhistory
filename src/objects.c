@@ -24,6 +24,7 @@ static int init_obj_hash(void)
     hashtable_add(obj_table_hash, "FOREST_BOREAL", FOREST_BOREAL);
     hashtable_add(obj_table_hash, "FOREST_WETLAND", FOREST_WETLAND);
     hashtable_add(obj_table_hash, "FOREST_RAIN", FOREST_RAIN);
+    hashtable_add(obj_table_hash, "VILLAGER_MILKMAID", VILLAGER_MILKMAID);
 
     hashtable_add(obj_table_hash, "FOREST", FOREST);
     hashtable_add(obj_table_hash, "GOLD", GOLD);
@@ -141,14 +142,78 @@ int objects_xml(FILE *fp)
             return 1;
         }
 
+        if(object[i].type != FOREST || 
+            object[i].type != GOLD   ||
+            object[i].type != STONE)
+        {
+            node = mxmlFindElement(inode, inode, "defence",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].defence = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].defence = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+            
+            node = mxmlFindElement(inode, inode, "attack",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].attack = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].attack = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+        
+            node = mxmlFindElement(inode, inode, "move",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].move = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].move = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+        }
+        else
+        {
+            object[i].defence = -1;
+            object[i].attack = -1;
+            object[i].move = -1;
+        }
         /* Debug: print the values of current object */
-        printf("%d %s:%d(%s) %s lives: %d\n", 
+        printf("%d %s:%d(%s) %s lives: %d, def: %d, att: %d, mov: %d\n", 
                 object[i].type,
                 object[i].name,
                 object[i].name_enum,
                 object[i].rname,
                 object[i].description,
-                object[i].live);
+                object[i].live,
+                object[i].defence,
+                object[i].attack,
+                object[i].move);
 
         /* End of debug */
         hashtable_add(objects_hash, object[i].name, &object[i]);

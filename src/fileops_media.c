@@ -62,7 +62,9 @@ int load_image_data()
   "status/gameover.png",
   "status/gameover_won.png",
   "others/isomapper.png",
-  "others/select.png"
+  "others/select.png",
+  "others/go.png",
+  "others/wrong.png"
   };
 
 
@@ -302,7 +304,8 @@ int load_image_data()
       "forest/boreal.png",
       "forest/wetland.png",
       "forest/rain.png",
-      "forest/broadleaf.png"
+      "forest/broadleaf.png",
+      "units/milkmaid.png"
   };
 
 

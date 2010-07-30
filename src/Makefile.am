@@ -49,7 +49,8 @@ tuxhistory_SOURCES = tuxhistory.c \
 	SDL_rotozoom.c	\
 	scandir.c	\
 	pixels.c	\
-	throttle.c	
+	throttle.c	\
+	tuxrts.c
 
 
 # HACK "TuxHistory" is the Windows program, whereas "tuxhistory" is the Unix program
@@ -77,12 +78,13 @@ EXTRA_DIST = 	credits.h 	\
 	players.h		\
 	SDL_extras.h	\
 	SDL_rotozoom.h	\
-	gettext.h	\
-	scandir.h	\
-	pixels.h	\
-	compiler.h	\
+	gettext.h		\
+	scandir.h		\
+	pixels.h		\
+	compiler.h		\
 	transtruct.h	\
-	throttle.h
+	throttle.h 		\
+	tuxrts.h
         
 
 

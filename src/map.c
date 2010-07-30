@@ -137,7 +137,6 @@ int map_xml(FILE *fp)
                 printf("Error: field not found...");
                 //return 0;
             }
-            //printf("%d",node->child->value.integer);
 
             if(node->child->value.integer >= 0)
             {
@@ -162,8 +161,6 @@ int map_xml(FILE *fp)
                     tmp_obj.x = x;
                     tmp_obj.y = y;
                     list_add(&list_nodes, tmp_obj);
-
-                    //map[i][j].obj_id = object_counter;
 
                     object_counter++;
                 }
@@ -698,8 +695,8 @@ int generate_map(void)
             anchor.y = dest.y + terrain[*img_enums]->h/2;
 
 
-            printf(" Tile dest in px: (%d,%d) from: (%d,%d) with anchori (%d,%d)\n", 
-                    dest.x, dest.y, i, j, anchor.x, anchor.y);
+            //printf(" Tile dest in px: (%d,%d) from: (%d,%d) with anchori (%d,%d)\n", 
+            //        dest.x, dest.y, i, j, anchor.x, anchor.y);
 
             gmaps[0][i][j].anchor = anchor;
             gmaps[0][i][j].rect.x = dest.x;

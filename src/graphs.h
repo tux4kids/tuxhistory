@@ -15,6 +15,7 @@
 #define GRAPHS_H
 
 #include "SDL.h"
+#include "tuxhistory.h"
 #include "globals.h"
 #include "objects.h"
 #include "map.h"
