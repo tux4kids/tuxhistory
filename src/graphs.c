@@ -16,6 +16,7 @@
 #include "globals.h"
 #include "graphs.h"
 #include "players.h"
+#include "llist.h"
 
 
 static int gmaps_alloc(int xsize, int ysize, int maps);
@@ -81,6 +82,7 @@ int create_gmaps(int players)
                 count++;
                 gmaps[i][j][k].visible = 1;
                 gmaps[i][j][k].terrain = map[j][k].terrain;
+                gmaps[i][j][k].object = NULL;
                 for(l = 0; l < NUM_DIRS; l++)
                 {
                     point.x = j;
@@ -114,6 +116,18 @@ int create_gmaps(int players)
 
 int update_gmaps(void)
 {
+    list_node *obj_node;
+
+    obj_node = list_nodes;
+    if(obj_node != NULL)
+    {
+        do{
+            gmaps[0][obj_node->obj.x][obj_node->obj.y].object = obj_node;
+            gmaps[0][obj_node->obj.x][obj_node->obj.y].object = obj_node;
+            obj_node = obj_node->next;
+        }while(obj_node != NULL);
+    }
+
     return 0;
 }
 

@@ -18,6 +18,7 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_extras.h"
+#include "SDL_rotozoom.h"
 
 #include "tuxhistory.h"
 #include "globals.h"
@@ -29,6 +30,7 @@
 #include "graphs.h"
 
 SDL_Surface* map_image;
+SDL_Surface* mini_map_image;
 
 static int  init_map_hash(void);
 static void end_map_hash(void);
@@ -647,6 +649,8 @@ int generate_map(void)
         return 1;
     }
 
+
+
     // Prepare the variables...
     SDL_FillRect(map_image, NULL, SDL_MapRGB(map_image->format, 0, 0 ,0));
 
@@ -746,6 +750,14 @@ int generate_map(void)
     // Create a anchors map and allocates int **anchor_map
     generate_anchormap(); 
 
+
+    // Generate mini map
+    mini_map_image = rotozoomSurface(map_image, 0, 0.1, 1);
+    if(mini_map_image == NULL)
+    {
+        printf("Error: No mini map!");
+        return 1;
+    }
     return 0;
 }
 

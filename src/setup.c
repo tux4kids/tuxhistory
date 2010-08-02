@@ -211,7 +211,7 @@ void handle_command_args(int argc, char* argv[])
     {
       /* Display help message: */
 
-      printf("\nTux, of Math Command\n\n"
+      printf("\nTux History\n\n"
         "Use the number keys on the keyboard to answer math equations.\n"
         "If you don't answer a comet's math equation before it hits\n"
         "one of your cities, the city's shields will be destroyed.\n"
@@ -258,8 +258,8 @@ void handle_command_args(int argc, char* argv[])
              strcmp(argv[i], "-c") == 0)
     {
       printf(
-        "\n\"Tux, of Math Command\" version " VERSION ", Copyright (C) 2001-2009,\n"
-        "Bill Kendrick, David Bruce, Tim Holy, and the Tux4Kids Project.\n"
+        "\n\"Tux History\" version " VERSION ", Copyright (C) 2010,\n"
+        "Jesus Mager, Bill Kendrick, David Bruce, Tim Holy, and the Tux4Kids Project.\n"
         "This program is free software; you can redistribute it and/or\n"
         "modify it under the terms of the GNU General Public License\n"
         "as published by the Free Software Foundation.  See COPYING.txt\n"
@@ -565,7 +565,7 @@ void initialize_SDL(void)
 
     seticon();
 
-    SDL_WM_SetCaption("Tu History", "TuxHistory");
+    SDL_WM_SetCaption("Tux History", "TuxHistory");
   }
 
   /* --- Define the colors we use --- */

@@ -64,7 +64,8 @@ int load_image_data()
   "others/isomapper.png",
   "others/select.png",
   "others/go.png",
-  "others/wrong.png"
+  "others/wrong.png",
+  "gui/byzantine.png"
   };
 
 

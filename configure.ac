@@ -461,6 +461,7 @@ data/fonts/Makefile
 data/images/Makefile
 data/images/backgrounds/Makefile
 data/images/icons/Makefile
+data/images/gui/Makefile
 data/images/others/Makefile
 data/images/penguins/Makefile
 data/images/status/Makefile

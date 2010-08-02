@@ -39,7 +39,6 @@ int game(void);
 void game_set_start_message(const char*, const char*, const char*, const char*);
 
 void draw_nums(const char* str, int x, int y);
-void draw_line(int x1, int y1, int x2, int y2, int r, int g, int b);
 void draw_numbers(const char* str, int x, int y);
 
 #endif

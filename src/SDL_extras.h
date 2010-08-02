@@ -56,4 +56,8 @@ SDL_Surface*    SimpleText(const char *t, int size, SDL_Color* col);
 SDL_Surface*    SimpleTextWithOffset(const char *t, int size, SDL_Color* col, int *glyph_offset);
 Uint32          get_pcolori(SDL_Surface *surface, int x, int y);
 
+void            draw_line(SDL_Surface* surface, SDL_Rect rect, int red, int grn, int blu);
+void            putpixel(SDL_Surface* surface, int x, int y, Uint32 pixel);
+void            draw_rect(SDL_Surface* surface, SDL_Rect rect);
+
 #endif

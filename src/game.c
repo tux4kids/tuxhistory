@@ -182,7 +182,8 @@ int game(void)
     while(game_status == GAME_IN_PROGRESS)
     {
         last_time = SDL_GetTicks();
-        
+
+        update_gmaps();
         game_handle_user_events();
         game_handle_mouse();
 
@@ -269,9 +270,29 @@ static void game_draw(void)
     }
    
     /*Third layer: User Interface*/
+
+    //TODO: Write a panel function to manipulate teh game...
+    
+    dest.x = 0;
+    dest.y = (screen->h / 5) * 4;
+    SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], NULL, screen, &dest);
+    
+    dest.x = (screen->w - mini_map_image->w - 5);
+    dest.y = (screen->h - mini_map_image->h - 5);
+    SDL_BlitSurface(mini_map_image, NULL, screen, &dest);
+    
+
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
+
+    dest.x = 20;
+    dest.y = 20;
+    dest.h = 100;
+    dest.w = 100;
+
+    draw_rect(screen, dest);
+
 }
 
 static void game_handle_mouse(void)

@@ -1,3 +1,5 @@
+#include "SDL.h"
+#include "SDL_rotozoom.h"
 #include "tuxrts.h"
 #include "globals.h"
 #include "tuxhistory.h"
@@ -10,7 +12,9 @@
 
 int tuxrts_init(char *object_name, char *map_name, int players)
 {
+    float zoom;
     FILE *fp;
+    SDL_Surface *tmp_surf;
 
     object_counter = 0;
 
@@ -52,6 +56,22 @@ int tuxrts_init(char *object_name, char *map_name, int players)
     }
     generate_map();
 
+    zoom = (float)screen->w/(float)images[IMG_GUIBG_BYZANTINE]->w;
+
+    //rotozoomSurface (SDL_Surface *src, double angle, double zoom, int smooth);
+    tmp_surf = rotozoomSurface(images[IMG_GUIBG_BYZANTINE], 0, zoom, 1);
+
+    if (tmp_surf == NULL)
+    {
+      fprintf(stderr,
+              "\nError: Zoom of GUI Backgrund not possible\n");
+      return 0;
+    }
+
+    SDL_free(images[IMG_GUIBG_BYZANTINE]);
+    images[IMG_GUIBG_BYZANTINE] = tmp_surf;
+
+
     return 0;
 }
 
@@ -60,6 +80,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
 int rts_valid_tile(int player, int unit, th_point coords)
 {
     list_node *unit_p;
+    th_obj *obj_p;
     if(coords.x < 0 || coords.x > x_tildes)
         return 0;
     if(coords.y < 0 || coords.y > y_tildes)
@@ -77,24 +98,50 @@ int rts_valid_tile(int player, int unit, th_point coords)
     {
         return 0;
     }
-    /*else if(gmaps[player][coords.x][coords.y].object != NULL)
+    else if(gmaps[player][coords.x][coords.y].object != NULL)
     {
-        if( gmaps[player][coords.x][coords.y].object->type == FOREST   ||
-            gmaps[player][coords.x][coords.y].object->type == GOLD     ||
-            gmaps[player][coords.x][coords.y].object->type == STONE ) 
+
+        obj_p = rts_get_object(player, coords);
+        if(obj_p != NULL)
         {
-            return 0;
-            // From to condition... Ships may use wather, 
-            // pawns may une FOREST, GOLD, AND STONE
+            if( obj_p->type == FOREST   ||
+                obj_p->type == GOLD     ||
+                obj_p->type == STONE)
+                return 0;
+            else
+                return 1;
         }
         else
         {
             return 1;
         }
-    }*/
+    }
     else
     {
         return 1;
     }
+}
+
+th_obj *rts_get_object(int player, th_point coords)
+{
+    list_node *obj_node;
+
+    if(gmaps[player][coords.x][coords.y].visible == 0)
+        return NULL;
+
+    obj_node = list_nodes;
+    if(obj_node != NULL)
+    {
+        do{
+            if( obj_node->obj.x == coords.x &&
+                obj_node->obj.y == coords.y   )
+                return &obj_node->obj;
+            else
+                obj_node = obj_node->next;
+        }while(obj_node != NULL);
+        return NULL;
+    }
+
+    return 0;
 }
 

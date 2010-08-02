@@ -1108,3 +1108,147 @@ Uint32 get_pcolori(SDL_Surface *surface, int x, int y)
 
 #endif
 
+/* Draw a line: */
+void draw_line(SDL_Surface* surface, SDL_Rect rect, int red, int grn, int blu)
+{
+  int dx, dy, tmp;
+  float m, b;
+  Uint32 pixel;
+  SDL_Rect dest;
+
+  pixel = SDL_MapRGB(screen->format, red, grn, blu);
+
+  dx = rect.w - rect.x;
+  dy = rect.h - rect.y;
+
+  putpixel(screen, rect.x, rect.y, pixel);
+
+  if (dx != 0)
+  {
+    m = ((float) dy) / ((float) dx);
+    b = rect.y - m * rect.x;
+
+    if (rect.w > rect.x)
+      dx = 1;
+    else
+      dx = -1;
+
+    while (rect.x != rect.w)
+    {
+      rect.x = rect.x + dx;
+      rect.y = m * rect.x + b;
+
+      putpixel(surface, rect.x, rect.y, pixel);
+    }
+  }
+  else
+  {
+    if (rect.y > rect.h)
+    {
+      tmp = rect.y;
+      rect.y = rect.h;
+      rect.h = tmp;
+    }
+
+    dest.x = rect.x;
+    dest.y = rect.y;
+    dest.w = 3;
+    dest.h = rect.h - rect.y;
+
+    SDL_FillRect(surface, &dest, pixel);
+  }
+}
+
+
+/* Draw a single pixel into the surface: */
+
+void putpixel(SDL_Surface* surface, int x, int y, Uint32 pixel)
+{
+#ifdef PUTPIXEL_RAW
+  int bpp;
+  Uint8* p;
+
+  /* Determine bytes-per-pixel for the surface in question: */
+
+  bpp = surface->format->BytesPerPixel;
+
+
+  /* Set a pointer to the exact location in memory of the pixel
+     in question: */
+
+  p = (Uint8 *) (surface->pixels +       /* Start at beginning of RAM */
+                 (y * surface->pitch) +  /* Go down Y lines */
+                 (x * bpp));             /* Go in X pixels */
+
+
+  /* Assuming the X/Y values are within the bounds of this surface... */
+
+  if (x >= 0 && y >= 0 && x < surface->w && y < surface->h)
+  {
+      /* Set the (correctly-sized) piece of data in the surface's RAM
+         to the pixel value sent in: */
+
+    if (bpp == 1)
+      *p = pixel;
+    else if (bpp == 2)
+      *(Uint16 *)p = pixel;
+    else if (bpp == 3)
+    {
+      if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
+      {
+        p[0] = (pixel >> 16) & 0xff;
+        p[1] = (pixel >> 8) & 0xff;
+        p[2] = pixel & 0xff;
+      }
+      else
+      {
+        p[0] = pixel & 0xff;
+        p[1] = (pixel >> 8) & 0xff;
+        p[2] = (pixel >> 16) & 0xff;
+      }
+    }
+    else if (bpp == 4)
+    {
+      *(Uint32 *)p = pixel;
+    }
+  }
+#else
+  SDL_Rect dest;
+
+  dest.x = x;
+  dest.y = y;
+  dest.w = 3;
+  dest.h = 4;
+
+  SDL_FillRect(surface, &dest, pixel);
+#endif
+}
+
+void draw_rect(SDL_Surface* surface, SDL_Rect rect)
+{
+    SDL_Rect tmp_rect;
+
+    tmp_rect.x = rect.x;
+    tmp_rect.y = rect.y;
+    tmp_rect.w = rect.w;
+    tmp_rect.h = rect.y;
+    draw_line(surface, tmp_rect, 255, 255, 255);
+
+    tmp_rect.x = rect.x;
+    tmp_rect.y = rect.y;
+    tmp_rect.w = rect.x;
+    tmp_rect.h = rect.h;
+    draw_line(surface, tmp_rect, 255, 255, 255);
+
+    tmp_rect.x = rect.x;
+    tmp_rect.y = rect.h;
+    tmp_rect.w = rect.w;
+    tmp_rect.h = rect.h;
+    draw_line(surface, tmp_rect, 255, 255, 255);
+
+    tmp_rect.x = rect.w;
+    tmp_rect.y = rect.y;
+    tmp_rect.w = rect.w;
+    tmp_rect.h = rect.h;
+    draw_line(surface, tmp_rect, 255, 255, 255);
+}
