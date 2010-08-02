@@ -38,6 +38,7 @@
 #include "map.h"
 #include "objects.h"
 #include "llist.h"
+#include "tuxrts.h"
 
 
 #define FPS 15 /* 15 frames per second */
@@ -121,7 +122,6 @@ static SDL_Surface* current_bkgd()
 
 static int game_init(void)
 {
-    FILE *fp;
 
     //SDL variables init
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
@@ -155,42 +155,9 @@ static int game_init(void)
     SDL_quit_received = 0;
     escape_received = 0;
 
-    fp = LoadObj("objects");
-    if(fp == NULL)
-    {
-        printf("File not found!\n");
-        DEBUGMSG(debug_game, "File not found!");
-        return 1;
-    }
-    printf("Object files in memory!\n");
-    if(objects_xml(fp))
-    {
-        printf("Error parsing file!");
-        DEBUGMSG(debug_game, "Error loading the objects description file.\n");
-        return 1;
-    }
-    printf("Object file parsed.\n");
-   
-    fp = LoadMap("map");
-    if(fp == NULL)
-    {
-        DEBUGMSG(debug_game, "File not found!");
-        return 1;
-    }
-    printf("Map file in memory.\n");
 
-    if(map_xml(fp))
-    {
-        printf("Error parsing file!");
-        DEBUGMSG(debug_game, "Error loading the map file.\n");
+    if(tuxrts_init("objects", "map", 2))
         return 1;
-    }
-    printf("Map file parsed!\n");
-    if(create_gmaps(2))
-    {
-        printf("Couldn't generate grpah mesh!\n");
-    }
-    generate_map();
 
     return 0;
 }
@@ -221,6 +188,8 @@ int game(void)
         game_handle_mouse();
 
         game_status = check_exit_conditions();
+        if(rts_valid_tile(0,1,io.go_xy))
+            printf("Is a valid tile... ");
         game_proces();
         game_draw();
         SDL_Flip(screen);
@@ -310,10 +279,7 @@ static void game_draw(void)
 
 static void game_proces(void)
 {
-    // TODO: Need to proces per player
     int i, j;
-    //io.go_xy.x = 0;
-    //io.go_xy.y = 0;
     if( io.go_rect.x != -1 &&
         io.go_rect.y != -1 )
     {
@@ -322,29 +288,34 @@ static void game_proces(void)
         {
             if(gmaps[0][io.go_xy.x][io.go_xy.y].terrain == OCEAN)
             {
+                printf("INVALID: Ocean tile");
                 io.go_valid_flag = 0;
             }
             else if(gmaps[0][io.go_xy.x][io.go_xy.y].terrain == HIGHSEA)
             {
+                printf("INVALID: Highsea tile");
                 io.go_valid_flag = 0;
             }
             else if(gmaps[0][io.go_xy.x][io.go_xy.y].object != NULL)
             {
-                if( gmaps[0][io.go_xy.x][io.go_xy.y].object->type == FOREST   ||
+                /*if( gmaps[0][io.go_xy.x][io.go_xy.y].object->type == FOREST   ||
                     gmaps[0][io.go_xy.x][io.go_xy.y].object->type == GOLD     ||
                     gmaps[0][io.go_xy.x][io.go_xy.y].object->type == STONE ) 
                 {
+                    printf("INVALID: Object in tile");
                     io.go_valid_flag = 0;
                     // From to condition... Ships may use wather, 
                     // pawns may une FOREST, GOLD, AND STONE
                 }
                 else
                 {
+                    printf("VALID: The target tile is valid");
                     io.go_valid_flag = 1;
-                }
+                }*/
             }
             else
             {
+                printf("VALID: The target tile is valid");
                 io.go_valid_flag = 1;
             }
         }
@@ -418,6 +389,7 @@ static void game_handle_mouse(void)
     }
     if(io.mousedown_flag != 0)
     {
+        printf("Mouse down, ... ");
         if(io.mouseclicked_flag != 0)
         {
             Pmousemap = mouse_map(io.Plclick, Pscreen);
@@ -434,7 +406,7 @@ static void game_handle_mouse(void)
         Pmousemap = mouse_map(io.Prclick, Pscreen);
         io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
         io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-        printf("Go select: %d %d \n", io.go_rect.x, io.go_rect.y);
+        printf("Go select: %d %d ", io.go_rect.x, io.go_rect.y);
         io.mousedownr_flag = 0;
         if( io.go_rect.x > Pscreen.x &&
             io.go_rect.x < Pscreen.x + screen->w &&
