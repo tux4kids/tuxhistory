@@ -790,15 +790,15 @@ th_point mouse_map(th_point mouse_p, th_point screen_p)
     
 
     anchor_p = &anchor_map[Pmousemap.x][Pmousemap.y];
-    if(anchor_p->x != -1 && anchor_p->y != -1)
-        terr_e = gmaps[0][anchor_p->x][anchor_p->y].terrain;
-    else
-        terr_e = -1;
-
+    if(anchor_p->x == -1 && anchor_p->y == -1)
+    {
+        Pmousemap.x = -1;
+        Pmousemap.y = -1;
+        return Pmousemap;
+    }
 
     Pmousemap.x = anchor_p->x;
     Pmousemap.y = anchor_p->y; 
-
 
     color = get_pcolor(images[IMG_ISOMAPPER], Ptilemap.x, Ptilemap.y);
 

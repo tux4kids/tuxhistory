@@ -61,8 +61,8 @@
 /* (These are now 'extern'd in "tuxhsitory.h") */
 
 /* window size */
-int win_res_x = 640;
-int win_res_y = 480;
+int win_res_x = 800;
+int win_res_y = 600;
 
 /* full screen size (set in initialize_SDL() ) */
 int fs_res_x = 0;
@@ -203,6 +203,8 @@ void handle_command_args(int argc, char* argv[])
   DIR *dirp;
   int i;
 
+
+  Opts_SetGlobalOpt(FULLSCREEN, 0);
   for (i = 1; i < argc; i++)
   {
     if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
@@ -321,7 +323,7 @@ void handle_command_args(int argc, char* argv[])
     else if (strcmp(argv[i], "--windowed") == 0 ||
              strcmp(argv[i], "-w") == 0)
     {
-      Opts_SetGlobalOpt(FULLSCREEN, 0);
+        Opts_SetGlobalOpt(FULLSCREEN, 0);
     }
     else if (strcmp(argv[i], "--nosound") == 0 ||
              strcmp(argv[i], "-s") == 0 ||

@@ -41,7 +41,7 @@
 #include "tuxrts.h"
 
 
-#define FPS 15 /* 15 frames per second */
+#define FPS 50 /* 15 frames per second */
 #define MS_PER_FRAME (1000 / FPS)
 
 #define IN_SCROLL 3 // Scroll speed
@@ -106,7 +106,6 @@ static void game_draw(void);
 static void game_handle_user_events(void);
 static void game_handle_mouse(void);
 static int game_mouse_event(SDL_Event event);
-static void game_proces(void);
 
 static int check_exit_conditions(void);
 static int game_over(int);
@@ -188,9 +187,6 @@ int game(void)
         game_handle_mouse();
 
         game_status = check_exit_conditions();
-        if(rts_valid_tile(0,1,io.go_xy))
-            printf("Is a valid tile... ");
-        game_proces();
         game_draw();
         SDL_Flip(screen);
 
@@ -257,69 +253,25 @@ static void game_draw(void)
         SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &io.select_rect_dest);
 
     if((io.go_rect.x != -1 && io.go_rect.y != -1) &&
-        io.go_valid_flag == 1)
+        io.go_valid_flag == 1 && io.go_rect_dest.x != -1)
     {
         SDL_BlitSurface(images[IMG_ISOGO], NULL, screen, &io.go_rect_dest);
         io.go_rect.x = -1;
         io.go_rect.y = -1;
     } 
     else if((io.go_rect.x != -1 && io.go_rect.y != -1) &&
-            !io.go_valid_flag)
+            !io.go_valid_flag && io.go_rect_dest.x != -1)
     {
         SDL_BlitSurface(images[IMG_ISOWRONG], NULL, screen, &io.go_rect_dest);
         io.go_rect.x = -1;
         io.go_rect.y = -1;
+        io.go_valid_flag = 0;
     }
    
     /*Third layer: User Interface*/
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
-}
-
-static void game_proces(void)
-{
-    int i, j;
-    if( io.go_rect.x != -1 &&
-        io.go_rect.y != -1 )
-    {
-        if( io.go_rect_dest.x != -1 &&
-            io.go_rect_dest.y != -1 )
-        {
-            if(gmaps[0][io.go_xy.x][io.go_xy.y].terrain == OCEAN)
-            {
-                printf("INVALID: Ocean tile");
-                io.go_valid_flag = 0;
-            }
-            else if(gmaps[0][io.go_xy.x][io.go_xy.y].terrain == HIGHSEA)
-            {
-                printf("INVALID: Highsea tile");
-                io.go_valid_flag = 0;
-            }
-            else if(gmaps[0][io.go_xy.x][io.go_xy.y].object != NULL)
-            {
-                /*if( gmaps[0][io.go_xy.x][io.go_xy.y].object->type == FOREST   ||
-                    gmaps[0][io.go_xy.x][io.go_xy.y].object->type == GOLD     ||
-                    gmaps[0][io.go_xy.x][io.go_xy.y].object->type == STONE ) 
-                {
-                    printf("INVALID: Object in tile");
-                    io.go_valid_flag = 0;
-                    // From to condition... Ships may use wather, 
-                    // pawns may une FOREST, GOLD, AND STONE
-                }
-                else
-                {
-                    printf("VALID: The target tile is valid");
-                    io.go_valid_flag = 1;
-                }*/
-            }
-            else
-            {
-                printf("VALID: The target tile is valid");
-                io.go_valid_flag = 1;
-            }
-        }
-    }
 }
 
 static void game_handle_mouse(void)
@@ -393,42 +345,59 @@ static void game_handle_mouse(void)
         if(io.mouseclicked_flag != 0)
         {
             Pmousemap = mouse_map(io.Plclick, Pscreen);
-            io.mousedown_flag = 0;
-            io.select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
-            io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-            io.select_xy.x = Pmousemap.x;
-            io.select_xy.y = Pmousemap.y;
-            printf("Draw select: %d %d \n", io.select_rect.x, io.select_rect.y);
+            if(Pmousemap.x != -1 && Pmousemap.y != -1)
+            {
+                io.mousedown_flag = 0;
+                io.select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+                io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
+                io.select_xy.x = Pmousemap.x;
+                io.select_xy.y = Pmousemap.y;
+                printf("Draw select: %d %d \n", io.select_rect.x, io.select_rect.y);
+            }
         }
     }
     if(io.mousedownr_flag != 0)
     {
         Pmousemap = mouse_map(io.Prclick, Pscreen);
-        io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
-        io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-        printf("Go select: %d %d ", io.go_rect.x, io.go_rect.y);
-        io.mousedownr_flag = 0;
-        if( io.go_rect.x > Pscreen.x &&
-            io.go_rect.x < Pscreen.x + screen->w &&
-            io.go_rect.y > Pscreen.y &&
-            io.go_rect.y < Pscreen.y + screen->h)
+        if(Pmousemap.x != -1 && Pmousemap.y != -1)
         {
-            io.go_rect_dest.x = io.go_rect.x - Pscreen.x;
-            io.go_rect_dest.y = io.go_rect.y - Pscreen.y;
-            io.go_xy.x = Pmousemap.x;
-            io.go_xy.y = Pmousemap.y;
-            printf("ScreenP: %d, %d go: %d, %d \n", Pscreen.x, Pscreen.y, io.go_rect.x, io.go_rect.y);
-        }
-        else
-        {
-            io.go_rect_dest.x = -1;
-            io.go_rect_dest.y = -1;
+            io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+            io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
+            printf("Go select: %d %d ", io.go_rect.x, io.go_rect.y);
+            io.mousedownr_flag = 0;
+            if( io.go_rect.x > Pscreen.x &&
+                io.go_rect.x < Pscreen.x + screen->w &&
+                io.go_rect.y > Pscreen.y &&
+                io.go_rect.y < Pscreen.y + screen->h)
+            {
+                io.go_rect_dest.x = io.go_rect.x - Pscreen.x;
+                io.go_rect_dest.y = io.go_rect.y - Pscreen.y;
+                io.go_xy.x = Pmousemap.x;
+                io.go_xy.y = Pmousemap.y;
+                //printf("ScreenP: %d, %d go: %d, %d \n", Pscreen.x, Pscreen.y, io.go_rect.x, io.go_rect.y);
+                if(rts_valid_tile(0,1,io.go_xy))
+                {
+                    printf("Is a valid tile...\n");
+                    io.go_valid_flag = 1;
+                }
+                else
+                {
+                    printf("Is a invalid tile...\n");
+                    io.go_valid_flag = 0;
+                }
+            }
+            else
+            {
+                io.go_rect_dest.x = -1;
+                io.go_rect_dest.y = -1;
+            }
         }
     }
     else
     {
         io.go_rect.x = -1;
         io.go_rect.y = -1;
+        io.go_valid_flag = 0;
     }
 }
 
