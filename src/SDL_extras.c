@@ -1252,3 +1252,34 @@ void draw_rect(SDL_Surface* surface, SDL_Rect rect)
     tmp_rect.h = rect.h;
     draw_line(surface, tmp_rect, 255, 255, 255);
 }
+
+void FillRect(SDL_Rect rect, int color) 
+{
+    SDL_FillRect(screen, &rect, color);
+}
+
+void th_ShowMessage(char* str, int size, int x, int y)
+{
+  SDL_Surface *s;
+  SDL_Rect loc;
+
+  s = NULL;
+
+  if (str)
+    s = BlackOutline(str, size, &white);
+
+  /* Draw lines of text (do after drawing Tux so text is in front): */
+  if (s)
+  {
+    loc.x = x; 
+    loc.y = y;
+    SDL_BlitSurface( s, NULL, screen, &loc);
+  }
+
+  /* and update: */
+  //SDL_UpdateRect(screen, 0, 0, 0, 0);
+
+  SDL_FreeSurface(s);
+}
+
+

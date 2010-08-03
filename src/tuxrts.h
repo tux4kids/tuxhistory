@@ -8,6 +8,19 @@
 #include "llist.h"
 #include "objects.h"
 
+enum{
+    BUILD,
+    REPAIR,
+    ATTACK,
+    CREATE
+};
+
+typedef struct rts_vars{
+    th_obj *selected_objs[30];
+    int selected_num;
+}rts_vars;
+
+
 /* tuxrts_mapinit(): Inizialize all map vars. This is
  * the fisrt function to call when we begin the game.
  * char *: Object file name, without .xml

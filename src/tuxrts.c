@@ -68,7 +68,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
       return 0;
     }
 
-    SDL_free(images[IMG_GUIBG_BYZANTINE]);
+    SDL_FreeSurface(images[IMG_GUIBG_BYZANTINE]);
     images[IMG_GUIBG_BYZANTINE] = tmp_surf;
 
 
@@ -126,7 +126,7 @@ th_obj *rts_get_object(int player, th_point coords)
 {
     list_node *obj_node;
 
-    if(gmaps[player][coords.x][coords.y].visible == 0)
+    if(gmaps[player][coords.x][coords.y].visible != 0)
         return NULL;
 
     obj_node = list_nodes;

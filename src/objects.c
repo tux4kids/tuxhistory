@@ -134,6 +134,7 @@ int objects_xml(FILE *fp)
         if(atoi(node->child->value.opaque) >= 0)
         {
             object[i].live = atoi(node->child->value.opaque);
+            object[i].actual_live = object[i].live;
         }
         else
         {

@@ -59,5 +59,7 @@ Uint32          get_pcolori(SDL_Surface *surface, int x, int y);
 void            draw_line(SDL_Surface* surface, SDL_Rect rect, int red, int grn, int blu);
 void            putpixel(SDL_Surface* surface, int x, int y, Uint32 pixel);
 void            draw_rect(SDL_Surface* surface, SDL_Rect rect);
+void            FillRect(SDL_Rect rect, int color); 
 
+void th_ShowMessage(char* str, int size, int x, int y);
 #endif

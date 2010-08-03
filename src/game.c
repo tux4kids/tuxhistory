@@ -74,6 +74,7 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 static SDL_Rect origin;
 static int screen_x;
 static int screen_y;
+static rts_vars selection;
 
 static th_point Pscreen;
 static int screen_margin_in;
@@ -90,6 +91,7 @@ typedef struct io_vars
     SDL_Rect select_xy;
     SDL_Rect select_rect;
     SDL_Rect select_rect_dest;
+    SDL_Rect select;
     th_point go_xy;
     SDL_Rect go_rect;
     SDL_Rect go_rect_dest;
@@ -214,6 +216,7 @@ static void game_draw(void)
 {
     SDL_Rect dest;
     list_node *obj_node;
+    char tmp_text[50];
 
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
@@ -245,6 +248,21 @@ static void game_draw(void)
                 dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
                     origin.y - objects[obj_node->obj.name_enum]->h/2;
                 SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
+
+                // Is the any object selected?
+                if(selection.selected_num != -1)
+                {
+                    if(selection.selected_objs[0] != NULL)
+                    {
+                        if(obj_node->obj.id == selection.selected_objs[0]->id)
+                        {
+                            dest.w = dest.x + objects[obj_node->obj.name_enum]->w;
+                            dest.h = dest.y;
+
+                            draw_line(screen, dest, 0,255,0);
+                        }
+                    }
+                }
              }
             obj_node = obj_node->next;
         }while(obj_node != NULL);
@@ -271,12 +289,39 @@ static void game_draw(void)
    
     /*Third layer: User Interface*/
 
-    //TODO: Write a panel function to manipulate teh game...
+    //TODO: Write a panel function to manipulate the game...
     
     dest.x = 0;
     dest.y = (screen->h / 5) * 4;
     SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], NULL, screen, &dest);
     
+    if(selection.selected_num != -1)
+    {
+        if(selection.selected_objs[0] != NULL)
+        {
+            dest.x = dest.x + 10;
+            dest.y = dest.y + 10;
+            dest.h = 100;
+            dest.w = screen->w / 5;
+            //FillRect(dest, 0x000000);
+
+            dest.x = dest.x + 2;
+            dest.y = dest.y + 2;
+            th_ShowMessage(selection.selected_objs[0]->rname, 12, dest.x+2, dest.y+2);
+
+            sprintf(tmp_text,"%d / %d", selection.selected_objs[0]->actual_live,
+                                        selection.selected_objs[0]->live);
+            th_ShowMessage(tmp_text, 15, 
+                    objects[selection.selected_objs[0]->name_enum]->w + dest.x + 10, dest.y+20);
+
+
+
+            dest.y = dest.y + 20;
+
+            SDL_BlitSurface(objects[selection.selected_objs[0]->name_enum], NULL, screen, &dest);
+        }
+    }
+
     dest.x = (screen->w - mini_map_image->w - 5);
     dest.y = (screen->h - mini_map_image->h - 5);
     SDL_BlitSurface(mini_map_image, NULL, screen, &dest);
@@ -286,12 +331,12 @@ static void game_draw(void)
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
 
-    dest.x = 20;
+    /*dest.x = 20;
     dest.y = 20;
     dest.h = 100;
     dest.w = 100;
 
-    draw_rect(screen, dest);
+    draw_rect(screen, dest);*/
 
 }
 
@@ -362,9 +407,11 @@ static void game_handle_mouse(void)
     }
     if(io.mousedown_flag != 0)
     {
-        printf("Mouse down, ... ");
+        //printf("Mouse down, ... ");
         if(io.mouseclicked_flag != 0)
         {
+            //io.select.x = Plclick.x;
+            //io.select.y = Plclick.y; 
             Pmousemap = mouse_map(io.Plclick, Pscreen);
             if(Pmousemap.x != -1 && Pmousemap.y != -1)
             {
@@ -373,7 +420,21 @@ static void game_handle_mouse(void)
                 io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
                 io.select_xy.x = Pmousemap.x;
                 io.select_xy.y = Pmousemap.y;
-                printf("Draw select: %d %d \n", io.select_rect.x, io.select_rect.y);
+
+                // Search for a object in current selected tile and
+                // select that object
+
+                selection.selected_objs[0]=rts_get_object(0,Pmousemap);
+                if(selection.selected_objs[0] != NULL)
+                {
+                    selection.selected_num = 0;
+                    printf("Selected: %s\n", selection.selected_objs[0]->name);
+                }
+                else
+                {
+                    selection.selected_num = -1;
+                }
+                
             }
         }
     }
@@ -384,7 +445,7 @@ static void game_handle_mouse(void)
         {
             io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
             io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-            printf("Go select: %d %d ", io.go_rect.x, io.go_rect.y);
+            //printf("Go select: %d %d ", io.go_rect.x, io.go_rect.y);
             io.mousedownr_flag = 0;
             if( io.go_rect.x > Pscreen.x &&
                 io.go_rect.x < Pscreen.x + screen->w &&
