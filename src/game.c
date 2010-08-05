@@ -481,6 +481,15 @@ static void game_handle_mouse(void)
         io.go_rect.y = -1;
         io.go_valid_flag = 0;
     }
+    if( selection.selected_num != -1        && 
+        selection.selected_objs[0] != NULL  &&
+        io.go_valid_flag)
+    {
+        Pmousemap.x = selection.selected_objs[0]->x;
+        Pmousemap.y = selection.selected_objs[0]->y;
+        ai_shortes_path(Pmousemap, io.go_xy);
+    }
+
 }
 
 static int pause_game(void)

@@ -26,6 +26,8 @@ endif
 
 
 tuxhistory_SOURCES = tuxhistory.c \
+	ai.c		\
+	bheap.c		\
 	setup.c 	\
 	titlescreen.c	\
 	map.c		\
@@ -58,6 +60,8 @@ TuxHistory_SOURCES  = $(tuxhistory_SOURCES) tuxmathrc.rc
 
 
 EXTRA_DIST = 	credits.h 	\
+	ai.h		\
+	bheap.h		\
 	fileops.h 	\
 	game.h		\
 	menu.h		\
