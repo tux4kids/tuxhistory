@@ -35,6 +35,7 @@ enum
 
 typedef struct gnode{
     int id;
+    th_point point;
     th_point rect;
     th_point anchor; //Anchors in main map surface.
     int visible;

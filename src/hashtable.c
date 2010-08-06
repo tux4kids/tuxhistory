@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2007, 2008, 2010 Robbert Haarman
+    with some additions by Jesus Mager 2010
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -21,6 +22,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "hashtable.h"
@@ -55,6 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 static inline unsigned int compute_hash(const struct hashtable *table,
                                         const char *key)
 {
+    printf("Init compute hash for %s\n", key);
     unsigned int n = table->hash(key);
     return (n < table->nbuckets) ? n : (n % table->nbuckets);
 }
@@ -70,17 +73,22 @@ int hashtable_add(struct hashtable *table, char *key, void *value)
     unsigned int n;
     struct hashtable_entry *entry = NEW(struct hashtable_entry);
     struct hashtable_entry *entries;
-    
+
+    if(!table) return 0;
+
     if(entry) {
         entry->key = key;
         entry->value = value;
         entry->next = NULL;
+        entry->prev = NULL;
         n = compute_hash(table, key);
         entries = table->bucket[n];
         if(!entries) table->bucket[n] = entry;
         else {
-            while(entries->next) entries = entries->next;
-            entries->next = entry;
+          while(entries->next) 
+            entries = entries->next;
+          entries->next = entry;
+          entry->prev = entries;
         }
         return 1;
     }
@@ -182,7 +190,50 @@ void *hashtable_lookup(const struct hashtable *table,
     
     return entry ? entry->value : NULL;
 }
+
+ /** remove the value bound to a key.
+ * @param table The hash table in which to remove the key.
+ * @param key The key to remove.
+ * @return The 1 succesfull removal, 0 if not found.
+ */
+int hashtable_remove(const struct hashtable *table,
+		       const char *key)
+{
+  unsigned int n = compute_hash(table, key);
+  struct hashtable_entry *entry = table->bucket[n];
+
+  while(entry) {
+    if(!strcmp(key, entry->key)) break;
+    entry = entry->next;
+  }
+
+  if(entry) {
+    if(entry->next) {
+      if(entry->prev) {
+        entry->prev->next = entry->next;
+        entry->next->prev = entry->prev;
+      }
+      else {
+        table->bucket[n] = entry->next;
+      }
+    }
+    else if(entry->prev)
+    {
+      entry->prev->next = NULL;
+    }
+    else {
+      table->bucket[n] = NULL;
+    }
     
+    free(entry);
+    entry = NULL;
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}   
+
 /** Create a hash table.
 * @param hash The hash function to use with this hash table.
         The function has to map NUL-terminated strings to unsigned ints.

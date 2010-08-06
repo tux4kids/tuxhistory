@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2007, 2008, 2010 Robbert Haarman
+    with some additions by Jesus Mager 2010
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -28,6 +29,7 @@ struct hashtable_entry {
     char *key;
     void *value;
     struct hashtable_entry *next;
+    struct hashtable_entry *prev;
 };
 
 struct hashtable {
@@ -43,6 +45,7 @@ void hashtable_iter(const struct hashtable *table,
 void (*func) (char *key, void *value));
 void *hashtable_lookup(const struct hashtable *table,
                         const char *key);
+int hashtable_remove(const struct hashtable *table, const char *key);
 struct hashtable *make_hashtable(unsigned int (*hash) (const char*),
                                 unsigned int nbuckets);
 

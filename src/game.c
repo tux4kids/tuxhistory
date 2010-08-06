@@ -428,7 +428,9 @@ static void game_handle_mouse(void)
                 if(selection.selected_objs[0] != NULL)
                 {
                     selection.selected_num = 0;
-                    printf("Selected: %s\n", selection.selected_objs[0]->name);
+                    printf("Selected: %s, in (%d, %d)\n", selection.selected_objs[0]->name,
+                            selection.selected_objs[0]->x,
+                            selection.selected_objs[0]->y);
                 }
                 else
                 {
@@ -445,7 +447,6 @@ static void game_handle_mouse(void)
         {
             io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
             io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-            //printf("Go select: %d %d ", io.go_rect.x, io.go_rect.y);
             io.mousedownr_flag = 0;
             if( io.go_rect.x > Pscreen.x &&
                 io.go_rect.x < Pscreen.x + screen->w &&
@@ -456,7 +457,6 @@ static void game_handle_mouse(void)
                 io.go_rect_dest.y = io.go_rect.y - Pscreen.y;
                 io.go_xy.x = Pmousemap.x;
                 io.go_xy.y = Pmousemap.y;
-                //printf("ScreenP: %d, %d go: %d, %d \n", Pscreen.x, Pscreen.y, io.go_rect.x, io.go_rect.y);
                 if(rts_valid_tile(0,1,io.go_xy))
                 {
                     printf("Is a valid tile...\n");
@@ -487,7 +487,13 @@ static void game_handle_mouse(void)
     {
         Pmousemap.x = selection.selected_objs[0]->x;
         Pmousemap.y = selection.selected_objs[0]->y;
-        ai_shortes_path(Pmousemap, io.go_xy);
+        //printf("Go to: (%d, %d) No.4\n", io.go_xy.x, io.go_xy.y);
+        printf("Path to go: from (%d,%d) to (%d,%d)\n", selection.selected_objs[0]->x,
+                selection.selected_objs[0]->y,
+                io.go_xy.x,
+                io.go_xy.y);
+        if(!ai_shortes_path(0,0,Pmousemap, io.go_xy))
+            printf("No shortes path found or a error ocurred!\n");
     }
 
 }

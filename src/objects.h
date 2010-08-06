@@ -15,7 +15,7 @@ enum{
 
 typedef struct th_obj{
     int id;
-    int x, y; // (x,y) in the th_map array
+    int x, y; // (x,y) in the gmaps array
     int type; // using the enum NUM_OF_TYPES of map.h
     int live; 
     int actual_live;

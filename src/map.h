@@ -65,8 +65,8 @@ void        th_draw_map(void);
 
 th_vector   get_vector(th_point point, int iso_dir);
 
-int generate_anchormap(void);
-void free_anchormap(void);
+int         generate_anchormap(void);
+void        free_anchormap(void);
 
 
 //mouse_map(): returns a th_point with the (x,y) pair

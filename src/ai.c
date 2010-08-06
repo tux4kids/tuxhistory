@@ -1,7 +1,6 @@
-
 /* ai.c
  *
- * Description: AI mainy path finding functions for the game lives here
+ * Description: AI mainly path finding functions for the game lives here
  * 
  * Author: Jesús Manuel Mager Hois (fongog@gmail.com) 2010
  * Copyright: GPL v3 or later
@@ -17,24 +16,185 @@
 #include "ai.h"
 #include "tuxrts.h"
 #include "bheap.h"
+#include "hashtable.h"
 
 // Hueristic distance between to points
 #define HDIST(x1, y1, x2, y2) ((x1<x2)?(x2-x1):(x1-x2)) + ((y1<y2)?(y2-y1):(y1-y2))
 
-void ai_shortes_path(th_point source, th_point goal)
+/* itoa: thanks to Lukás Chmel */
+static char* itoa(int value, char* result, int base)
 {
-    int H, G, F;
-    if( source.x >= 0 && source.x < x_tildes   &&
-        source.y >= 0 && source.y < y_tildes   &&
-        goal.x >= 0 && goal.x < x_tildes       &&
-        goal.y >= 0 && goal.y < y_tildes       )
+    if (base < 2 || base > 36) { *result = '\0'; return result; }
+    char* ptr = result, *ptr1 = result, tmp_char;
+    int tmp_value;
+    do {
+        tmp_value = value;
+        value /= base;
+        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
+    } while ( value );
+    if (tmp_value < 0) *ptr++ = '-';
+    *ptr-- = '\0';
+    while(ptr1 < ptr) {
+        tmp_char = *ptr;
+        *ptr--= *ptr1;
+        *ptr1++ = tmp_char;
+    }
+    return result;
+}
+
+th_point *ai_shortes_path(int player, int unit, th_point source, th_point goal)
+{
+    int i, a;
+    int count;
+
+    th_vector vector;
+    th_point pt;
+
+    bheap *open;
+    struct hashtable *closed;
+    bheap_node *e;
+    bheap_node *p;
+    bheap_node *n;
+    
+    // Are the source and goal point valid?
+    if( source.x >= 0 && source.x <= x_tildes   &&
+        source.y >= 0 && source.y <= y_tildes   &&
+        goal.x >= 0 && goal.x <= x_tildes       &&
+        goal.y >= 0 && goal.y <= y_tildes       )
     {
-        H = HDIST(source.x, source.y, goal.x, goal.y);
-        printf("H Distance %d\n", H);
+        
+        e = (bheap_node *)malloc(x_tildes * y_tildes * sizeof(bheap_node));
+        if(e == NULL)
+            return NULL;
+
+        count = 0;
+        i = 0;
+
+        // Creating open and closed lists
+        open = bheap_init(x_tildes * y_tildes);
+        closed = make_hashtable(hashtable_default_hash, x_tildes * y_tildes);
+
+        // Defining the initial node 
+        sprintf(e[count].id, "%03d%03d", source.x, source.y);
+        printf("Element id to store: %s\n", e[count].id);
+        e[count].deph = 0;
+        e[count].point = source;
+        e[count].h = HDIST(e[count].point.x, e[count].point.y, goal.x, goal.y);
+        e[count].g = e[count].deph;
+        e[count].val = e[count].g + e[count].h;
+        e[count].index = i;
+        e[count].parent = NULL;
+        
+        // Insert the initial node to the open list
+        if(!bheap_add(open, &e[count]))
+        {
+            printf("Coudn't add element to the open list!\n");
+            return NULL;
+        }
+        bheap_print(open);
+
+        while(open->count >= 0)
+        {
+            // Remove the lowest element in open list
+            // and add it to the closed list
+            n = bheap_del(open);
+            if(n == NULL)
+            {
+                printf("Error deleting the priority element from open list!\n");
+                return NULL;
+            }
+            bheap_print(open);
+            
+            printf("Element id to store in loop: %s, index: %d\n", n->id, n->index);
+
+            if(!hashtable_add(closed, e[n->index].id, &e[n->index]))
+            {
+                printf("Error adding to hashtable!\n");
+                return NULL;
+            }
+
+            printf("Element added to hashtable!\n");
+            
+
+            //Is this element the goal?
+            if(n->point.x == goal.x && n->point.y == goal.y)
+            {
+                while(n->parent)
+                {
+                    printf("(%d,%d)\n",n->point.x, n->point.y);
+                    n = n->parent;
+                }
+                
+                return NULL;
+            }
+
+            printf("This element is not the goal!.. Trying...\n");
+
+            //For each valid move for n
+            for(a = 0; a < NUM_DIRS; a++)
+            {
+                vector = get_vector(n->point, a);
+                if(vector.x != -2 && vector.y != -2)
+                {
+                    printf("Vector is valid... \n");
+                    printf("For %d direction tile in (%d,%d) is valid?\n", a, n->point.x, n->point.y);
+
+                    pt.x = vector.x + n->point.x;
+                    pt.y = vector.y + n->point.y;
+                    if(rts_valid_tile(player, unit, pt))
+                    {
+
+                        printf("Adding direction %d to open list!\n", a);
+
+                        //New valid element
+                        count++;
+                        e[count].deph = n->deph + 1;
+                        e[count].point = pt;
+                        memset(e[count].id, 0, 7);
+                        sprintf(e[count].id, "%03d%03d", pt.x, pt.y);
+                        e[count].index = count;
+                        e[count].h = HDIST(e[count].point.x, e[count].point.y, goal.x, goal.y);
+                        e[count].g = e[count].deph; //Unnecessary?
+                        e[count].val = e[count].g + e[count].h; // F = G + H
+                        e[count].parent = n;
+                        printf("Actual id: %s\n, H: %d G:%d F:%d Deph:%d\n", e[count].id, e[count].h,
+                               e[count].g, e[count].val, e[count].deph);
+
+                        //Is this element in closed list?
+                        if((p = hashtable_lookup(closed, e[count].id)) != NULL)
+                        {
+                            if(p->val < e[count].val)
+                            {
+                                if(!hashtable_remove(closed, p->id))
+                                {
+                                    printf("Error ocurred while trying to remove key in hashtable!\n");
+                                    return NULL;
+                                }
+                                if(!bheap_add(open, p))
+                                {
+                                    printf("Error ocurred while adding a element to open list\n");
+                                    return NULL;
+                                }
+                            }
+                        }   
+                        else
+                        {
+                            if(!bheap_add(open, &e[count]))
+                            {
+                                printf("Error ocurred while adding a new element to open list\n");
+                                return NULL;
+                            }
+                        }
+                        bheap_print(open);
+                    }
+                }
+            }
+        }
+        FREE(e);
     }
     else
     {
-        printf("Bad point references!\n");
+        printf("Bad point references : Origin(%d, %d) Dest(%d, %d)\n", source.x, source.y, goal.x, goal.y);
     }
 }
 

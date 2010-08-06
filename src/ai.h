@@ -15,4 +15,4 @@
 #include "globals.h"
 #include "graphs.h"
 
-void ai_shortes_path(th_point source, th_point goal);
+th_point *ai_shortes_path(int, int, th_point source, th_point goal);
