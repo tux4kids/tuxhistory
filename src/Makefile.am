@@ -51,7 +51,6 @@ tuxhistory_SOURCES = tuxhistory.c \
 	SDL_rotozoom.c	\
 	scandir.c	\
 	pixels.c	\
-	throttle.c	\
 	tuxrts.c
 
 
@@ -87,7 +86,6 @@ EXTRA_DIST = 	credits.h 	\
 	pixels.h		\
 	compiler.h		\
 	transtruct.h	\
-	throttle.h 		\
 	tuxrts.h
         
 

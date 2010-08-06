@@ -224,8 +224,8 @@ static void game_draw(void)
 
     dest.y = 0;
 
-    /*TODO: Separate each Layer drawing in different functions.*/
 
+    /*TODO: Separate each Layer drawing in different functions.*/
 
     /*First layer: terrain*/
     SDL_BlitSurface(map_image, &origin, screen, &dest);
@@ -284,9 +284,10 @@ static void game_draw(void)
         SDL_BlitSurface(images[IMG_ISOWRONG], NULL, screen, &io.go_rect_dest);
         io.go_rect.x = -1;
         io.go_rect.y = -1;
-        io.go_valid_flag = 0;
     }
    
+    io.go_valid_flag = 0;
+
     /*Third layer: User Interface*/
 
     //TODO: Write a panel function to manipulate the game...
@@ -307,13 +308,14 @@ static void game_draw(void)
 
             dest.x = dest.x + 2;
             dest.y = dest.y + 2;
-            th_ShowMessage(selection.selected_objs[0]->rname, 12, dest.x+2, dest.y+2);
 
-            sprintf(tmp_text,"%d / %d", selection.selected_objs[0]->actual_live,
-                                        selection.selected_objs[0]->live);
-            th_ShowMessage(tmp_text, 15, 
-                    objects[selection.selected_objs[0]->name_enum]->w + dest.x + 10, dest.y+20);
+            //th_ShowMessage(selection.selected_objs[0]->rname, 12, dest.x+2, dest.y+2);
 
+            //sprintf(tmp_text,"%d / %d", selection.selected_objs[0]->actual_live,
+            //                            selection.selected_objs[0]->live);
+            //printf("dir is: %s\n", tmp_text);
+            //th_ShowMessage(tmp_text, 15, 
+            //        objects[selection.selected_objs[0]->name_enum]->w + dest.x + 10, dest.y+20);
 
 
             dest.y = dest.y + 20;
@@ -325,11 +327,11 @@ static void game_draw(void)
     dest.x = (screen->w - mini_map_image->w - 5);
     dest.y = (screen->h - mini_map_image->h - 5);
     SDL_BlitSurface(mini_map_image, NULL, screen, &dest);
-    
 
     dest.x = (screen->w - images[IMG_STOP]->w - 5);
     dest.y = glyph_offset;
     SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
+    
 
     /*dest.x = 20;
     dest.y = 20;
@@ -344,8 +346,9 @@ static void game_handle_mouse(void)
 {
     th_point Pmousemap;
     th_point Pdtmap;
+    th_point *path;
     int i, j;
-
+    
     Pmousemap = mouse_map(io.Pmouse, Pscreen);
     Pdtmap = Pscreen;
     if(Pmousemap.x != -1 && Pmousemap.y != -1)
@@ -492,11 +495,13 @@ static void game_handle_mouse(void)
                 selection.selected_objs[0]->y,
                 io.go_xy.x,
                 io.go_xy.y);
-        if(!ai_shortes_path(0,0,Pmousemap, io.go_xy))
+        if(!(path = ai_shortes_path(0,0,Pmousemap, io.go_xy)))
             printf("No shortes path found or a error ocurred!\n");
+        else
+            printf("Path found!\n");
     }
-
 }
+
 
 static int pause_game(void)
 {

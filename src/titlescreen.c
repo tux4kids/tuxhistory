@@ -28,7 +28,6 @@
 #include "loaders.h"
 #include "SDL_extras.h"
 #include "menu.h"
-#include "throttle.h"
 
 /* --- Data Structure for Dirty Blitting --- */
 SDL_Rect srcupdate[MAX_UPDATES];
@@ -583,8 +582,6 @@ void ShowMessage(int font_size, const char* str1, const char* str2,
 
     HandleTitleScreenAnimations();
 
-    /* Wait so we keep frame rate constant: */
-    Throttle(20, &timer);
   }  // End of while (!finished) loop
 
   SDL_FreeSurface(s1);

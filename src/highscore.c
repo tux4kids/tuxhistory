@@ -21,8 +21,6 @@
 #include "SDL_extras.h"
 #include "convert_utf.h"
 #include "transtruct.h"
-#include "throttle.h"
-
 
 typedef struct high_score_entry {
   int score;
@@ -844,7 +842,6 @@ int Ready(const char* heading)
     }
 
     HandleTitleScreenAnimations();
-    Throttle(20, &timer);
     frame++;
   }  // End of while (!finished) loop
 

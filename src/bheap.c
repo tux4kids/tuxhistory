@@ -12,6 +12,7 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+#include<assert.h>
 
 #include "bheap.h"
 
@@ -45,16 +46,12 @@ int bheap_add(bheap *heap, bheap_node *data)
 {
     //bheap_node *node;
     int m;
+    int i;
 
-    heap->count++;
-
-    if(heap->size < heap->count)
+    if(!heap)
         return 0;
 
-    if(heap == NULL)
-        return 0;
-
-    if(data == NULL)
+    if(!data)
         return 0;
 
     /*
@@ -64,7 +61,33 @@ int bheap_add(bheap *heap, bheap_node *data)
 
     *node = data;
     */
-    
+
+    printf("Begining bheap_add... the count is %d\n", heap->count);
+
+    printf("Data to store, val %d, x %d, y %d.\n", data->val, data->point.x, data->point.y);
+    for(i=0; i<heap->count; i++)
+    {
+        if(!heap->items[i])
+        {
+            printf("Error accesing item!");
+            return 0;
+        }
+        printf("In loop %d, val %d\n", i, heap->items[i]->val);
+        if( heap->items[i]->point.x == data->point.x &&
+            heap->items[i]->point.y == data->point.y)
+        {
+            printf("Is allready in openlist\n"); 
+            return 1;
+        }
+    }
+    printf("Is not already in open list!\n");
+
+    heap->count++;
+    printf("* New count value %d\n", heap->count);
+    if(heap->size < heap->count)
+        return 0;
+
+    printf("* Count is smaller than size..\n");
     m = heap->count;
     heap->items[heap->count] = data;
     while(m != 0)
@@ -79,6 +102,10 @@ int bheap_add(bheap *heap, bheap_node *data)
             break;
         }
     }
+
+    printf("Ending bheap_add...\n");
+    printf("OK Cheking integrity...\n");
+    printf("Priority :%d New element: %d ALL O.K.\n", heap->items[0]->val, heap->items[heap->count]->val);
     return 1;
 }
 
@@ -96,6 +123,7 @@ bheap_node *bheap_del(bheap *heap)
     node = heap->items[0];
     //free(heap->items[0]);
     heap->items[0] = heap->items[heap->count];
+    heap->items[heap->count] = NULL;
     heap->count--;
     if(heap->count < 0)
         printf("heap is empty!\n");
@@ -134,14 +162,28 @@ bheap_node *bheap_del(bheap *heap)
 void bheap_print(bheap *heap)
 {
     int i;
-    if(heap->count < 0)
+    if(!heap)
+    {
+        printf("bheap_print: NULL parameter!\n");
+        return;
+    }
+    printf("Begining bheap_printf... the count is %d\n", heap->count);
+    if(heap->count < 0 || heap->count >= heap->size)
     {
         printf("Error, there are no elements to print!\n");
         return;
     }
-    for(i=0; i<=heap->count; i++)
-        printf("%d ", heap->items[i]->val);
-    printf("\n");
+    for(i=0; i<heap->count; i++)
+    {
+        if(!heap->items)
+        {
+            printf("Error trying to print item %d\n", i);
+            return;
+        }
+        printf("loop %d ",i);
+        printf("%s:%d\n ", heap->items[i]->id, heap->items[i]->val);
+    }
+    printf("End of bheap_print\n");
 }
 
 void bheap_free(bheap *heap)
@@ -152,8 +194,10 @@ void bheap_free(bheap *heap)
         free(heap->items[i]);
         heap->items[i] = NULL;
     }*/
+    assert(heap->items != NULL);
     free(heap->items);
     heap->items = NULL;
+    assert(heap != NULL);
     free(heap);
     heap = NULL;
 }

@@ -27,6 +27,7 @@ typedef struct th_obj{
     int attack;
     int move;
     int player;
+    int path_flag; //Need pathfinding?
 }th_obj;
 
 int object_counter;

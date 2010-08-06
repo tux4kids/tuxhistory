@@ -74,6 +74,8 @@ int hashtable_add(struct hashtable *table, char *key, void *value)
     struct hashtable_entry *entry = NEW(struct hashtable_entry);
     struct hashtable_entry *entries;
 
+    printf("Begining hashtable_add...\n");
+
     if(!table) return 0;
 
     if(entry) {
@@ -83,16 +85,25 @@ int hashtable_add(struct hashtable *table, char *key, void *value)
         entry->prev = NULL;
         n = compute_hash(table, key);
         entries = table->bucket[n];
-        if(!entries) table->bucket[n] = entry;
-        else {
-          while(entries->next) 
-            entries = entries->next;
-          entries->next = entry;
-          entry->prev = entries;
+        if(!entries)
+        {
+            printf(" - No entry in buket, storing!\n");
+            table->bucket[n] = entry;
         }
+        else {
+          printf(" - First buket full Next!\n");
+          while(entries->next) 
+          {
+              printf(" - Next>\n");
+              entries = entries->next;
+          }
+          entries->next = entry;
+          entries->next->prev = entries;
+        }
+        printf("Ending hashtable_add...\n");
         return 1;
     }
-    
+    printf("Ending hashtable_add...\n");
     return 0;
 }
 
@@ -166,8 +177,12 @@ void hashtable_iter(const struct hashtable *table,
     struct hashtable_entry *entry;
     
     for(i = 0; i < table->nbuckets; i++) {
-        for(entry = table->bucket[i]; entry; entry = entry->next) {
-            func(entry->key, entry->value);
+        if(table->bucket[i])
+        {
+            for(entry = table->bucket[i]; entry; entry = entry->next) {
+                //func(entry->key, entry->value);
+                continue;
+            }
         }
     }
 }
@@ -183,12 +198,25 @@ void *hashtable_lookup(const struct hashtable *table,
     unsigned int n = compute_hash(table, key);
     struct hashtable_entry *entry = table->bucket[n];
     
+    printf("Begining hashtable_lookup...\n");
+
     while(entry) {
+        printf("LUNext>\n");
         if(!strcmp(key, entry->key)) break;
         entry = entry->next;
     }
     
-    return entry ? entry->value : NULL;
+    printf("Ending hashtable_lookup...\n");
+    if(entry)
+    {
+        return entry->value;
+    }
+    else
+    {
+        printf("Returning NULL pointer\n");
+        return NULL;
+    }
+    //return entry ? entry->value : NULL;
 }
 
  /** remove the value bound to a key.
@@ -202,7 +230,9 @@ int hashtable_remove(const struct hashtable *table,
   unsigned int n = compute_hash(table, key);
   struct hashtable_entry *entry = table->bucket[n];
 
+  printf("Begining hashtable_remove...\n");
   while(entry) {
+    printf("Next>\n");
     if(!strcmp(key, entry->key)) break;
     entry = entry->next;
   }
@@ -215,6 +245,7 @@ int hashtable_remove(const struct hashtable *table,
       }
       else {
         table->bucket[n] = entry->next;
+        entry->next->prev= NULL;
       }
     }
     else if(entry->prev)
@@ -227,9 +258,11 @@ int hashtable_remove(const struct hashtable *table,
     
     free(entry);
     entry = NULL;
+    printf("Ending hashtable_remove...\n");
     return 1;
   }
   else {
+    printf("Ending hashtable_remove...\n");
     return 0;
   }
 }   
