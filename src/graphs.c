@@ -72,24 +72,31 @@ int create_gmaps(int players)
     }
 
     printf("x_tiles: %d, y_tiles: %d\n", x_tildes, y_tildes);
-    for(i = 1; i < players; i++)
+    for(i = 0; i < players; i++)
     {
         count = 0;
-        for(j = 0; j < x_tildes; j++)
+        for(j = 0; j <= x_tildes; j++)
         {
-            for(k = 0; k < y_tildes; k++)
+            for(k = 0; k <= y_tildes; k++)
             {
                 count++;
-                gmaps[i][j][k].visible = 1;
                 gmaps[i][j][k].terrain = map[j][k].terrain;
                 gmaps[i][j][k].object = NULL;
                 gmaps[i][j][k].point.x = j;
                 gmaps[i][j][k].point.y = k;
+                if(i == 0)
+                {
+                    gmaps[i][j][k].visible = 1;
+                    gmaps[i][j][k].explored = 1;
+                }
+                else
+                {
+                    gmaps[i][j][k].visible = 0;
+                    gmaps[i][j][k].explored = 0;
+                }
 
                 for(l = 0; l < NUM_DIRS; l++)
                 {
-                    point.x = j;
-                    point.y = k;
                     vector = get_vector(point, l);
                     if(vector.x != -2 && vector.y != -2)
                     {
@@ -99,21 +106,12 @@ int create_gmaps(int players)
                     {
                         gmaps[i][j][k].nodes[l] = NULL;
                     }
-                    if(i > 0)
-                    {
-                        gmaps[i][j][k].visible = 1;
-                        gmaps[i][j][k].explored = 1;
-                    }
-                    else
-                    {
-                        gmaps[i][j][k].visible = 0;
-                        gmaps[i][j][k].explored = 0;
-                    }
                 }
                 gmaps[i][j][k].id = count;
             }
         }
     }
+
     return 0;
 }
 

@@ -57,7 +57,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 static inline unsigned int compute_hash(const struct hashtable *table,
                                         const char *key)
 {
-    printf("Init compute hash for %s\n", key);
+    //printf("Init compute hash for %s\n", key);
     unsigned int n = table->hash(key);
     return (n < table->nbuckets) ? n : (n % table->nbuckets);
 }
@@ -74,7 +74,7 @@ int hashtable_add(struct hashtable *table, char *key, void *value)
     struct hashtable_entry *entry = NEW(struct hashtable_entry);
     struct hashtable_entry *entries;
 
-    printf("Begining hashtable_add...\n");
+    //printf("Begining hashtable_add...\n");
 
     if(!table) return 0;
 
@@ -87,23 +87,23 @@ int hashtable_add(struct hashtable *table, char *key, void *value)
         entries = table->bucket[n];
         if(!entries)
         {
-            printf(" - No entry in buket, storing!\n");
+            //printf(" - No entry in buket, storing!\n");
             table->bucket[n] = entry;
         }
         else {
-          printf(" - First buket full Next!\n");
+          //printf(" - First buket full Next!\n");
           while(entries->next) 
           {
-              printf(" - Next>\n");
+              //printf(" - Next>\n");
               entries = entries->next;
           }
           entries->next = entry;
           entries->next->prev = entries;
         }
-        printf("Ending hashtable_add...\n");
+        //printf("Ending hashtable_add...\n");
         return 1;
     }
-    printf("Ending hashtable_add...\n");
+    //printf("Ending hashtable_add...\n");
     return 0;
 }
 
@@ -181,7 +181,7 @@ void hashtable_iter(const struct hashtable *table,
         {
             for(entry = table->bucket[i]; entry; entry = entry->next) {
                 //func(entry->key, entry->value);
-                continue;
+                printf("key -> %s\n", entry->key);
             }
         }
     }
@@ -198,22 +198,24 @@ void *hashtable_lookup(const struct hashtable *table,
     unsigned int n = compute_hash(table, key);
     struct hashtable_entry *entry = table->bucket[n];
     
-    printf("Begining hashtable_lookup...\n");
+    //printf("Begining hashtable_lookup...\n");
 
     while(entry) {
-        printf("LUNext>\n");
+        //printf("LUNext>\n");
+        //printf("%s key OK\n", key);
         if(!strcmp(key, entry->key)) break;
+        //printf("lunext cmp passed\n");
         entry = entry->next;
     }
     
-    printf("Ending hashtable_lookup...\n");
+    //printf("Ending hashtable_lookup...\n");
     if(entry)
     {
         return entry->value;
     }
     else
     {
-        printf("Returning NULL pointer\n");
+        //printf("Returning NULL pointer\n");
         return NULL;
     }
     //return entry ? entry->value : NULL;
@@ -230,9 +232,9 @@ int hashtable_remove(const struct hashtable *table,
   unsigned int n = compute_hash(table, key);
   struct hashtable_entry *entry = table->bucket[n];
 
-  printf("Begining hashtable_remove...\n");
+  //printf("Begining hashtable_remove...\n");
   while(entry) {
-    printf("Next>\n");
+    //printf("Next>\n");
     if(!strcmp(key, entry->key)) break;
     entry = entry->next;
   }

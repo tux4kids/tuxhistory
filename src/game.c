@@ -80,6 +80,8 @@ static th_point Pscreen;
 static int screen_margin_in;
 static int screen_margin_out;
 
+int this_player;
+
 typedef struct io_vars
 {
     th_point Pmouse;
@@ -156,6 +158,46 @@ static int game_init(void)
     SDL_quit_received = 0;
     escape_received = 0;
 
+    // Input/output data strucure init.
+    io.Pmouse.x = 0;
+    io.Pmouse.y = 0;
+    io.Prclick.x = -1;
+    io.Prclick.y = -1;
+    io.Plclick.x = -1;
+    io.Plclick.y = -1;
+    io.mousedown_flag = 0;
+    io.mousedownr_flag = 0;
+    io.mouseclicked_flag = 0;
+    io.select_xy.x = 0;
+    io.select_xy.y = 0;
+    io.select_xy.w = 0;
+    io.select_xy.h = 0;
+    io.select_rect.x = 0;
+    io.select_rect.y = 0;
+    io.select_rect.w = 0;
+    io.select_rect.h = 0;
+    io.select_rect_dest.x = 0;
+    io.select_rect_dest.y = 0;
+    io.select_rect_dest.w = 0;
+    io.select_rect_dest.h = 0;
+    io.select.x = 0;
+    io.select.y = 0;
+    io.select.w = 0;
+    io.select.h = 0;
+    io.go_xy.x = -1;
+    io.go_xy.y = -1;
+    io.go_rect.x = 0;
+    io.go_rect.y = 0;
+    io.go_rect.w = 0;
+    io.go_rect.h = 0;
+    io.go_rect_dest.x = 0;
+    io.go_rect_dest.y = 0;
+    io.go_rect_dest.w = 0;
+    io.go_rect_dest.h = 0;
+    io.go_valid_flag = 0;
+
+    // Player?
+    this_player = 1;
 
     if(tuxrts_init("objects", "map", 2))
         return 1;
@@ -309,13 +351,13 @@ static void game_draw(void)
             dest.x = dest.x + 2;
             dest.y = dest.y + 2;
 
-            //th_ShowMessage(selection.selected_objs[0]->rname, 12, dest.x+2, dest.y+2);
+            th_ShowMessage(selection.selected_objs[0]->rname, 12, dest.x+2, dest.y+2);
 
-            //sprintf(tmp_text,"%d / %d", selection.selected_objs[0]->actual_live,
-            //                            selection.selected_objs[0]->live);
+            sprintf(tmp_text,"%d / %d", selection.selected_objs[0]->actual_live,
+                                        selection.selected_objs[0]->live);
             //printf("dir is: %s\n", tmp_text);
-            //th_ShowMessage(tmp_text, 15, 
-            //        objects[selection.selected_objs[0]->name_enum]->w + dest.x + 10, dest.y+20);
+            th_ShowMessage(tmp_text, 15, 
+                    objects[selection.selected_objs[0]->name_enum]->w + dest.x + 10, dest.y+20);
 
 
             dest.y = dest.y + 20;
@@ -418,6 +460,7 @@ static void game_handle_mouse(void)
             Pmousemap = mouse_map(io.Plclick, Pscreen);
             if(Pmousemap.x != -1 && Pmousemap.y != -1)
             {
+                printf("Mouse clicked in a valid tile!\n");
                 io.mousedown_flag = 0;
                 io.select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
                 io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
@@ -428,6 +471,7 @@ static void game_handle_mouse(void)
                 // select that object
 
                 selection.selected_objs[0]=rts_get_object(0,Pmousemap);
+
                 if(selection.selected_objs[0] != NULL)
                 {
                     selection.selected_num = 0;

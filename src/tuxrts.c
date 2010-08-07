@@ -126,13 +126,20 @@ th_obj *rts_get_object(int player, th_point coords)
 {
     list_node *obj_node;
 
-    if(gmaps[player][coords.x][coords.y].visible != 0)
+    printf("Enter to rts_get_object\n");
+
+    if(gmaps[player][coords.x][coords.y].visible != 1)
+    {
+        printf("No visible in (%d,%d).\n", coords.x, coords.y);
         return NULL;
+    }
 
     obj_node = list_nodes;
     if(obj_node != NULL)
     {
         do{
+            printf("Object: (%d,%d) = (%d,%d)\n", obj_node->obj.x, 
+                    obj_node->obj.y, coords.x, coords.y);
             if( obj_node->obj.x == coords.x &&
                 obj_node->obj.y == coords.y   )
                 return &obj_node->obj;
