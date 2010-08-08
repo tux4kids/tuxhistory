@@ -9,7 +9,14 @@
  * http://www.tux4kids.com
  * 
  */
+#include<stdio.h>
 
+// Lua headers
+#include "lua.h"
+#include "lualib.h"
+#include "lauxlib.h"
+
+//Tuxhistory headers
 #include "tuxhistory.h"
 #include "globals.h"
 #include "graphs.h"
@@ -17,32 +24,28 @@
 #include "tuxrts.h"
 #include "bheap.h"
 #include "hashtable.h"
+#include "objects.h"
 
 // Hueristic distance between to points
 #define HDIST(x1, y1, x2, y2) (((x1<x2)?(x2-x1):(x1-x2) + ((y1<y2)?(y2-y1):(y1-y2)))*10)
 
-/* itoa: thanks to Lukás Chmel */
-static char* itoa(int value, char* result, int base)
+int ai_init(int players)
 {
-    if (base < 2 || base > 36) { *result = '\0'; return result; }
-    char* ptr = result, *ptr1 = result, tmp_char;
-    int tmp_value;
-    do {
-        tmp_value = value;
-        value /= base;
-        *ptr++ = "zyxwvutsrqponmlkjihgfedcba9876543210123456789abcdefghijklmnopqrstuvwxyz" [35 + (tmp_value - value * base)];
-    } while ( value );
-    if (tmp_value < 0) *ptr++ = '-';
-    *ptr-- = '\0';
-    while(ptr1 < ptr) {
-        tmp_char = *ptr;
-        *ptr--= *ptr1;
-        *ptr1++ = tmp_char;
+    L = lua_open();
+    if(!L)
+    {
+        printf("Error starting LUA!\n");
+        return 0;
     }
-    return result;
+    return 1;
 }
 
-th_point *ai_shortes_path(int player, int unit, th_point source, th_point goal)
+void ai_free(void)
+{
+    lua_close(L);
+}
+
+th_path *ai_shortes_path(int player, int unit, th_point source, th_point goal)
 {
     int i, a;
     int count;
@@ -50,6 +53,7 @@ th_point *ai_shortes_path(int player, int unit, th_point source, th_point goal)
     th_vector vector;
     th_point pt;
     th_point *solution;
+    th_path *path;
 
     bheap *open;
     struct hashtable *closed;
@@ -126,19 +130,28 @@ th_point *ai_shortes_path(int player, int unit, th_point source, th_point goal)
             {
                 printf("Solution deph is %d\n", n->deph);
                 solution = (th_point *)malloc(n->deph * sizeof(th_point));
-                i = 0;
+                if(!solution)
+                    return NULL;
+                path = (th_path *)malloc(sizeof(th_path));
+                if(!path)
+                    return NULL;
+
+                i = n->deph - 1;
 
                 while(n->parent)
                 {
                     printf("(%d,%d)\n",n->point.x, n->point.y);
                     solution[i] = n->point;
                     n = n->parent;
-                    i++;
                 } 
+                
+                path->path = solution;
+                path->size = i;
+
                 free_hashtable(closed);
                 bheap_free(open);
                 FREE(e);
-                return solution;
+                return path;
             }
 
             //printf("This element is not the goal!.. Trying...\n");
@@ -226,5 +239,71 @@ th_point *ai_shortes_path(int player, int unit, th_point source, th_point goal)
     {
         printf("Bad point references : Origin(%d, %d) Dest(%d, %d)\n", source.x, source.y, goal.x, goal.y);
     }
+}
+
+void ai_free_path(th_path *path)
+{
+    FREE(path->path);
+    FREE(path);
+}
+
+int ai_modify_state(int player, th_obj *object, int state)
+{
+    if(!object)
+    {
+        printf("Incorrect object!\n");
+        return 0;
+    }
+    if(object->player == player || object->player == 0)
+    {
+        object->state.old_state = object->state.state;
+        object->state.state = state;
+        object->state.flag = 1;
+        return 1;
+    }
+    printf("Not a valid player to modify objects state!");
+    return 0;
+}
+
+int ai_state_update(list_node *node)
+{
+    if(!node)
+        return 0;
+    do{
+        if(node->obj.state.flag)
+        {
+            if(node->obj.state.state == GOTO)
+            {
+                node->obj.state.count = node->obj.state.path->size;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 1;
+            }
+        }
+        if(node->obj.state.agains_flag)
+        {
+        }
+        if(node->obj.state.path_flag)
+        {
+            node->obj.state.count++;
+            if(node->obj.state.path_count < 0)
+            {
+                node->obj.x = node->obj.state.path->path[node->obj.state.path_count].x;
+                node->obj.x = node->obj.state.path->path[node->obj.state.path_count].y;
+                node->obj.state.path_count--;
+            }
+            else
+            {
+                if(node->obj.state.state == GOTO)
+                {
+                    ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                }
+                ai_free_path(node->obj.state.path);
+            }
+        }
+        node = node->next;
+    }while(node != NULL);
+    return 1;
 }
 

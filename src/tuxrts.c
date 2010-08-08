@@ -9,6 +9,8 @@
 #include "players.h"
 #include "graphs.h"
 #include "llist.h"
+#include "ai.h"
+
 
 int tuxrts_init(char *object_name, char *map_name, int players)
 {
@@ -138,10 +140,11 @@ th_obj *rts_get_object(int player, th_point coords)
     if(obj_node != NULL)
     {
         do{
-            printf("Object: (%d,%d) = (%d,%d)\n", obj_node->obj.x, 
-                    obj_node->obj.y, coords.x, coords.y);
+            printf("Object: (%d,%d) = (%d,%d) and player %d = %d ?\n", obj_node->obj.x, 
+                    obj_node->obj.y, coords.x, coords.y, obj_node->obj.player, player);
             if( obj_node->obj.x == coords.x &&
-                obj_node->obj.y == coords.y   )
+                obj_node->obj.y == coords.y &&
+                obj_node->obj.player == player)
                 return &obj_node->obj;
             else
                 obj_node = obj_node->next;
@@ -150,5 +153,124 @@ th_obj *rts_get_object(int player, th_point coords)
     }
 
     return 0;
+}
+
+static void rts_set_visible(int player, th_point point, int deph, int count)
+{
+    int l;
+    if(count == deph)
+        return;
+
+    gmaps[player][point.x][point.y].explored = 1;
+    gmaps[player][point.x][point.y].visible = 1;
+
+    for(l = 0; l < NUM_DIRS; l++)
+    {
+        if(gmaps[player][point.x][point.y].nodes[l])
+            rts_set_visible(player, gmaps[player][point.x][point.y].nodes[l]->point, deph, count+1);
+    }
+    return;
+}
+
+int rts_update_game(void)
+{
+    int i, j, player;
+    list_node *obj_node;
+    th_point point;
+
+    // Update gmaps...
+    for(player = 1; player <= num_of_players; player++)
+    {
+        for(i = 0; i <= x_tildes; i++)
+        {
+            for(j = 0; j <= y_tildes; j++)
+            {
+                gmaps[player][i][j].visible = 0;
+                gmaps[player][i][j].object = NULL;
+            }
+        }
+    }
+    obj_node = list_nodes;
+    if(obj_node != NULL)
+    {
+        do{
+            point.x = obj_node->obj.x;
+            point.y = obj_node->obj.y;
+            rts_set_visible(obj_node->obj.player,
+                            point,
+                            obj_node->obj.vision_range,
+                            0);
+            gmaps[obj_node->obj.player][point.y][point.y].object = &(obj_node->obj);
+            obj_node = obj_node->next;
+        }while(obj_node != NULL);
+    }
+    return 0;
+}
+
+/*************** Change state functions ****************/
+
+
+int rts_goto(th_obj *obj, th_point point)
+{
+    th_path *path;
+    th_point source;
+    if(!obj)
+    {
+        printf("rts_goto error: object invalid!\n");
+        return 0;
+    }
+    printf("Chanche %s state: go from (%d,%d) to (%d,%d)\n", 
+                obj->rname,
+                obj->x,
+                obj->y,
+                point.x,
+                point.y);
+    
+    source.x = obj->x;
+    source.y = obj->y;
+
+    if(!(path = ai_shortes_path(obj->player,obj->type,source, point)))
+    {
+        printf("No shortes path found or a error ocurred!\n");
+        return 0;
+    }
+    
+    obj->state.path = path;
+
+    ai_modify_state(obj->player, obj, GOTO);
+
+    //printf("Path found!\n");
+
+    return 0;
+}
+
+int rts_build(th_obj *obj, int type, th_point point)
+{
+    return 1;
+}
+
+int rts_die(th_obj *obj)
+{
+    return 1;
+}
+int rts_create(th_obj *obj, int type)
+{
+    return 1;
+}
+// For the folowing functions: target can be NULL or point 
+// can be -1,-1, but one must be valid. If all to are valid,
+// it will give preference to target.
+
+int rts_attack(th_obj *obj, th_obj *target, th_point point)
+{
+    return 1;
+}
+int rts_repair(th_obj *obj, th_obj *target, th_point point)
+{
+    return 1;
+}
+int rts_use(th_obj *obj, th_obj *target, th_point point)
+{
+    return 1;
 }
 

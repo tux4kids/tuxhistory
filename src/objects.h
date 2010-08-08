@@ -1,7 +1,29 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
+#include "globals.h"
 #include "hashtable.h"
+
+enum{
+    REC_NONE,
+    REC_GOLD,
+    REC_STONE,
+    REC_WOOD,
+    REC_FOOD,
+    NUM_RESOURCES
+};
+
+enum{
+    INACTIVE,
+    BUILD,
+    REPAIR,
+    ATTACK,
+    CREATE,
+    GOTO,
+    USE,
+    DIE,
+    NUM_OF_STATES
+};
 
 enum{
     FOREST,
@@ -11,6 +33,21 @@ enum{
     UNIT,
     NUM_OF_TYPES
 };
+
+typedef struct th_state{
+    int state;
+    int old_state;
+    int count; // Counter to anime
+    int flag; //Has a new state? 
+    int action_againts;
+    int agains_flag;
+    th_path *path;
+    int path_count;
+    int path_flag; //Need pathfinding?
+    int carrying;
+    int resource_type;
+    struct th_obj *target_obj;
+}th_state;
 
 
 typedef struct th_obj{
@@ -23,17 +60,19 @@ typedef struct th_obj{
     int name_enum;
     char rname[50];
     char description[200];
+    int vision_range;
     int defence;
     int attack;
     int move;
     int player;
-    int path_flag; //Need pathfinding?
+    struct th_state state;
 }th_obj;
 
-int object_counter;
 struct hashtable *obj_table_hash; //Strings to enums
 struct hashtable *objects_hash; //Names to objects
+
 th_obj *object;
+int object_counter;
 
 int objects_xml(FILE *fp);
 

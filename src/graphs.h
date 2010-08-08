@@ -41,7 +41,7 @@ typedef struct gnode{
     int visible;
     int explored;
     int usable; 
-    struct gnode *nodes[8];
+    struct gnode *nodes[NUM_DIRS-1];
     th_obj *object;
     int terrain;
 }gnode;

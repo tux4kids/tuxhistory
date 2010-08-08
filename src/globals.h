@@ -176,7 +176,10 @@ typedef struct th_vector{
     int y;
 } th_vector;
 
-
+typedef struct th_path{
+    th_point *path;
+    int size;
+}th_path;
 
 #define NAME_BUF_SIZE 200
 /* data for 'Training Academy' lessons: */

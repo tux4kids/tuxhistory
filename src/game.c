@@ -227,7 +227,8 @@ int game(void)
     {
         last_time = SDL_GetTicks();
 
-        update_gmaps();
+        //update_gmaps();
+        rts_update_game();
         game_handle_user_events();
         game_handle_mouse();
 

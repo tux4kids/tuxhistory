@@ -147,6 +147,23 @@ int objects_xml(FILE *fp)
             object[i].type != GOLD   ||
             object[i].type != STONE)
         {
+            node = mxmlFindElement(inode, inode, "vision",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].vision_range = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].vision_range = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+
             node = mxmlFindElement(inode, inode, "defence",
                     NULL, NULL, MXML_DESCEND);
             
@@ -204,6 +221,23 @@ int objects_xml(FILE *fp)
             object[i].attack = -1;
             object[i].move = -1;
         }
+
+        //Initializing states
+
+        object[i].state.state = INACTIVE;
+        object[i].state.old_state = INACTIVE;
+        object[i].state.count = 0;
+        object[i].state.flag = 0;
+        object[i].state.action_againts = INACTIVE;
+        object[i].state.agains_flag = 0;
+        object[i].state.path = NULL;
+        object[i].state.path_count = 0; 
+        object[i].state.path_flag = 0;
+        object[i].state.carrying = 0;
+        object[i].state.resource_type = REC_NONE;
+        object[i].state.target_obj = NULL;
+
+
         /* Debug: print the values of current object */
         printf("%d %s:%d(%s) %s lives: %d, def: %d, att: %d, mov: %d\n", 
                 object[i].type,

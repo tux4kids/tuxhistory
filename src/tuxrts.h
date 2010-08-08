@@ -8,18 +8,14 @@
 #include "llist.h"
 #include "objects.h"
 
-enum{
-    BUILD,
-    REPAIR,
-    ATTACK,
-    CREATE
-};
 
 typedef struct rts_vars{
     th_obj *selected_objs[30];
     int selected_num;
 }rts_vars;
 
+
+list_node *selected_node;
 
 /* tuxrts_mapinit(): Inizialize all map vars. This is
  * the fisrt function to call when we begin the game.
@@ -50,6 +46,26 @@ th_obj *rts_get_object(int, th_point);
 
 void tuxrts_cleanup(void);
 
-list_node *selected_node;
+/*************** Change state functions ****************/
+
+int rts_update_game(void);
+
+int rts_goto(th_obj *obj, th_point point);
+
+int rts_build(th_obj *obj, int type, th_point point);
+
+int rts_die(th_obj *obj);
+
+int rts_create(th_obj *obj, int type);
+
+// For the folowing functions: target can be NULL or point 
+// can be -1,-1, but one must be valid. If all to are valid,
+// it will give preference to target.
+
+int rts_attack(th_obj *obj, th_obj *target, th_point point);
+
+int rts_repair(th_obj *obj, th_obj *target, th_point);
+
+int rts_use(th_obj *obj, th_obj *target, th_point point);
 
 #endif

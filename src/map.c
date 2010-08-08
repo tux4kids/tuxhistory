@@ -14,6 +14,7 @@
 
 #include<ctype.h>
 #include<mxml.h>
+#include<assert.h>
 
 #include "SDL.h"
 #include "SDL_image.h"
@@ -85,6 +86,8 @@ int map_xml(FILE *fp)
     th_obj *object_ptr;
     th_obj tmp_obj;
 
+    char *tmp_text;
+
     object_ptr = NULL;
     list_nodes = NULL;
 
@@ -150,33 +153,50 @@ int map_xml(FILE *fp)
             // Get objects
             node = mxmlFindElement(jnode, jnode, "object",
                     NULL, NULL, MXML_DESCEND);
-            if(node->child != NULL)
+            if(node)
             {
-                object_ptr = hashtable_lookup(objects_hash, node->child->value.text.string);
-                if(object_ptr != NULL)
+                if(node->child != NULL)
                 {
-                    printf("(%s", node->child->value.text.string);
-                    
-                    printf(" *%s ", object_ptr->description);
-                    tmp_obj = *object_ptr;
-                    tmp_obj.id = object_counter;
-                    tmp_obj.x = x;
-                    tmp_obj.y = y;
-                    list_add(&list_nodes, tmp_obj);
+                    object_ptr = hashtable_lookup(objects_hash, node->child->value.text.string);
+                    if(object_ptr != NULL)
+                    {
 
-                    object_counter++;
-                }
-                else
-                {
-                    printf("Wrong object name\n");
-                }
+                        printf("(%s", node->child->value.text.string);
+                    
+                        printf(" *%s ", object_ptr->description);
+                        tmp_obj = *object_ptr;
+
+                        if(tmp_text = mxmlElementGetAttr(node, "player"))
+                        {
+                            tmp_obj.player = atoi(tmp_text);
+                            printf(" PLAYER: %03d ", tmp_obj.player);
+                        }
+                        else
+                        {
+                            tmp_obj.player = 0;
+                            printf(" NO PLAYER ");
+                        }
+
+                        tmp_obj.id = object_counter;
+                        tmp_obj.x = x;
+                        tmp_obj.y = y;
+                        list_add(&list_nodes, tmp_obj);
+
+                        object_counter++;
+                    }
+                    else
+                    {
+                        printf("Wrong object name\n");
+                    }
                 
-                value=(int)hashtable_lookup(map_table_hash, node->child->value.text.string);
-                if(value!=-1)
-                {
-                    printf(" Hash object: %d) ", value);
+                    value=(int)hashtable_lookup(map_table_hash, node->child->value.text.string);
+                    if(value!=-1)
+                    {
+                        printf(" Hash object: %d) ", value);
+                    }
                 }
             }
+            //node = NULL;
 
             y++;
         }
