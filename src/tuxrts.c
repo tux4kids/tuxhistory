@@ -20,19 +20,26 @@ int tuxrts_init(char *object_name, char *map_name, int players)
 
     object_counter = 0;
 
+    if(!init_players(players))
+    {
+       printf("No players created!\n");
+       DEBUGMSG(debug_game, "No players created!");
+       return 0;
+    }
+
     fp = LoadObj("objects");
     if(fp == NULL)
     {
         printf("File not found!\n");
         DEBUGMSG(debug_game, "File not found!");
-        return 1;
+        return 0;
     }
     printf("Object files in memory!\n");
     if(objects_xml(fp))
     {
         printf("Error parsing file!");
         DEBUGMSG(debug_game, "Error loading the objects description file.\n");
-        return 1;
+        return 0;
     }
     printf("Object file parsed.\n");
    
@@ -40,7 +47,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
     if(fp == NULL)
     {
         DEBUGMSG(debug_game, "File not found!");
-        return 1;
+        return 0;
     }
     printf("Map file in memory.\n");
 
@@ -48,13 +55,13 @@ int tuxrts_init(char *object_name, char *map_name, int players)
     {
         printf("Error parsing file!");
         DEBUGMSG(debug_game, "Error loading the map file.\n");
-        return 1;
+        return 0;
     }
     printf("Map file parsed!\n");
     if(create_gmaps(players))
     {
         printf("Couldn't generate grpah mesh!\n");
-        return 1;
+        return 0;
     }
     generate_map();
 
@@ -74,7 +81,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
     images[IMG_GUIBG_BYZANTINE] = tmp_surf;
 
 
-    return 0;
+    return 1;
 }
 
 // Returns 1 if the tile is valid to use for a player, and unit
@@ -164,6 +171,7 @@ static void rts_set_visible(int player, th_point point, int deph, int count)
     gmaps[player][point.x][point.y].explored = 1;
     gmaps[player][point.x][point.y].visible = 1;
 
+
     for(l = 0; l < NUM_DIRS; l++)
     {
         if(gmaps[player][point.x][point.y].nodes[l])
@@ -179,7 +187,7 @@ int rts_update_game(void)
     th_point point;
 
     // Update gmaps...
-    for(player = 1; player <= num_of_players; player++)
+    for(player = 0; player <= num_of_players; player++)
     {
         for(i = 0; i <= x_tildes; i++)
         {
@@ -187,6 +195,7 @@ int rts_update_game(void)
             {
                 gmaps[player][i][j].visible = 0;
                 gmaps[player][i][j].object = NULL;
+                gmaps[player][i][j].drawed = 0;
             }
         }
     }

@@ -7,4 +7,6 @@ othersdir = $(pkgdatadir)/images/others
 dist_others_DATA = isomapper.png \
 select.png \
 go.png \
+novisible.png \
+explored.png \
 wrong.png

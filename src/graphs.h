@@ -40,8 +40,10 @@ typedef struct gnode{
     th_point anchor; //Anchors in main map surface.
     int visible;
     int explored;
+    int drawed;
     int usable; 
-    struct gnode *nodes[NUM_DIRS-1];
+    struct gnode *nodes[NUM_DIRS];
+    int nodes_flag[NUM_DIRS];
     th_obj *object;
     int terrain;
 }gnode;

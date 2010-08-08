@@ -24,10 +24,10 @@ int init_players(int players)
     num_of_players = players;
     if(players_alloc(num_of_players))
     {
-        return 1;
+        return 0;
     }
     last_player = -1;
-    return 0;
+    return 1;
 }
 int add_player(char *name, int civ, int max_pop, int stone, 
                 int wood, int food, int gold, th_point pos)

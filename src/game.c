@@ -106,7 +106,7 @@ io_vars io;
 
 static int game_init(void);
 
-static void game_draw(void);
+static void game_draw(int player);
 static void game_handle_user_events(void);
 static void game_handle_mouse(void);
 static int game_mouse_event(SDL_Event event);
@@ -217,7 +217,7 @@ int game(void)
         ;//SwitchScreenMode();  //Huh??
     }
 
-    if(game_init())
+    if(!game_init())
     {
         DEBUGMSG(debug_game, "Error loading game using game_init()\n");
         return -1;
@@ -233,7 +233,7 @@ int game(void)
         game_handle_mouse();
 
         game_status = check_exit_conditions();
-        game_draw();
+        game_draw(this_player);
         SDL_Flip(screen);
 
         if(paused)
@@ -253,18 +253,76 @@ int game(void)
         }
     }
     game_over(game_status);
+    return 1;
 }
 
-static void game_draw(void)
+static void draw_unexplored(int player, th_point point)
+{
+    int l;
+    SDL_Rect dest;
+
+    if(point.x == -1)
+        return;
+    if(point.y == -1)
+        return;
+
+    //Is the point in screen?
+    if( gmaps[0][point.x][point.y].rect.x >= (Pscreen.x - images[IMG_EXPLORED]->w) &&
+        gmaps[0][point.x][point.y].rect.x <  (Pscreen.x + screen->w) &&
+        gmaps[0][point.x][point.y].rect.y >= (Pscreen.y - images[IMG_EXPLORED]->h) &&
+        gmaps[0][point.x][point.y].rect.y <  (Pscreen.x + screen->w) &&
+        gmaps[player][point.x][point.y].drawed == 0 )
+    {
+        //printf(" + ");
+        dest.x = gmaps[0][point.x][point.y].rect.x - Pscreen.x;
+        dest.y = gmaps[0][point.x][point.y].rect.y - Pscreen.y;
+
+        //Is the point visible or unexplored? If so plaint!
+        if(gmaps[player][point.x][point.y].visible == 0)
+            if(gmaps[player][point.x][point.y].explored == 1)
+                SDL_BlitSurface(images[IMG_EXPLORED], NULL, screen, &dest);
+            else
+                SDL_BlitSurface(images[IMG_NOVISIBLE], NULL, screen, &dest);
+        gmaps[player][point.x][point.y].drawed = 1;
+        
+        //Call neighboors to draw!
+        for(l = 0; l <= NUM_DIRS; l++)
+        {
+            if(gmaps[player][point.x][point.y].nodes_flag[l] == 1)
+            {
+                if(gmaps[player][point.x][point.y].nodes[l] != NULL)
+                {
+                    //printf(" -%d(%d,%d)- \n", l, point.x, point.y);
+                    draw_unexplored(player, gmaps[player][point.x][point.y].nodes[l]->point);
+                }
+            }
+        }
+    }
+    //else
+        /*printf("NO DRAW: drawed:%d, (%d,%d) is not in (%d,%d)\n",
+                gmaps[player][point.x][point.y].drawed,
+                gmaps[0][point.x][point.y].rect.x,
+                gmaps[0][point.x][point.y].rect.y,
+                (Pscreen.x - images[IMG_EXPLORED]->w),
+                (Pscreen.y - images[IMG_EXPLORED]->h));*/
+}
+
+
+
+
+static void game_draw(int player)
 {
     SDL_Rect dest;
     list_node *obj_node;
     char tmp_text[50];
+    th_point point;
+    th_point dest_point;
+
 
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
-    dest.x = 0;
 
+    dest.x = 0;
     dest.y = 0;
 
 
@@ -272,6 +330,19 @@ static void game_draw(void)
 
     /*First layer: terrain*/
     SDL_BlitSurface(map_image, &origin, screen, &dest);
+
+    
+    point.x = 0;
+    point.y = 0;
+    dest_point = mouse_map(point, Pscreen);
+    while(dest_point.x == -1 && dest_point.y == -1)
+    {
+        point.x = point.x + images[IMG_EXPLORED]->w;
+        point.y = point.y + images[IMG_EXPLORED]->h;
+        dest_point = mouse_map(point, Pscreen);
+    }
+    //printf("Init in: (%d,%d)\n", dest_point.x, dest_point.y);
+    draw_unexplored(player, dest_point); 
 
     /*Second layer: objects*/
 

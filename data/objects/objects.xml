@@ -42,6 +42,7 @@
         <rname>Vilager</rname>
         <description>This unit can create buildings, and recolect resources.</description>
         <live>25</live>
+        <vision>3</vision>
         <defence>1</defence>
         <attack>3</attack>
         <move>1</move>

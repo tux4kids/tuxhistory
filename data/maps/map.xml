@@ -10,14 +10,14 @@
         <tilde>
             <height>0</height>
             <terrain>GRASSLAND</terrain>
-            <object>FOREST_MIXED</object>
+            <object player=0>FOREST_MIXED</object>
             <unit></unit>
             <building></building>
         </tilde>
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object>FOREST_RAIN</object>
+            <object player=0>FOREST_RAIN</object>
             <unit></unit>
             <building></building>
         </tilde>
@@ -194,9 +194,7 @@
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object>VILLAGER_MILKMAID</object>
-            <unit>VILLAGER_MILKMAID</unit>
-            <building></building>
+            <object player=1>VILLAGER_MILKMAID</object>
         </tilde>
         <tilde>
             <height>1</height>
@@ -1839,7 +1837,7 @@
         <tilde>
             <height>1</height>
             <terrain>SWAMP</terrain>
-            <object>FOREST_MIXED</object>
+            <object player=0>FOREST_MIXED</object>
             <unit></unit>
             <building></building>
         </tilde>

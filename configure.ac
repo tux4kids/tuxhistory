@@ -181,7 +181,7 @@ AC_CHECK_LIB([m],
 dnl Check for LibLua: --------------------------------------------------------
 
 PKG_CHECK_MODULES([LUA],
-    [lua],
+    [lua50],
     ,
     [
       [echo "LUA not found via pkg_config, checking with AC_CHECK_LIB:"]
@@ -196,8 +196,6 @@ PKG_CHECK_MODULES([LUA],
 AC_DEFINE([HAVE_LIBLUA],[1],[Define to 1 if you have the `lua` library])
 CFLAGS="$CFLAGS $LUA_CFLAGS"
 LIBS="$LIBS $LUA_LIBS"
-
-
 
 
 dnl Check for SDL_Pango: --------------------------------------------------------

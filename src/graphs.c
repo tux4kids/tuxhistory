@@ -84,6 +84,8 @@ int create_gmaps(int players)
                 gmaps[i][j][k].object = NULL;
                 gmaps[i][j][k].point.x = j;
                 gmaps[i][j][k].point.y = k;
+                gmaps[i][j][k].drawed = 0;
+                
                 if(i == 0)
                 {
                     gmaps[i][j][k].visible = 1;
@@ -97,13 +99,17 @@ int create_gmaps(int players)
 
                 for(l = 0; l < NUM_DIRS; l++)
                 {
+                    point.x = j;
+                    point.y = k;
                     vector = get_vector(point, l);
                     if(vector.x != -2 && vector.y != -2)
                     {
-                        gmaps[i][j][k].nodes[l] = &gmaps[0][j+vector.x][k+vector.y];
+                        gmaps[i][j][k].nodes_flag[l] = 1;
+                        gmaps[i][j][k].nodes[l] = &gmaps[i][j+vector.x][k+vector.y];
                     }
                     else
                     {
+                        gmaps[i][j][k].nodes_flag[l] = 0;
                         gmaps[i][j][k].nodes[l] = NULL;
                     }
                 }
