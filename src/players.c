@@ -10,7 +10,7 @@ static int players_alloc(int players);
 
 static int players_alloc(int players)
 {
-    player = malloc(players * sizeof(int));
+    player = malloc((1 + players) * sizeof(th_players));
     if(player == NULL)
     {
         printf("players_alloc: Couldn't allocate memory for palyer\n");
@@ -19,14 +19,25 @@ static int players_alloc(int players)
     return 0;
 }
 
-int init_players(int players)
+int init_players(int players, int human)
 {
+    th_point pos;
     num_of_players = players;
     if(players_alloc(num_of_players))
     {
         return 0;
     }
-    last_player = -1;
+    last_player = 0;
+
+    //TODO: This information should be readen from a map
+    
+    pos.x = 0;
+    pos.y = 0;
+    add_player("Human", CIV_DEFAULT, 50, 200, 
+                200, 200, 200, pos);
+    add_player("Computer", CIV_DEFAULT, 50, 200, 
+                200, 200, 200, pos);
+    human_player = human;
     return 1;
 }
 int add_player(char *name, int civ, int max_pop, int stone, 
@@ -52,13 +63,13 @@ int add_player(char *name, int civ, int max_pop, int stone,
     player[last_player].gold = gold;
     player[last_player].pop = 0;
     player[last_player].player_num = last_player;
-    if(gmaps == NULL)
+    /*if(gmaps == NULL)
     {
         printf("add_player(): gmaps isn't allocated, cant giva a position in map to player!\n");
         return 1;
     }
     player[last_player].pos = &gmaps[0][pos.x][pos.y];
-
+    */
     return 0;
 }   
 

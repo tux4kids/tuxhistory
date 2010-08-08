@@ -20,7 +20,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
 
     object_counter = 0;
 
-    if(!init_players(players))
+    if(!init_players(players, 1))
     {
        printf("No players created!\n");
        DEBUGMSG(debug_game, "No players created!");

@@ -136,17 +136,18 @@ th_path *ai_shortes_path(int player, int unit, th_point source, th_point goal)
                 if(!path)
                     return NULL;
 
-                i = n->deph - 1;
+                i=0;
 
                 while(n->parent)
                 {
-                    printf("(%d,%d)\n",n->point.x, n->point.y);
+                    //printf("(%d,%d)\n",n->point.x, n->point.y);
                     solution[i] = n->point;
                     n = n->parent;
+                    i++;
                 } 
                 
                 path->path = solution;
-                path->size = i;
+                path->size = i - 1;
 
                 free_hashtable(closed);
                 bheap_free(open);
@@ -274,12 +275,14 @@ int ai_state_update(list_node *node)
         {
             if(node->obj.state.state == GOTO)
             {
-                node->obj.state.count = node->obj.state.path->size;
+                node->obj.state.path_count = node->obj.state.path->size;
+                node->obj.state.count = 0;
                 node->obj.state.flag = 0;
                 node->obj.state.agains_flag = 0;
                 node->obj.state.action_againts = 0;
                 node->obj.state.path_flag = 1;
             }
+            node->obj.state.flag = 0;
         }
         if(node->obj.state.agains_flag)
         {
@@ -287,19 +290,25 @@ int ai_state_update(list_node *node)
         if(node->obj.state.path_flag)
         {
             node->obj.state.count++;
-            if(node->obj.state.path_count < 0)
+            if(node->obj.state.count > 10)
             {
-                node->obj.x = node->obj.state.path->path[node->obj.state.path_count].x;
-                node->obj.x = node->obj.state.path->path[node->obj.state.path_count].y;
-                node->obj.state.path_count--;
-            }
-            else
-            {
-                if(node->obj.state.state == GOTO)
+                node->obj.state.count = 0;
+                if(node->obj.state.path_count >= 0)
                 {
-                    ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    node->obj.x = node->obj.state.path->path[node->obj.state.path_count].x;
+                    node->obj.y = node->obj.state.path->path[node->obj.state.path_count].y;
+                    printf("Modify path count %d -> (%d,%d)\n", node->obj.state.path_count,
+                            node->obj.x, node->obj.y);
+                    node->obj.state.path_count = node->obj.state.path_count - 1;
                 }
-                ai_free_path(node->obj.state.path);
+                else
+                {
+                    if(node->obj.state.state == GOTO)
+                    {
+                        ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    }
+                    //ai_free_path(node->obj.state.path);
+                }
             }
         }
         node = node->next;

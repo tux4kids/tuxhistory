@@ -39,6 +39,7 @@
 #include "objects.h"
 #include "llist.h"
 #include "tuxrts.h"
+#include "ai.h"
 
 
 #define FPS 50 /* 15 frames per second */
@@ -232,6 +233,8 @@ int game(void)
         game_handle_user_events();
         game_handle_mouse();
 
+        ai_state_update(list_nodes);
+
         game_status = check_exit_conditions();
         game_draw(this_player);
         SDL_Flip(screen);
@@ -279,10 +282,16 @@ static void draw_unexplored(int player, th_point point)
 
         //Is the point visible or unexplored? If so plaint!
         if(gmaps[player][point.x][point.y].visible == 0)
+        {
             if(gmaps[player][point.x][point.y].explored == 1)
+            {
                 SDL_BlitSurface(images[IMG_EXPLORED], NULL, screen, &dest);
+            }
             else
+            {
                 SDL_BlitSurface(images[IMG_NOVISIBLE], NULL, screen, &dest);
+            }
+        }
         gmaps[player][point.x][point.y].drawed = 1;
         
         //Call neighboors to draw!
@@ -317,7 +326,8 @@ static void game_draw(int player)
     char tmp_text[50];
     th_point point;
     th_point dest_point;
-
+    th_point tmp_point;
+    int temp1, temp2, i, j;
 
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
@@ -332,24 +342,13 @@ static void game_draw(int player)
     SDL_BlitSurface(map_image, &origin, screen, &dest);
 
     
-    point.x = 0;
-    point.y = 0;
-    dest_point = mouse_map(point, Pscreen);
-    while(dest_point.x == -1 && dest_point.y == -1)
-    {
-        point.x = point.x + images[IMG_EXPLORED]->w;
-        point.y = point.y + images[IMG_EXPLORED]->h;
-        dest_point = mouse_map(point, Pscreen);
-    }
-    //printf("Init in: (%d,%d)\n", dest_point.x, dest_point.y);
-    draw_unexplored(player, dest_point); 
-
     /*Second layer: objects*/
 
     obj_node = list_nodes;
     if(obj_node != NULL)
     {
         do{
+            // Is the object in the visible screen?
             if( gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x > origin.x -
                     objects[obj_node->obj.name_enum]->w/2&&
                 gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y > origin.y - 
@@ -357,12 +356,24 @@ static void game_draw(int player)
                 gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x < origin.x + origin.w &&
                 gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y < origin.y + origin.w)
             {
-                dest.x = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x - 
-                    origin.x - objects[obj_node->obj.name_enum]->w/2;
-                dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
-                    origin.y - objects[obj_node->obj.name_enum]->h/2;
-                SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
-
+                // Can the human player see this object?
+                if(gmaps[human_player][obj_node->obj.x][obj_node->obj.y].visible ||
+                   (
+                    gmaps[human_player][obj_node->obj.x][obj_node->obj.y].explored &&
+                    (
+                     obj_node->obj.type == FOREST    ||
+                     obj_node->obj.type == GOLD      ||
+                     obj_node->obj.type == STONE
+                    )
+                   )
+                  )
+                {
+                    dest.x = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x - 
+                        origin.x - objects[obj_node->obj.name_enum]->w/2;
+                    dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
+                        origin.y - objects[obj_node->obj.name_enum]->h/2;
+                    SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
+                }
                 // Is the any object selected?
                 if(selection.selected_num != -1)
                 {
@@ -401,6 +412,36 @@ static void game_draw(int player)
     }
    
     io.go_valid_flag = 0;
+    point.x = 0;
+    point.y = 0;
+    dest_point = mouse_map(point, Pscreen);
+    if(dest_point.x == -1 || dest_point.y == -1)
+    {
+        point.x = Pscreen.x + 10;
+        point.y = Pscreen.y + 10;
+        dest_point = mouse_map(point, Pscreen);
+        temp1 = screen->w/images[IMG_EXPLORED]->w;
+        temp2 = screen->h/images[IMG_EXPLORED]->h;
+        for(i = 0; i < temp1; i++)
+        {
+            for(j = 0; j < temp2; j++)
+            {
+                tmp_point.x = i * images[IMG_EXPLORED]->w;
+                tmp_point.y = i * images[IMG_EXPLORED]->h;
+                dest_point = mouse_map(tmp_point, Pscreen);
+                if(dest_point.x != -1 || dest_point.y != -1)
+                {
+                    draw_unexplored(player, dest_point); 
+                    goto unexp_draw;
+                }
+            }
+        }    
+        return;
+    }
+    //printf("Init in: (%d,%d)\n", dest_point.x, dest_point.y);
+    draw_unexplored(player, dest_point); 
+
+unexp_draw:
 
     /*Third layer: User Interface*/
 
@@ -508,6 +549,7 @@ static void game_handle_mouse(void)
             }
             
         }
+        // TODO: Selecting rectangle is incompleat
         if( io.select_rect.x > Pscreen.x &&
             io.select_rect.x < Pscreen.x + screen->w &&
             io.select_rect.y > Pscreen.y &&
@@ -542,7 +584,7 @@ static void game_handle_mouse(void)
                 // Search for a object in current selected tile and
                 // select that object
 
-                selection.selected_objs[0]=rts_get_object(0,Pmousemap);
+                selection.selected_objs[0]=rts_get_object(human_player,Pmousemap);
 
                 if(selection.selected_objs[0] != NULL)
                 {
@@ -611,10 +653,11 @@ static void game_handle_mouse(void)
                 selection.selected_objs[0]->y,
                 io.go_xy.x,
                 io.go_xy.y);
-        if(!(path = ai_shortes_path(0,0,Pmousemap, io.go_xy)))
+        rts_goto(selection.selected_objs[0], io.go_xy);
+/*        if(!(path = ai_shortes_path(human_player,0,Pmousemap, io.go_xy)))
             printf("No shortes path found or a error ocurred!\n");
         else
-            printf("Path found!\n");
+            printf("Path found!\n");*/
     }
 }
 
