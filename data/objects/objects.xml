@@ -7,6 +7,7 @@
         <rname>"Mixed Forest"</rname>
         <description>Cut this trees and get 375 woods</description>
         <live>375</live>
+        <vision>1</vision>
     </object>
     <object>
         <type>FOREST</type>
@@ -14,6 +15,7 @@
         <rname>Tropical forest</rname>
         <description>Cut this trees and get 350 woods</description>
         <live>350</live>
+        <vision>1</vision>
     </object>
     <object>
         <type>FOREST</type>
@@ -21,6 +23,7 @@
         <rname>Scrub Forest</rname>
         <description>Cut this trees and get 250 woods</description>
         <live>250</live>
+        <vision>1</vision>
     </object>
     <object>
         <type>FOREST</type>
@@ -28,6 +31,7 @@
         <rname>Conifer Forest</rname>
         <description>Cut this trees and get 400 woods</description>
         <live>400</live>
+        <vision>1</vision>
     </object>
     <object>
         <type>FOREST</type>
@@ -35,7 +39,24 @@
         <rname>Rain Forest</rname>
         <description>Cut this trees and get 300 woods</description>
         <live>300</live>
+        <vision>1</vision>
     </object>
+    <object>
+        <type>GOLD</type>
+        <name>REC_GOLD_1</name>
+        <rname>Gold</rname>
+        <description>Get 450 gold</description>
+        <live>450</live>
+        <vision>1</vision>
+    </object>
+    <object>
+        <type>STONE</type>
+        <name>REC_STONE_1</name>
+        <rname>Stone</rname>
+        <description>Get 450 Stone</description>
+        <live>450</live>
+        <vision>1</vision>
+    </object> 
     <object>
         <type>UNIT</type>
         <name>VILLAGER_MILKMAID</name>

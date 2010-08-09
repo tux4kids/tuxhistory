@@ -32,6 +32,12 @@ list_node *list_add(list_node **ptr, th_obj obj)
     node->next = *ptr;
     *ptr = node;
     node->obj = obj;
+    node->prev = NULL;
+
+    if(object_counter != 0)
+        node->next->prev = node;
+
+    (*ptr)->obj.id = object_counter;
 
     object_counter++;
 
@@ -40,10 +46,15 @@ list_node *list_add(list_node **ptr, th_obj obj)
 
 void list_remove(list_node** ptr)
 {
+    list_node *node;
+    list_node *tmp;
     if(ptr != NULL && *ptr != NULL)
     {
-        list_node *node = *ptr;
+        node = *ptr;
+        tmp = (*ptr)->prev;
         *ptr = (*ptr)->next;
+        (*ptr)->prev = tmp;
+        tmp->next = *ptr;
         free(node);
     }
 }

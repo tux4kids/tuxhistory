@@ -306,6 +306,26 @@ int ai_modify_state(int player, th_obj *object, int state)
     printf("Not a valid player to modify objects state!");
     return 0;
 }
+static int ai_kill_object(list_node *node)
+{
+    list_node *iter_node;
+    iter_node = list_nodes;
+    do{
+
+        if(&(iter_node->obj) == node->obj.state.target_obj)
+        {
+            node->obj.state.target_obj = NULL;
+            node->obj.state.target_point.x = 0;
+            node->obj.state.target_point.y = 0;
+        }
+        iter_node = iter_node->next;
+    }while(iter_node);
+
+    list_remove(&node);
+    printf("Exito removiendo\n");
+    return 1;
+}
+
 static int ai_is_tile_free(th_point point)
 {
     return 0;
@@ -342,11 +362,16 @@ static th_point ai_find_closest_center(th_point point)
     do{
         if(node->obj.name_enum == VILLAGE_CENTER)
         {
-            if( HDIST(point.x, point.y, node->obj.x, node->obj.y) < 
+            if(lowest.x == -1 && lowest.y ==-1)
+            {
+                lowest.x = node->obj.x;
+                lowest.y = node->obj.y;
+            }
+            else if( HDIST(point.x, point.y, node->obj.x, node->obj.y) < 
                 HDIST(point.x, point.y, lowest.x, lowest.y))
             {
-            lowest.x =  node->obj.x;
-            lowest.y =  node->obj.y;
+                lowest.x =  node->obj.x;
+                lowest.y =  node->obj.y;
             }
         }
         node = node->next;
@@ -415,6 +440,10 @@ int ai_state_update(list_node *node)
                 node->obj.state.path_flag = 1;
             } 
             node->obj.state.flag = 0;
+            if(node->obj.state.state == DIE)
+            {
+                ai_kill_object(node);
+            }
         }
         if(node->obj.state.agains_flag)
         {
@@ -509,11 +538,20 @@ int ai_state_update(list_node *node)
                         {
                             tmp_point.x = node->obj.x;
                             tmp_point.y = node->obj.y;
+                            printf("Finish collecting at: (%d,%d)\n", tmp_point.x, tmp_point.y);
                             point = ai_find_closest_center(tmp_point);
-                            printf("Closest center al (%d, %d)\n", point.x, point.y);
-                            rts_goto(&(node->obj), point);
-                            node = node->next;
-                            continue;
+                            if(point.x != -1 && point.y != -1)
+                            {
+                                printf("Closest center al (%d, %d)\n", point.x, point.y);
+                                rts_goto(&(node->obj), point);
+                                node = node->next;
+                                continue;
+                            }
+                            else
+                            {
+                                printf("No town center in map!\n");
+                                ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                            }
                         }
                     }
                 }
@@ -573,6 +611,9 @@ int ai_state_update(list_node *node)
                 }
             }
         }
+        if(node->obj.actual_live <= 0)
+            ai_modify_state(node->obj.player, &(node->obj), DIE);
+
         node = node->next;
     }while(node != NULL);
 }

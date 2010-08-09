@@ -10,4 +10,6 @@ go.png \
 novisible.png \
 explored.png \
 used_forest.png \
+gold.png \
+stone.png \
 wrong.png

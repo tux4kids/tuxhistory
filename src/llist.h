@@ -18,6 +18,7 @@
 
 typedef struct list_node{
     struct list_node *next;
+    struct list_node *prev;
     th_obj obj;
 }list_node;
 
