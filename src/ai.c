@@ -25,6 +25,11 @@
 #include "bheap.h"
 #include "hashtable.h"
 #include "objects.h"
+#include "fileops.h"
+#include "loaders.h"
+#include "map.h"
+#include "players.h"
+#include "llist.h"
 
 // Hueristic distance between to points
 #define HDIST(x1, y1, x2, y2) (((x1<x2)?(x2-x1):(x1-x2) + ((y1<y2)?(y2-y1):(y1-y2)))*10)
@@ -43,6 +48,41 @@ int ai_init(int players)
 void ai_free(void)
 {
     lua_close(L);
+}
+// Returns 1 if the tile is valid to use for a player, and unit
+// and 0 if not.
+int ai_valid_tile(int player, int unit, th_point coords)
+{
+    list_node *node;
+    th_obj *obj_p;
+    if(coords.x < 0 || coords.x > x_tildes)
+        return 0;
+    if(coords.y < 0 || coords.y > y_tildes)
+        return 0;
+    if(player < 0 || player > num_of_players)
+        return 0;
+
+    //unit_p = list_search(list_nodes, unit);
+    
+    if(gmaps[player][coords.x][coords.y].terrain == OCEAN)
+    {
+        return 0;
+    }
+    else if(gmaps[player][coords.x][coords.y].terrain == HIGHSEA)
+    {
+        return 0;
+    }
+    
+    //Is a object there?
+    node = list_nodes;
+    do{
+        if(node->obj.x == coords.x && node->obj.y == coords.y)
+        {
+            return 0;
+        }
+        node = node->next;
+    }while(node);
+    return 1; 
 }
 
 th_path *ai_shortes_path(int player, int unit, th_point source, th_point goal)
@@ -140,7 +180,7 @@ th_path *ai_shortes_path(int player, int unit, th_point source, th_point goal)
 
                 while(n->parent)
                 {
-                    //printf("(%d,%d)\n",n->point.x, n->point.y);
+                    printf("(%d,%d)\n",n->point.x, n->point.y);
                     solution[i] = n->point;
                     n = n->parent;
                     i++;
@@ -168,7 +208,7 @@ th_path *ai_shortes_path(int player, int unit, th_point source, th_point goal)
 
                     pt.x = vector.x + n->point.x;
                     pt.y = vector.y + n->point.y;
-                    if(rts_valid_tile(player, unit, pt))
+                    if(ai_valid_tile(player, unit, pt))
                     {
 
                         //printf("Adding direction %d to open list!\n", a);
@@ -265,6 +305,11 @@ int ai_modify_state(int player, th_obj *object, int state)
     printf("Not a valid player to modify objects state!");
     return 0;
 }
+static int ai_is_tile_free(th_point point)
+{
+    return 0;
+}
+
 
 int ai_state_update(list_node *node)
 {
@@ -282,6 +327,33 @@ int ai_state_update(list_node *node)
                 node->obj.state.action_againts = 0;
                 node->obj.state.path_flag = 1;
             }
+            if(node->obj.state.state == ATTACK)
+            {
+                node->obj.state.path_count = node->obj.state.path->size;
+                node->obj.state.count = 0;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 1;
+            }
+            if(node->obj.state.state == USE)
+            {
+                node->obj.state.path_count = node->obj.state.path->size;
+                node->obj.state.count = 0;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 1;
+            }
+            if(node->obj.state.state == REPAIR)
+            {
+                node->obj.state.path_count = node->obj.state.path->size;
+                node->obj.state.count = 0;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 1;
+            } 
             node->obj.state.flag = 0;
         }
         if(node->obj.state.agains_flag)
@@ -295,6 +367,12 @@ int ai_state_update(list_node *node)
                 node->obj.state.count = 0;
                 if(node->obj.state.path_count >= 0)
                 {
+                    /*if(gmaps[human_player][node->obj.state.path->path[node->obj.state.path_count].x]
+                            [node->obj.state.path->path[node->obj.state.path_count].y].object)
+                    {
+                        rts_goto(&(node->obj), node->obj.state.path->path[node->obj.state.path->size]);
+                        continue;
+                    }*/
                     node->obj.x = node->obj.state.path->path[node->obj.state.path_count].x;
                     node->obj.y = node->obj.state.path->path[node->obj.state.path_count].y;
                     printf("Modify path count %d -> (%d,%d)\n", node->obj.state.path_count,
@@ -313,6 +391,5 @@ int ai_state_update(list_node *node)
         }
         node = node->next;
     }while(node != NULL);
-    return 1;
 }
 

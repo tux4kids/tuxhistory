@@ -11,5 +11,6 @@ SUBDIRS = backgrounds \
   status \
   title \
   tux \
-  units
+  units \
+  buildings
 

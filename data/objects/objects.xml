@@ -42,10 +42,21 @@
         <rname>Vilager</rname>
         <description>This unit can create buildings, and recolect resources.</description>
         <live>25</live>
-        <vision>3</vision>
+        <vision>2</vision>
         <defence>1</defence>
         <attack>3</attack>
         <move>1</move>
+    </object>
+    <object>
+        <type>BUILDING</type>
+        <name>HOUSE</name>
+        <rname>House</rname>
+        <description>Bulid houses to increment population limit</description>
+        <live>50</live>
+        <vision>2</vision>
+        <defence>0</defence>
+        <attack>0</attack>
+        <move>0</move>
     </object>
 </data>
 

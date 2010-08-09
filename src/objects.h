@@ -47,6 +47,7 @@ typedef struct th_state{
     int carrying;
     int resource_type;
     struct th_obj *target_obj;
+    th_point target_point;
 }th_state;
 
 

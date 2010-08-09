@@ -466,6 +466,7 @@ data/images/status/Makefile
 data/images/title/Makefile
 data/images/tux/Makefile
 data/images/units/Makefile
+data/images/buildings/Makefile
 data/images/terrain/Makefile
 data/images/terrain/arctic/Makefile
 data/images/terrain/desert/Makefile

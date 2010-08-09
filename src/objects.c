@@ -25,6 +25,9 @@ static int init_obj_hash(void)
     hashtable_add(obj_table_hash, "FOREST_WETLAND", FOREST_WETLAND);
     hashtable_add(obj_table_hash, "FOREST_RAIN", FOREST_RAIN);
     hashtable_add(obj_table_hash, "VILLAGER_MILKMAID", VILLAGER_MILKMAID);
+    hashtable_add(obj_table_hash, "HOUSE", HOUSE);
+    hashtable_add(obj_table_hash, "HUT", HUT);
+    hashtable_add(obj_table_hash, "VILLAGE_CENTER", VILLAGE_CENTER);
 
     hashtable_add(obj_table_hash, "FOREST", FOREST);
     hashtable_add(obj_table_hash, "GOLD", GOLD);

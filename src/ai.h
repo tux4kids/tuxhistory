@@ -33,4 +33,5 @@ int ai_modify_state(int player, th_obj *object, int state);
 
 int ai_state_update(list_node *node);
 
+int ai_valid_tile(int player, int unit, th_point coords);
 #endif

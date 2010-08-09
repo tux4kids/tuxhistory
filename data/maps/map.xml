@@ -935,9 +935,7 @@
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object></object>
-            <unit></unit>
-            <building></building>
+            <object player=1>HOUSE</object>
         </tilde>
         <tilde>
             <height>1</height>
@@ -949,10 +947,11 @@
         <tilde>
             <height>1</height>
             <terrain>SWAMP</terrain>
-            <object></object>
+            <object player=1>HOUSE</object>
             <unit></unit>
             <building></building>
-        </tilde>        <tilde>
+        </tilde>        i
+        <tilde>
             <height>0</height>
             <terrain>OCEAN</terrain>
             <object></object>
@@ -976,7 +975,7 @@
         <tilde>
             <height>1</height>
             <terrain>SWAMP</terrain>
-            <object></object>
+            <object player=2>HUT</object>
             <unit></unit>
             <building></building>
         </tilde>        

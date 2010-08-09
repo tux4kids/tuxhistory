@@ -375,6 +375,9 @@ enum{
     FOREST_RAIN,
     FOREST_BROADLEAF,
     VILLAGER_MILKMAID,
+    HOUSE,
+    HUT,
+    VILLAGE_CENTER,
     NUM_OBJECTS // Must be at the end.
 };
 

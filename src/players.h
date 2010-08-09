@@ -15,8 +15,9 @@ typedef struct th_players{
     char name[NAME_LEN];
     int player_num;
     int civ;
-    int max_pop;
+    int max_pop; // Maximum of slots avaiable.
     int pop;
+    int limit_pop; // 4 slots per house
     int stone;
     int wood;
     int food;

@@ -308,7 +308,10 @@ int load_image_data()
       "forest/wetland.png",
       "forest/rain.png",
       "forest/broadleaf.png",
-      "units/milkmaid.png"
+      "units/milkmaid.png",
+      "buildings/villagehouse.png",
+      "buildings/hut.png",
+      "buildings/monolit.png"
   };
 
 

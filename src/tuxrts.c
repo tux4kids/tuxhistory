@@ -88,7 +88,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
 // and 0 if not.
 int rts_valid_tile(int player, int unit, th_point coords)
 {
-    list_node *unit_p;
+    list_node *node;
     th_obj *obj_p;
     if(coords.x < 0 || coords.x > x_tildes)
         return 0;
@@ -97,7 +97,7 @@ int rts_valid_tile(int player, int unit, th_point coords)
     if(player < 0 || player > num_of_players)
         return 0;
 
-    unit_p = list_search(list_nodes, unit);
+    //unit_p = list_search(list_nodes, unit);
     
     if(gmaps[player][coords.x][coords.y].terrain == OCEAN)
     {
@@ -107,28 +107,8 @@ int rts_valid_tile(int player, int unit, th_point coords)
     {
         return 0;
     }
-    else if(gmaps[player][coords.x][coords.y].object != NULL)
-    {
-
-        obj_p = rts_get_object(player, coords);
-        if(obj_p != NULL)
-        {
-            if( obj_p->type == FOREST   ||
-                obj_p->type == GOLD     ||
-                obj_p->type == STONE)
-                return 0;
-            else
-                return 1;
-        }
-        else
-        {
-            return 1;
-        }
-    }
-    else
-    {
-        return 1;
-    }
+    
+    return 1; 
 }
 
 th_obj *rts_get_object(int player, th_point coords)
@@ -221,13 +201,81 @@ int rts_update_game(void)
 
 int rts_goto(th_obj *obj, th_point point)
 {
+    list_node *node;
     th_path *path;
     th_point source;
+    th_point tmp_point;
+    int l;
+    int action;
+
     if(!obj)
     {
         printf("rts_goto error: object invalid!\n");
         return 0;
     }
+    if(obj->type != UNIT)
+    {
+        return 0;
+    }
+
+    action = GOTO;
+
+    node = list_nodes;
+    do{
+        if(node->obj.x == point.x && node->obj.y == point.y)
+        {
+            tmp_point.x = -1;
+            tmp_point.y = -1;
+            printf("A object is on the goal tile\n");
+            for(l=0; l<NUM_DIRS; l++)
+            {
+                if(gmaps[human_player][point.x][point.y].nodes[l])
+                {
+                    if(ai_valid_tile(human_player, 0, gmaps[human_player][point.x][point.y].nodes[l]->point)){
+                        tmp_point = point;
+                        point = gmaps[human_player][point.x][point.y].nodes[l]->point;
+                        printf("New goal tile: (%d,%d)\n", point.x, point.y);
+                        break;
+                    }
+                    //printf("Try direcction %d\n", l);
+                }
+            }
+            
+            if(tmp_point.x == -1 && tmp_point.y == -1)
+                return 0;
+
+            printf("Finding a new action!\n");
+            if(node->obj.player != human_player)
+            {
+                if(node->obj.type == BUILDING || node->obj.type == UNIT) 
+                {
+                    obj->state.target_point = tmp_point;
+                    obj->state.target_obj = &(node->obj);
+                    action = ATTACK;
+                }
+                else if(node->obj.type == FOREST ||
+                        node->obj.type == GOLD   ||
+                        node->obj.type == STONE) 
+                {
+                    obj->state.target_point = tmp_point;
+                    obj->state.target_obj = &(node->obj);
+                    action = USE;
+                }
+            } 
+            else
+            {
+                if(node->obj.type == BUILDING) 
+                {
+                    obj->state.target_point = tmp_point;
+                    obj->state.target_obj = &(node->obj);
+                    action = REPAIR;
+                }
+            }
+            break;
+        }
+        node = node->next;
+    }while(node);
+
     printf("Chanche %s state: go from (%d,%d) to (%d,%d)\n", 
                 obj->rname,
                 obj->x,
@@ -241,16 +289,16 @@ int rts_goto(th_obj *obj, th_point point)
     if(!(path = ai_shortes_path(obj->player,obj->type,source, point)))
     {
         printf("No shortes path found or a error ocurred!\n");
-        return 0;
+        return 1;
     }
     
     obj->state.path = path;
 
-    ai_modify_state(obj->player, obj, GOTO);
+    ai_modify_state(obj->player, obj, action);
 
     //printf("Path found!\n");
 
-    return 0;
+    return 1;
 }
 
 int rts_build(th_obj *obj, int type, th_point point)
