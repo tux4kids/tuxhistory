@@ -28,7 +28,7 @@ typedef struct th_players{
 int num_of_players;
 int human_player;
 int last_player;
-th_players *player;
+th_players *player_vars;
 
 int init_players(int players, int human);
 int add_player(char *name, int civ, int max_pop, int stone, 

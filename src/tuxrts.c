@@ -237,7 +237,6 @@ int rts_goto(th_obj *obj, th_point point)
                         printf("New goal tile: (%d,%d)\n", point.x, point.y);
                         break;
                     }
-                    //printf("Try direcction %d\n", l);
                 }
             }
             
@@ -258,6 +257,8 @@ int rts_goto(th_obj *obj, th_point point)
                         node->obj.type == STONE) 
                 {
                     obj->state.target_point = tmp_point;
+                    obj->state.rec_point = tmp_point;
+                    obj->state.rec_point_flag = 1;
                     obj->state.target_obj = &(node->obj);
                     action = USE;
                 }
@@ -266,9 +267,19 @@ int rts_goto(th_obj *obj, th_point point)
             {
                 if(node->obj.type == BUILDING) 
                 {
-                    obj->state.target_point = tmp_point;
-                    obj->state.target_obj = &(node->obj);
-                    action = REPAIR;
+                    if(node->obj.name_enum == VILLAGE_CENTER &&
+                            obj->state.carrying > 0) 
+                    {
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        action = STORE;
+                    }
+                    else
+                    {
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        action = REPAIR;
+                    }
                 }
             }
             break;
@@ -276,7 +287,7 @@ int rts_goto(th_obj *obj, th_point point)
         node = node->next;
     }while(node);
 
-    printf("Chanche %s state: go from (%d,%d) to (%d,%d)\n", 
+    printf("Change %s state: go from (%d,%d) to (%d,%d)\n", 
                 obj->rname,
                 obj->x,
                 obj->y,
@@ -296,7 +307,7 @@ int rts_goto(th_obj *obj, th_point point)
 
     ai_modify_state(obj->player, obj, action);
 
-    //printf("Path found!\n");
+    printf("Path found!\n");
 
     return 1;
 }

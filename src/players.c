@@ -10,8 +10,8 @@ static int players_alloc(int players);
 
 static int players_alloc(int players)
 {
-    player = malloc((1 + players) * sizeof(th_players));
-    if(player == NULL)
+    player_vars = malloc((1 + players) * sizeof(th_players));
+    if(player_vars == NULL)
     {
         printf("players_alloc: Couldn't allocate memory for palyer\n");
         return 1;
@@ -54,15 +54,15 @@ int add_player(char *name, int civ, int max_pop, int stone,
         printf("add_player(): Players name too large, plese choose another");
         return 1;
     }
-    (void) strcpy(player[last_player].name, name);
-    player[last_player].civ = civ;
-    player[last_player].max_pop = max_pop;
-    player[last_player].stone = stone;
-    player[last_player].wood = wood;
-    player[last_player].food = food;
-    player[last_player].gold = gold;
-    player[last_player].pop = 0;
-    player[last_player].player_num = last_player;
+    (void) strcpy(player_vars[last_player].name, name);
+    player_vars[last_player].civ = civ;
+    player_vars[last_player].max_pop = max_pop;
+    player_vars[last_player].stone = stone;
+    player_vars[last_player].wood = wood;
+    player_vars[last_player].food = food;
+    player_vars[last_player].gold = gold;
+    player_vars[last_player].pop = 0;
+    player_vars[last_player].player_num = last_player;
     /*if(gmaps == NULL)
     {
         printf("add_player(): gmaps isn't allocated, cant giva a position in map to player!\n");
@@ -76,5 +76,5 @@ int add_player(char *name, int civ, int max_pop, int stone,
 
 void clean_players(void)
 {
-    FREE(player);
+    FREE(player_vars);
 }

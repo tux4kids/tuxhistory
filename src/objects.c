@@ -12,7 +12,7 @@ static int init_obj_hash(void);
 static int init_obj_hash(void)
 {
 
-    obj_table_hash = make_hashtable(hashtable_default_hash, NUM_OBJECTS+NUM_OF_TYPES);
+    obj_table_hash = make_hashtable(hashtable_default_hash, NUM_OBJECTS+NUM_OF_TYPES+1);
 
     if(obj_table_hash == NULL)
         return 1;
@@ -66,6 +66,8 @@ int objects_xml(FILE *fp)
             printf("To many objects, the limit is %d", MAX_DEF_OBJECTS);
             return 1;
         }
+        
+        object[i].vision_range = 0;
         node = mxmlFindElement(inode, inode, "type",
                                NULL, NULL, MXML_DESCEND);
         if(node != NULL)
@@ -239,7 +241,11 @@ int objects_xml(FILE *fp)
         object[i].state.carrying = 0;
         object[i].state.resource_type = REC_NONE;
         object[i].state.target_obj = NULL;
-
+        object[i].state.target_point.x = 0;
+        object[i].state.target_point.y = 0;
+        object[i].state.rec_point_flag = 0;
+        object[i].state.rec_point.x = 0;
+        object[i].state.rec_point.y = 0;
 
         /* Debug: print the values of current object */
         printf("%d %s:%d(%s) %s lives: %d, def: %d, att: %d, mov: %d\n", 

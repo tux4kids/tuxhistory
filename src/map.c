@@ -37,7 +37,6 @@ static int  init_map_hash(void);
 static void end_map_hash(void);
 static int get_terrain_enum(char *);
 static int *get_context_tildes(int, int);
-static th_vector get_iso_vector(int dir);
 static int *get_draw_tilde(int *, int);
 static int get_tile_num(int, int);
 static void str_upper(char *);
@@ -370,7 +369,7 @@ static int *get_context_tildes(int x, int y)
 // Returns a th_vector that contains a vector
 // representing the tile walking of a isometric
 // direction
-static th_vector get_iso_vector(int dir)
+th_vector get_iso_vector(int dir)
 {
     th_vector vector;
     if(dir == ISO_NW)

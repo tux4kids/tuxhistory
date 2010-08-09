@@ -9,4 +9,5 @@ select.png \
 go.png \
 novisible.png \
 explored.png \
+used_forest.png \
 wrong.png

@@ -58,5 +58,27 @@
         <attack>0</attack>
         <move>0</move>
     </object>
+    <object>
+        <type>BUILDING</type>
+        <name>HUT</name>
+        <rname>Hut</rname>
+        <description>Bulid houses to increment population limit</description>
+        <live>25</live>
+        <vision>1</vision>
+        <defence>0</defence>
+        <attack>0</attack>
+        <move>0</move>
+    </object>
+    <object>
+        <type>BUILDING</type>
+        <name>VILLAGE_CENTER</name>
+        <rname>Center</rname>
+        <description>This building can create villagers and you can store resources here</description>
+        <live>200</live>
+        <vision>3</vision>
+        <defence>0</defence>
+        <attack>0</attack>
+        <move>0</move>
+    </object>
 </data>
 

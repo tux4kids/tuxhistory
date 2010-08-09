@@ -22,6 +22,7 @@ enum{
     GOTO,
     USE,
     DIE,
+    STORE,
     NUM_OF_STATES
 };
 
@@ -48,8 +49,9 @@ typedef struct th_state{
     int resource_type;
     struct th_obj *target_obj;
     th_point target_point;
+    th_point rec_point;
+    int rec_point_flag;
 }th_state;
-
 
 typedef struct th_obj{
     int id;

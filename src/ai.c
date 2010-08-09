@@ -300,6 +300,7 @@ int ai_modify_state(int player, th_obj *object, int state)
         object->state.old_state = object->state.state;
         object->state.state = state;
         object->state.flag = 1;
+        printf("State Modified from %d to %d!\n",object->state.old_state,object->state.state );
         return 1;
     }
     printf("Not a valid player to modify objects state!");
@@ -310,14 +311,63 @@ static int ai_is_tile_free(th_point point)
     return 0;
 }
 
+static int ai_close_obj(th_obj *obj1, th_obj *obj2)
+{
+    int l;
+    th_point point;
+    th_vector vector;
+    for(l = 0; l < NUM_DIRS; l++)
+    {
+        vector = get_iso_vector(l);
+        point.x = vector.x;
+        point.y = vector.y;
+        if(obj1->x + point.x == obj2->x &&
+           obj1->y + point.y == obj2->y)
+        {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static th_point ai_find_closest_center(th_point point)
+{
+    th_point lowest;
+    list_node *node;
+
+    lowest.x = -1;
+    lowest.y = -1;
+
+    node = list_nodes;
+    do{
+        if(node->obj.name_enum == VILLAGE_CENTER)
+        {
+            if( HDIST(point.x, point.y, node->obj.x, node->obj.y) < 
+                HDIST(point.x, point.y, lowest.x, lowest.y))
+            {
+            lowest.x =  node->obj.x;
+            lowest.y =  node->obj.y;
+            }
+        }
+        node = node->next;
+    }while(node);
+    return lowest;
+}
+    
+
+// ai_state_update modifies the values of all objects if they change their
+// state.
 
 int ai_state_update(list_node *node)
 {
+    int tmp;
+    th_point tmp_point, point;
     if(!node)
         return 0;
     do{
         if(node->obj.state.flag)
         {
+            //printf("Enter to process state\n");
             if(node->obj.state.state == GOTO)
             {
                 node->obj.state.path_count = node->obj.state.path->size;
@@ -354,6 +404,16 @@ int ai_state_update(list_node *node)
                 node->obj.state.action_againts = 0;
                 node->obj.state.path_flag = 1;
             } 
+            if(node->obj.state.state == STORE)
+            {
+                printf("Go to store resources!\n");
+                node->obj.state.path_count = node->obj.state.path->size;
+                node->obj.state.count = 0;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 1;
+            } 
             node->obj.state.flag = 0;
         }
         if(node->obj.state.agains_flag)
@@ -361,18 +421,13 @@ int ai_state_update(list_node *node)
         }
         if(node->obj.state.path_flag)
         {
+            //printf("path flag is on!\n");
             node->obj.state.count++;
             if(node->obj.state.count > 10)
             {
                 node->obj.state.count = 0;
                 if(node->obj.state.path_count >= 0)
                 {
-                    /*if(gmaps[human_player][node->obj.state.path->path[node->obj.state.path_count].x]
-                            [node->obj.state.path->path[node->obj.state.path_count].y].object)
-                    {
-                        rts_goto(&(node->obj), node->obj.state.path->path[node->obj.state.path->size]);
-                        continue;
-                    }*/
                     node->obj.x = node->obj.state.path->path[node->obj.state.path_count].x;
                     node->obj.y = node->obj.state.path->path[node->obj.state.path_count].y;
                     printf("Modify path count %d -> (%d,%d)\n", node->obj.state.path_count,
@@ -384,8 +439,137 @@ int ai_state_update(list_node *node)
                     if(node->obj.state.state == GOTO)
                     {
                         ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                        node->obj.state.path_flag = 0;
                     }
-                    //ai_free_path(node->obj.state.path);
+                    else
+                    {
+                        node->obj.state.path_flag = 0;
+                        node->obj.state.count = 0;
+                    }
+                    ai_free_path(node->obj.state.path);
+                }
+            }
+        }
+        else 
+        {
+            if(node->obj.state.state == ATTACK)
+            {
+                //printf("Attacking and not walking...\n");
+                if(ai_close_obj(&(node->obj), node->obj.state.target_obj))
+                {
+                    node->obj.state.count++;
+                    if(node->obj.state.count > 10)
+                    {
+                        node->obj.state.count = 0;
+                        printf("%s attacking %s, %s live is %d\n", node->obj.rname,
+                            node->obj.state.target_obj->rname, 
+                            node->obj.state.target_obj->rname, 
+                            node->obj.state.target_obj->actual_live);
+                        node->obj.state.target_obj->state.action_againts = ATTACK;
+                        node->obj.state.target_obj->state.agains_flag = 1;
+                        tmp = node->obj.attack - node->obj.state.target_obj->defence;
+                        if(tmp > 0)
+                            node->obj.state.target_obj->live = node->obj.state.target_obj->actual_live - tmp;
+                        else
+                            node->obj.state.target_obj->live = node->obj.state.target_obj->actual_live - 1;
+                    }
+                }
+                else
+                {
+                    ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    node->obj.state.target_obj = NULL;
+                    node->obj.state.count = 0;
+                }
+            }
+            if(node->obj.state.state == USE)
+            {
+                //printf("Using and not walking...\n");
+                if(ai_close_obj(&(node->obj), node->obj.state.target_obj))
+                {
+                    node->obj.state.count++;
+                    if(node->obj.state.count > 10)
+                    {
+                        node->obj.state.count = 0;
+                        node->obj.state.target_obj->state.action_againts = USE;
+                        node->obj.state.target_obj->state.agains_flag = 1;
+                        tmp = node->obj.attack;// - node->obj.state.target_obj->defence;
+                        node->obj.state.target_obj->actual_live = node->obj.state.target_obj->actual_live - tmp;
+                        node->obj.state.carrying = node->obj.state.carrying + tmp;
+                        if(node->obj.state.target_obj->type == FOREST)
+                            node->obj.state.resource_type = REC_WOOD;
+                        if(node->obj.state.target_obj->type == GOLD)
+                            node->obj.state.resource_type = REC_GOLD;
+                        if(node->obj.state.target_obj->type == STONE)
+                            node->obj.state.resource_type = REC_STONE;
+                        printf("%s using %s, %s live is %d\n", node->obj.rname,
+                            node->obj.state.target_obj->rname, 
+                            node->obj.state.target_obj->rname, 
+                            node->obj.state.target_obj->actual_live);
+                        if(node->obj.state.carrying > 50)
+                        {
+                            tmp_point.x = node->obj.x;
+                            tmp_point.y = node->obj.y;
+                            point = ai_find_closest_center(tmp_point);
+                            printf("Closest center al (%d, %d)\n", point.x, point.y);
+                            rts_goto(&(node->obj), point);
+                            node = node->next;
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    node->obj.state.target_obj = NULL;
+                    node->obj.state.count = 0;
+                }
+            }
+            if(node->obj.state.state == STORE)
+            {
+                if(ai_close_obj(&(node->obj), node->obj.state.target_obj))
+                {
+                    if(node->obj.state.carrying > 0)
+                    {
+                        if(node->obj.state.resource_type == REC_WOOD)
+                            player_vars[node->obj.player].wood += node->obj.state.carrying;
+                        else if(node->obj.state.resource_type == REC_FOOD)
+                            player_vars[node->obj.player].food += node->obj.state.carrying;
+                        else if(node->obj.state.resource_type == REC_GOLD)
+                            player_vars[node->obj.player].gold += node->obj.state.carrying;
+                        else if(node->obj.state.resource_type == REC_STONE)
+                            player_vars[node->obj.player].stone += node->obj.state.carrying;
+
+                        printf("Player %d have now WOOD %d, FOOD %d, STONE %d, GOLD %d\n",
+                                node->obj.player,
+                                player_vars[node->obj.player].wood,
+                                player_vars[node->obj.player].food,
+                                player_vars[node->obj.player].stone,
+                                player_vars[node->obj.player].gold);
+                        
+                        node->obj.state.carrying = 0;
+                        node->obj.state.resource_type = REC_NONE;
+
+                        if(node->obj.state.rec_point_flag)
+                        {
+                            rts_goto(&(node->obj), node->obj.state.rec_point);
+                        }
+                        else
+                        {
+                            node->obj.state.rec_point_flag = 0;
+                            ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                        }
+                    }
+                    else
+                    {
+                            node->obj.state.rec_point_flag = 0;
+                            ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    }
+                }
+                else
+                {
+                    ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    node->obj.state.target_obj = NULL;
+                    node->obj.state.count = 0;
                 }
             }
         }

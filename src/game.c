@@ -322,8 +322,9 @@ static void draw_unexplored(int player, th_point point)
 static void game_draw(int player)
 {
     SDL_Rect dest;
+    SDL_Rect dest2;
     list_node *obj_node;
-    char tmp_text[50];
+    char tmp_text[100];
     th_point point;
     th_point dest_point;
     th_point tmp_point;
@@ -372,7 +373,11 @@ static void game_draw(int player)
                         origin.x - objects[obj_node->obj.name_enum]->w/2;
                     dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
                         origin.y - objects[obj_node->obj.name_enum]->h/2;
-                    SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
+                    if(obj_node->obj.actual_live < obj_node->obj.live 
+                            && obj_node->obj.type == FOREST)
+                        SDL_BlitSurface(objects[FOREST_USED], NULL, screen, &dest);
+                    else
+                        SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
                 }
                 // Is the any object selected?
                 if(selection.selected_num != -1)
@@ -393,8 +398,8 @@ static void game_draw(int player)
         }while(obj_node != NULL);
     }
 // User interaction
-    if(io.select_rect_dest.x != -1 && io.select_rect_dest.y != -1)
-        SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &io.select_rect_dest);
+    //if(io.select_rect_dest.x != -1 && io.select_rect_dest.y != -1)
+    //    SDL_BlitSurface(images[IMG_ISOSELECT], NULL, screen, &io.select_rect_dest);
 
     if((io.go_rect.x != -1 && io.go_rect.y != -1) &&
         io.go_valid_flag == 1 && io.go_rect_dest.x != -1)
@@ -446,7 +451,23 @@ unexp_draw:
     /*Third layer: User Interface*/
 
     //TODO: Write a panel function to manipulate the game...
-    
+    dest2.x = 0;
+    dest2.y = 0;//(screen->h / 20) * 19;
+    dest2.h = screen->h / 20;
+    dest2.w = images[IMG_GUIBG_BYZANTINE]->w;
+
+    dest.x = 0;
+    dest.y = 0;
+
+    SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], &dest2, screen, &dest);
+    sprintf(tmp_text,"Wood %5d   Food %5d   Stone %5d   Gold %5d ", 
+                                player_vars[1].wood,
+                                player_vars[1].food,
+                                player_vars[1].stone,
+                                player_vars[1].gold);
+            
+    th_ShowMessage(tmp_text, 16, dest.x+2, dest.y+2);
+
     dest.x = 0;
     dest.y = (screen->h / 5) * 4;
     SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], NULL, screen, &dest);

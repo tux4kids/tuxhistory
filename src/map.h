@@ -62,7 +62,7 @@ void        free_map(void);
 
 void        th_draw_map(void);
 
-
+th_vector   get_iso_vector(int dir);
 th_vector   get_vector(th_point point, int iso_dir);
 
 int         generate_anchormap(void);

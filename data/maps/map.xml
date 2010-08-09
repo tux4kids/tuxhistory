@@ -705,7 +705,7 @@
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object></object>
+            <object player=1>VILLAGE_CENTER</object>
             <unit></unit>
             <building></building>
         </tilde>
@@ -718,21 +718,21 @@
         </tilde>
         <tilde>
             <height>1</height>
-            <terrain>SWAMP</terrain>
+            <terrain>SAVANNAH</terrain>
             <object></object>
             <unit></unit>
             <building></building>
         </tilde>        <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
-            <object></object>
+            <terrain>SAVANNAH</terrain>
+            <object player=1>VILLAGER_MILKMAID</object>
             <unit></unit>
             <building></building>
         </tilde>
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object></object>
+            <object>FOREST_TROPICAL</object>
             <unit></unit>
             <building></building>
         </tilde>
@@ -953,14 +953,14 @@
         </tilde>        i
         <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
+            <terrain>DESERT</terrain>
             <object></object>
             <unit></unit>
             <building></building>
         </tilde>
         <tilde>
             <height>1</height>
-            <terrain>GRASSLAND</terrain>
+            <terrain>DESERT</terrain>
             <object></object>
             <unit></unit>
             <building></building>
@@ -1068,7 +1068,7 @@
             <building></building>
         </tilde>        <tilde>
             <height>0</height>
-            <terrain>OCEAN</terrain>
+            <terrain>DESERT</terrain>
             <object></object>
             <unit></unit>
             <building></building>

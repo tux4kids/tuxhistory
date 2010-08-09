@@ -308,6 +308,7 @@ int load_image_data()
       "forest/wetland.png",
       "forest/rain.png",
       "forest/broadleaf.png",
+      "others/used_forest.png",
       "units/milkmaid.png",
       "buildings/villagehouse.png",
       "buildings/hut.png",
