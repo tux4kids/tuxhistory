@@ -30,7 +30,7 @@ static int gmaps_alloc(int xsize, int ysize, int maps)
     xsize++;
     ysize++;
     gmaps = (gnode ***)malloc(maps * sizeof(gnode **));
-    if(gmaps[i] == NULL)
+    if(gmaps == NULL)
     {
         printf("Error: Allocation of objects faild!\n");
         return 1; 

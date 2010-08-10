@@ -67,7 +67,10 @@ int load_image_data()
   "others/wrong.png",
   "others/explored.png",
   "others/novisible.png",
-  "gui/byzantine.png"
+  "gui/byzantine.png",
+  "gui/build.png",
+  "gui/kill.png",
+  "gui/pawn.png"
   };
 
 

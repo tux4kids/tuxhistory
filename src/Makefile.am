@@ -37,6 +37,7 @@ tuxhistory_SOURCES = tuxhistory.c \
 	fileops_media.c \
 	options.c	\
 	credits.c	\
+	panel.c		\
 	hashtable.c \
 	highscore.c	\
 	llist.c		\
@@ -73,6 +74,7 @@ EXTRA_DIST = 	credits.h 	\
 	loaders.h	\
 	titlescreen.h   \
 	map.h		\
+	panel.h		\
 	objects.h	\
 	options.h	\
 	setup.h		\

@@ -40,6 +40,7 @@
 #include "llist.h"
 #include "tuxrts.h"
 #include "ai.h"
+#include "panel.h"
 
 
 #define FPS 50 /* 15 frames per second */
@@ -131,7 +132,7 @@ static int game_init(void)
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0));
     SDL_Flip(screen);
 
-    generate_map();
+    //generate_map();
 
     //SDL_Flip(map_image);
     quit = 0;
@@ -202,6 +203,13 @@ static int game_init(void)
 
     if(tuxrts_init("objects", "map", 2))
         return 1;
+
+    Pscreen.x = map_image->w/2 - panel.panel_game.w/2;
+    Pscreen.y = map_image->h/2 - panel.panel_game.h/2;
+    origin.x = Pscreen.x;
+    origin.y = Pscreen.y;
+    origin.w = panel.panel_game.w;
+    origin.h = panel.panel_game.h;
 
     return 0;
 }
@@ -277,8 +285,8 @@ static void draw_unexplored(int player, th_point point)
         gmaps[player][point.x][point.y].drawed == 0 )
     {
         //printf(" + ");
-        dest.x = gmaps[0][point.x][point.y].rect.x - Pscreen.x;
-        dest.y = gmaps[0][point.x][point.y].rect.y - Pscreen.y;
+        dest.x = gmaps[0][point.x][point.y].rect.x - Pscreen.x + panel.panel_game.x;
+        dest.y = gmaps[0][point.x][point.y].rect.y - Pscreen.y + panel.panel_game.y;
 
         //Is the point visible or unexplored? If so plaint!
         if(gmaps[player][point.x][point.y].visible == 0)
@@ -316,9 +324,6 @@ static void draw_unexplored(int player, th_point point)
                 (Pscreen.y - images[IMG_EXPLORED]->h));*/
 }
 
-
-
-
 static void game_draw(int player)
 {
     SDL_Rect dest;
@@ -333,16 +338,11 @@ static void game_draw(int player)
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
 
-    dest.x = 0;
-    dest.y = 0;
-
-
     /*TODO: Separate each Layer drawing in different functions.*/
 
     /*First layer: terrain*/
-    SDL_BlitSurface(map_image, &origin, screen, &dest);
+    SDL_BlitSurface(map_image, &origin, screen, &panel.panel_game);
 
-    
     /*Second layer: objects*/
 
     obj_node = list_nodes;
@@ -370,16 +370,16 @@ static void game_draw(int player)
                   )
                 {
                     dest.x = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x - 
-                        origin.x - objects[obj_node->obj.name_enum]->w/2;
+                        origin.x - objects[obj_node->obj.name_enum]->w/2 + panel.panel_game.x;
                     dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
-                        origin.y - objects[obj_node->obj.name_enum]->h/2;
+                        origin.y - objects[obj_node->obj.name_enum]->h/2 + panel.panel_game.y;
                     if(obj_node->obj.actual_live < obj_node->obj.live 
                             && obj_node->obj.type == FOREST)
                         SDL_BlitSurface(objects[FOREST_USED], NULL, screen, &dest);
                     else
                         SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
                 }
-                // Is the any object selected?
+                // Is any object selected?
                 if(selection.selected_num != -1)
                 {
                     if(selection.selected_objs[0] != NULL)
@@ -448,73 +448,8 @@ static void game_draw(int player)
 
 unexp_draw:
 
-    /*Third layer: User Interface*/
 
-    //TODO: Write a panel function to manipulate the game...
-    dest2.x = 0;
-    dest2.y = 0;//(screen->h / 20) * 19;
-    dest2.h = screen->h / 20;
-    dest2.w = images[IMG_GUIBG_BYZANTINE]->w;
-
-    dest.x = 0;
-    dest.y = 0;
-
-    SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], &dest2, screen, &dest);
-    sprintf(tmp_text,"Wood %5d   Food %5d   Stone %5d   Gold %5d ", 
-                                player_vars[1].wood,
-                                player_vars[1].food,
-                                player_vars[1].stone,
-                                player_vars[1].gold);
-            
-    th_ShowMessage(tmp_text, 16, dest.x+2, dest.y+2);
-
-    dest.x = 0;
-    dest.y = (screen->h / 5) * 4;
-    SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], NULL, screen, &dest);
-    
-    if(selection.selected_num != -1)
-    {
-        if(selection.selected_objs[0] != NULL)
-        {
-            dest.x = dest.x + 10;
-            dest.y = dest.y + 10;
-            dest.h = 100;
-            dest.w = screen->w / 5;
-            //FillRect(dest, 0x000000);
-
-            dest.x = dest.x + 2;
-            dest.y = dest.y + 2;
-
-            th_ShowMessage(selection.selected_objs[0]->rname, 12, dest.x+2, dest.y+2);
-
-            sprintf(tmp_text,"%d / %d", selection.selected_objs[0]->actual_live,
-                                        selection.selected_objs[0]->live);
-            //printf("dir is: %s\n", tmp_text);
-            th_ShowMessage(tmp_text, 15, 
-                    objects[selection.selected_objs[0]->name_enum]->w + dest.x + 10, dest.y+20);
-
-
-            dest.y = dest.y + 20;
-
-            SDL_BlitSurface(objects[selection.selected_objs[0]->name_enum], NULL, screen, &dest);
-        }
-    }
-
-    dest.x = (screen->w - mini_map_image->w - 5);
-    dest.y = (screen->h - mini_map_image->h - 5);
-    SDL_BlitSurface(mini_map_image, NULL, screen, &dest);
-
-    dest.x = (screen->w - images[IMG_STOP]->w - 5);
-    dest.y = glyph_offset;
-    SDL_BlitSurface(images[IMG_STOP], NULL, screen, &dest);
-    
-
-    /*dest.x = 20;
-    dest.y = 20;
-    dest.h = 100;
-    dest.w = 100;
-
-    draw_rect(screen, dest);*/
+    panel_draw(selection.selected_objs[0], selection.selected_num);
 
 }
 
@@ -530,11 +465,11 @@ static void game_handle_mouse(void)
     if(Pmousemap.x != -1 && Pmousemap.y != -1)
     {
    
-        if( Pscreen.x < (map_image->w - screen->h) &&
+/*        if( Pscreen.x < (map_image->w - screen->w) &&
             Pscreen.x > 0 &&
             Pscreen.y < (map_image->h - screen->h) &&
-            Pscreen.y > 0)
-        {
+            Pscreen.y > panel.panel_header_dest.h)
+        {*/
             // Is the mouse close to the border? Move the
             // map...
             if(io.Pmouse.x < screen_margin_in && Pscreen.x > IN_SCROLL){
@@ -547,8 +482,9 @@ static void game_handle_mouse(void)
             if(io.Pmouse.y < screen_margin_in && Pscreen.y > IN_SCROLL){
                 Pscreen.y = Pscreen.y - IN_SCROLL;
             }
-            if(io.Pmouse.y > screen->h - screen_margin_in &&
-                    (Pscreen.y + screen->h) < (map_image->h - IN_SCROLL)){
+            if(io.Pmouse.y > (screen->h - screen_margin_in)&&
+                (Pscreen.y + panel.panel_game.h)
+                < (map_image->h - IN_SCROLL)){
                 Pscreen.y = Pscreen.y + IN_SCROLL;
             }
 
@@ -565,11 +501,12 @@ static void game_handle_mouse(void)
                 Pscreen.y = Pscreen.y - OUT_SCROLL;
             }
             if(io.Pmouse.y > screen->h - screen_margin_out &&
-                    (Pscreen.y + screen->h) < (map_image->h - OUT_SCROLL)){
+                (Pscreen.y + panel.panel_game.h) 
+                < (map_image->h - OUT_SCROLL)){
                 Pscreen.y = Pscreen.y + OUT_SCROLL;
             }
             
-        }
+        //}
         // TODO: Selecting rectangle is incompleat
         if( io.select_rect.x > Pscreen.x &&
             io.select_rect.x < Pscreen.x + screen->w &&
@@ -587,73 +524,83 @@ static void game_handle_mouse(void)
     }
     if(io.mousedown_flag != 0)
     {
-        //printf("Mouse down, ... ");
         if(io.mouseclicked_flag != 0)
         {
-            //io.select.x = Plclick.x;
-            //io.select.y = Plclick.y; 
-            Pmousemap = mouse_map(io.Plclick, Pscreen);
-            if(Pmousemap.x != -1 && Pmousemap.y != -1)
+            if(panel_click(&io.Plclick))
             {
-                printf("Mouse clicked in a valid tile!\n");
-                io.mousedown_flag = 0;
-                io.select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
-                io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
-                io.select_xy.x = Pmousemap.x;
-                io.select_xy.y = Pmousemap.y;
-
-                // Search for a object in current selected tile and
-                // select that object
-
-                selection.selected_objs[0]=rts_get_object(human_player,Pmousemap);
-
-                if(selection.selected_objs[0] != NULL)
+                io.mouseclicked_flag = 0;
+            }
+            else
+            {
+                Pmousemap = mouse_map(io.Plclick, Pscreen);
+                if(Pmousemap.x != -1 && Pmousemap.y != -1)
                 {
-                    selection.selected_num = 0;
-                    printf("Selected: %s, in (%d, %d)\n", selection.selected_objs[0]->name,
+                    printf("Mouse clicked in a valid tile!\n");
+                    io.mousedown_flag = 0;
+                    io.select_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+                    io.select_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
+                    io.select_xy.x = Pmousemap.x;
+                    io.select_xy.y = Pmousemap.y;
+
+                    // Search for a object in current selected tile and
+                    // select that object
+
+                    selection.selected_objs[0]=rts_get_object(human_player,Pmousemap);
+
+                    if(selection.selected_objs[0] != NULL)
+                    {
+                        selection.selected_num = 0;
+                        printf("Selected: %s, in (%d, %d)\n", selection.selected_objs[0]->name,
                             selection.selected_objs[0]->x,
                             selection.selected_objs[0]->y);
+                    }
+                    else
+                    {
+                        selection.selected_num = -1;
+                    }
                 }
-                else
-                {
-                    selection.selected_num = -1;
-                }
-                
             }
         }
     }
     if(io.mousedownr_flag != 0)
     {
-        Pmousemap = mouse_map(io.Prclick, Pscreen);
-        if(Pmousemap.x != -1 && Pmousemap.y != -1)
+        if(panel_rclick(&io.Plclick))
         {
-            io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
-            io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y;
             io.mousedownr_flag = 0;
-            if( io.go_rect.x > Pscreen.x &&
-                io.go_rect.x < Pscreen.x + screen->w &&
-                io.go_rect.y > Pscreen.y &&
-                io.go_rect.y < Pscreen.y + screen->h)
+        }
+        else
+        {
+            Pmousemap = mouse_map(io.Prclick, Pscreen);
+            if(Pmousemap.x != -1 && Pmousemap.y != -1)
             {
-                io.go_rect_dest.x = io.go_rect.x - Pscreen.x;
-                io.go_rect_dest.y = io.go_rect.y - Pscreen.y;
-                io.go_xy.x = Pmousemap.x;
-                io.go_xy.y = Pmousemap.y;
-                if(rts_valid_tile(0,1,io.go_xy))
+                io.go_rect.x = gmaps[0][Pmousemap.x][Pmousemap.y].rect.x; 
+                io.go_rect.y = gmaps[0][Pmousemap.x][Pmousemap.y].rect.y + panel.panel_header_dest.h;
+                io.mousedownr_flag = 0;
+                if( io.go_rect.x > Pscreen.x &&
+                    io.go_rect.x < Pscreen.x + screen->w &&
+                    io.go_rect.y > Pscreen.y &&
+                    io.go_rect.y < Pscreen.y + screen->h)
                 {
-                    printf("Is a valid tile...\n");
-                    io.go_valid_flag = 1;
+                    io.go_rect_dest.x = io.go_rect.x - Pscreen.x;
+                    io.go_rect_dest.y = io.go_rect.y - Pscreen.y;
+                    io.go_xy.x = Pmousemap.x;
+                    io.go_xy.y = Pmousemap.y;
+                    if(rts_valid_tile(0,1,io.go_xy))
+                    {
+                        printf("Is a valid tile...\n");
+                        io.go_valid_flag = 1;
+                    }
+                    else
+                    {
+                        printf("Is a invalid tile...\n");
+                        io.go_valid_flag = 0;
+                    }
                 }
                 else
                 {
-                    printf("Is a invalid tile...\n");
-                    io.go_valid_flag = 0;
+                    io.go_rect_dest.x = -1;
+                    io.go_rect_dest.y = -1;
                 }
-            }
-            else
-            {
-                io.go_rect_dest.x = -1;
-                io.go_rect_dest.y = -1;
             }
         }
     }

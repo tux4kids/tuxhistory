@@ -4,4 +4,7 @@
 
 guidir = $(pkgdatadir)/images/gui
 
-dist_gui_DATA = byzantine.png
+dist_gui_DATA = byzantine.png \
+build.png \
+kill.png \
+pawn.png 

@@ -29,6 +29,7 @@
 #include "hashtable.h"
 #include "llist.h"
 #include "graphs.h"
+#include "panel.h"
 
 SDL_Surface* map_image;
 SDL_Surface* mini_map_image;
@@ -636,6 +637,8 @@ endineriter:
 void free_anchormap(void)
 {
     int i;
+    if(!anchor_map)
+        return;
     for(i = 0; i < (int)(map_image->w / terrain[0]->w); i++)
         FREE(anchor_map[i]);
     FREE(anchor_map);
@@ -813,13 +816,13 @@ th_point mouse_map(th_point mouse_p, th_point screen_p)
     th_point Pmousemap;
     th_point Ptilemap;
 
+
     Pmousemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)/terrain[TUNDRA_CENTER_1]->w;
-    Pmousemap.y = (int)(mouse_p.y + screen_p.y)/terrain[TUNDRA_CENTER_1]->h;
+    Pmousemap.y = (int)(mouse_p.y + screen_p.y - panel.panel_header_dest.h)/terrain[TUNDRA_CENTER_1]->h;
     
     Ptilemap.x = (int)(mouse_p.x + screen_p.x + terrain[TUNDRA_CENTER_1]->w/2)%terrain[TUNDRA_CENTER_1]->w;
-    Ptilemap.y = (int)(mouse_p.y + screen_p.y)%terrain[TUNDRA_CENTER_1]->h;
+    Ptilemap.y = (int)(mouse_p.y + screen_p.y - panel.panel_header_dest.h)%terrain[TUNDRA_CENTER_1]->h;
     
-
     anchor_p = &anchor_map[Pmousemap.x][Pmousemap.y];
     if(anchor_p->x == -1 && anchor_p->y == -1)
     {

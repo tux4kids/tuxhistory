@@ -51,10 +51,19 @@ void list_remove(list_node** ptr)
     if(ptr != NULL && *ptr != NULL)
     {
         node = *ptr;
-        tmp = (*ptr)->prev;
-        *ptr = (*ptr)->next;
+        if(node->prev)
+        {
+            tmp = (*ptr)->prev;
+        }
+        else
+        {
+            tmp = NULL;
+            list_nodes = (*ptr)->next;
+        }
+        *ptr = (*ptr)->next; //
         (*ptr)->prev = tmp;
-        tmp->next = *ptr;
+        if(tmp)
+            tmp->next = *ptr;
         free(node);
     }
 }

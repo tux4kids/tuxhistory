@@ -475,7 +475,7 @@ int ai_state_update(list_node *node)
                         node->obj.state.path_flag = 0;
                         node->obj.state.count = 0;
                     }
-                    ai_free_path(node->obj.state.path);
+                    //ai_free_path(node->obj.state.path);
                 }
             }
         }

@@ -65,22 +65,12 @@ int tuxrts_init(char *object_name, char *map_name, int players)
     }
     generate_map();
 
-    zoom = (float)screen->w/(float)images[IMG_GUIBG_BYZANTINE]->w;
 
-    //rotozoomSurface (SDL_Surface *src, double angle, double zoom, int smooth);
-    tmp_surf = rotozoomSurface(images[IMG_GUIBG_BYZANTINE], 0, zoom, 1);
-
-    if (tmp_surf == NULL)
+    if(!panel_init())
     {
-      fprintf(stderr,
-              "\nError: Zoom of GUI Backgrund not possible\n");
-      return 0;
+        printf("Error loading GUI.\n");
+        return 0;
     }
-
-    SDL_FreeSurface(images[IMG_GUIBG_BYZANTINE]);
-    images[IMG_GUIBG_BYZANTINE] = tmp_surf;
-
-
     return 1;
 }
 
