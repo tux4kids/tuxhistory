@@ -316,8 +316,13 @@ int load_image_data()
       "others/stone.png",
       "units/milkmaid.png",
       "buildings/villagehouse.png",
+      "buildings/villagehouse_new.png",
       "buildings/hut.png",
-      "buildings/monolit.png"
+      "buildings/hut_new.png",
+      "buildings/monolit.png",
+      "buildings/monolit_new.png",
+      "buildings/farm.png",
+      "buildings/farm_new.png"
   };
 
 

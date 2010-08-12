@@ -367,7 +367,7 @@
         <tilde>
             <height>1</height>
             <terrain>GRASSLAND</terrain>
-            <object></object>
+            <object player=1>FARM</object>
             <unit></unit>
             <building></building>
         </tilde>

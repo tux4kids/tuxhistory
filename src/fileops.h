@@ -382,8 +382,13 @@ enum{
     REC_STONE_1,
     VILLAGER_MILKMAID,
     HOUSE,
+    HOUSE_NEW,
     HUT,
+    HUT_NEW,
     VILLAGE_CENTER,
+    VILLAGE_CENTER_NEW,
+    FARM,
+    FARM_NEW,
     NUM_OBJECTS // Must be at the end.
 };
 

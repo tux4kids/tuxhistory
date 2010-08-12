@@ -63,6 +63,7 @@ int tuxrts_init(char *object_name, char *map_name, int players)
         printf("Couldn't generate grpah mesh!\n");
         return 0;
     }
+    
     generate_map();
 
 
@@ -244,7 +245,7 @@ int rts_goto(th_obj *obj, th_point point)
                 }
                 else if(node->obj.type == FOREST ||
                         node->obj.type == GOLD   ||
-                        node->obj.type == STONE) 
+                        node->obj.type == STONE ) 
                 {
                     obj->state.target_point = tmp_point;
                     obj->state.rec_point = tmp_point;
@@ -263,6 +264,15 @@ int rts_goto(th_obj *obj, th_point point)
                         obj->state.target_point = tmp_point;
                         obj->state.target_obj = &(node->obj);
                         action = STORE;
+                    }
+                    else if(node->obj.name_enum == FARM)
+                    {
+                        printf("It is a farm!");
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        obj->state.rec_point = tmp_point;
+                        obj->state.rec_point_flag = 1;    
+                        action = USE;
                     }
                     else
                     {

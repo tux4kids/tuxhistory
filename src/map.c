@@ -455,6 +455,11 @@ static int *get_draw_tilde(int *array, int oe)
     int *a;
     int i,j;
 
+    if(!array)
+    {
+        return NULL;
+    }
+
     // Allocate a as a dinamic array, please free it using FREE()
     a = (int *)malloc(9*sizeof(int));
     if( a == NULL )

@@ -30,6 +30,7 @@ static int init_obj_hash(void)
     hashtable_add(obj_table_hash, "VILLAGE_CENTER", VILLAGE_CENTER);
     hashtable_add(obj_table_hash, "REC_GOLD_1", REC_GOLD_1);
     hashtable_add(obj_table_hash, "REC_STONE_1", REC_STONE_1);
+    hashtable_add(obj_table_hash, "FARM", FARM);
 
     hashtable_add(obj_table_hash, "FOREST", FOREST);
     hashtable_add(obj_table_hash, "GOLD", GOLD);

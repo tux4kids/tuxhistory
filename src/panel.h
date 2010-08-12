@@ -22,6 +22,7 @@ typedef struct th_panel{
     SDL_Rect panel_description;
     SDL_Rect panel_option[5];
     int panel_actions[5];
+    int panel_actions_obj[5];
     SDL_Rect panel_dest;
     SDL_Rect panel_origin;
     SDL_Rect panel_header_dest;
@@ -33,7 +34,7 @@ th_panel panel;
 
 int panel_init(void);
 void panel_draw(th_obj *, int);
-int panel_click(th_point *point);
+int panel_click(th_point *point, th_obj *obj);
 int panel_rclick(th_point *point);
 
 #endif

@@ -24,6 +24,7 @@
 #include "fileops.h"
 #include "players.h"
 
+static int rect_coll(th_point *p, SDL_Rect *r);
 
 int panel_init(void)
 {
@@ -44,17 +45,12 @@ int panel_init(void)
     for(i = 0; i < 5; i++)
     {
         panel.panel_option[i].x = panel.panel_description.x + 
-            panel.panel_description.w + 10 + (images[IMG_GUIBUILD]->w+10)*i;
+                panel.panel_description.w + 10 + (images[IMG_GUIBUILD]->w+10)*i;
         panel.panel_option[i].y = panel.panel_description.y;
         panel.panel_option[i].w = images[IMG_GUIBUILD]->w;
         panel.panel_option[i].h = images[IMG_GUIBUILD]->h;
+        panel.panel_actions[i] = INACTIVE;
     }
-
-    panel.panel_actions[0] = INACTIVE;
-    panel.panel_actions[1] = INACTIVE;
-    panel.panel_actions[2] = INACTIVE;
-    panel.panel_actions[3] = INACTIVE;
-    panel.panel_actions[4] = INACTIVE;
 
     panel.panel_header_dest.x = 0;
     panel.panel_header_dest.y = 0;
@@ -100,12 +96,16 @@ int panel_init(void)
 // from the object xml file info!
 void panel_draw(th_obj *select, int num)
 {
-    SDL_Rect dest, dest2;
+    SDL_Rect dest, dest2, rect;
     char tmp_text[100];
     int menu_y =(screen->h / 5) * 4;
 
     //TODO: Write a panel function to manipulate the game...
 
+    rect.x = 0;
+    rect.y = 0;
+    rect.w = images[IMG_GUIKILL]->w;
+    rect.h = images[IMG_GUIKILL]->h;
 
     SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], &panel.panel_header_dest, screen, 
             &panel.panel_header_origin);
@@ -140,15 +140,28 @@ void panel_draw(th_obj *select, int num)
             SDL_BlitSurface(objects[select->name_enum], NULL, screen, &dest);
             
             if(select->name_enum == VILLAGER_MILKMAID)
-            {
-                SDL_BlitSurface(images[IMG_GUIBUILD], NULL, screen, &panel.panel_option[0]);
+            { 
+                rect.x = objects[VILLAGE_CENTER]->w/2 - panel.panel_option[0].w/2;
+                SDL_FillRect(screen, &panel.panel_option[0], 0x000000);
+                SDL_BlitSurface(objects[VILLAGE_CENTER], &rect, screen, &panel.panel_option[0]);
                 panel.panel_actions[0] = BUILD;
+                panel.panel_actions_obj[0] = VILLAGE_CENTER;
+
+                rect.x = objects[FARM]->w/2 - panel.panel_option[1].w/2;
+                SDL_FillRect(screen, &panel.panel_option[1], 0x000000);
+                SDL_BlitSurface(objects[FARM], &rect, screen, &panel.panel_option[1]);
+                panel.panel_actions[1] = BUILD;
+                panel.panel_actions_obj[1] = FARM;               
+
+                rect.x = objects[HOUSE]->w/2 - panel.panel_option[2].w/2;
+                SDL_FillRect(screen, &panel.panel_option[2], 0x000000);
+                SDL_BlitSurface(objects[HOUSE], &rect, screen, &panel.panel_option[2]);
+                panel.panel_actions[2] = BUILD;
+                panel.panel_actions_obj[2] = HOUSE;
 
                 SDL_BlitSurface(images[IMG_GUIKILL], NULL, screen, &panel.panel_option[4]);
                 panel.panel_actions[4] = DIE;
 
-                panel.panel_actions[1] = INACTIVE;
-                panel.panel_actions[2] = INACTIVE;  
                 panel.panel_actions[3] = INACTIVE;
             }
             else if(select->name_enum == VILLAGE_CENTER)
@@ -197,14 +210,17 @@ static int rect_coll(th_point *p, SDL_Rect *r)
         return 0;
 }
 
+// Return -2 if a non building option was clicked, -1 if no click in
+// the panel was done, and 0+ to specify the building type to
+// create.
 
-
-int panel_click(th_point *point)
+int panel_click(th_point *point, th_obj *obj)
 {
+    int i;
     if(rect_coll(point, &panel.panel_header_dest))
     {
         printf("Click in header!\n");
-        return 1;
+        return -2;
     }
     else if(rect_coll(point, &panel.panel_dest))
     {
@@ -214,13 +230,31 @@ int panel_click(th_point *point)
         {
             printf("Click in the object description\n");
         }
-        if(rect_coll(point, &panel.panel_minimap))
+        else if(rect_coll(point, &panel.panel_minimap))
         {
             printf("Click in minimap!\n");
         }
-        return 1;
+        else
+        {
+            for(i = 0; i < 5; i++)
+            {
+                if(rect_coll(point, &panel.panel_option[i]))
+                {
+                    printf("Action: %d, target %d \n", panel.panel_actions[i],
+                            panel.panel_actions_obj[i]);
+                    if(panel.panel_actions[i] == DIE)
+                    {
+                        ai_modify_state(human_player, obj, DIE);
+                        return -3;
+                    }
+                    return panel.panel_actions_obj[i];
+                    return -2;
+                }
+            }
+        }
+        return -2;
     }
-    return 0;
+    return -1;
 }
 
 

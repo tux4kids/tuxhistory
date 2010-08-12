@@ -385,14 +385,20 @@ static th_point ai_find_closest_center(th_point point)
 
 int ai_state_update(list_node *node)
 {
+    list_node *node_tmp;
     int tmp;
+    int i;
     th_point tmp_point, point;
     if(!node)
         return 0;
+    
+    i = 0;
+    
     do{
+        i++;
         if(node->obj.state.flag)
         {
-            //printf("Enter to process state\n");
+            printf("Enter to process state\n");
             if(node->obj.state.state == GOTO)
             {
                 node->obj.state.path_count = node->obj.state.path->size;
@@ -442,7 +448,10 @@ int ai_state_update(list_node *node)
             node->obj.state.flag = 0;
             if(node->obj.state.state == DIE)
             {
+                node_tmp = node->next;
                 ai_kill_object(node);
+                node = node_tmp;
+                continue;
             }
         }
         if(node->obj.state.agains_flag)
@@ -530,6 +539,9 @@ int ai_state_update(list_node *node)
                             node->obj.state.resource_type = REC_GOLD;
                         if(node->obj.state.target_obj->type == STONE)
                             node->obj.state.resource_type = REC_STONE;
+                        if(node->obj.state.target_obj->name_enum == FARM)
+                            node->obj.state.resource_type = REC_FOOD;
+
                         printf("%s using %s, %s live is %d\n", node->obj.rname,
                             node->obj.state.target_obj->rname, 
                             node->obj.state.target_obj->rname, 

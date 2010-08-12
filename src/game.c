@@ -100,6 +100,8 @@ typedef struct io_vars
     SDL_Rect go_rect;
     SDL_Rect go_rect_dest;
     int go_valid_flag;
+    int build_flag; //-1 if no building to alloc, and 0+ to specify the 
+                    //building type.
 }io_vars;
 
 io_vars io;
@@ -197,6 +199,7 @@ static int game_init(void)
     io.go_rect_dest.w = 0;
     io.go_rect_dest.h = 0;
     io.go_valid_flag = 0;
+    io.build_flag = -1;
 
     // Player?
     this_player = 1;
@@ -417,9 +420,31 @@ static void game_draw(int player)
     }
    
     io.go_valid_flag = 0;
+
+    //Draw a preview of a future building if the building flag is on
+
+    dest_point = mouse_map(io.Pmouse, Pscreen);
+    if(dest_point.x != -1)
+    {
+        if(dest_point.y != -1)
+        {
+            if(io.build_flag >= 0)
+            {
+                dest.x = gmaps[0][dest_point.x][dest_point.y].anchor.x - 
+                    origin.x - objects[io.build_flag]->w/2 + panel.panel_game.x;
+                dest.y = gmaps[0][dest_point.x][dest_point.y].anchor.y - 
+                    origin.y - objects[io.build_flag]->w/2 + panel.panel_game.y;
+
+                SDL_BlitSurface(objects[io.build_flag+1], NULL, screen, &dest);
+            }
+        }
+    }
+
     point.x = 0;
     point.y = 0;
     dest_point = mouse_map(point, Pscreen);
+
+    // Draw no visible areas black
     if(dest_point.x == -1 || dest_point.y == -1)
     {
         point.x = Pscreen.x + 10;
@@ -459,6 +484,7 @@ static void game_handle_mouse(void)
     th_point Pdtmap;
     th_point *path;
     int i, j;
+    int tmp;
     
     Pmousemap = mouse_map(io.Pmouse, Pscreen);
     Pdtmap = Pscreen;
@@ -521,14 +547,17 @@ static void game_handle_mouse(void)
             io.select_rect_dest.x = -1;
             io.select_rect_dest.y = -1;
         }
+
     }
     if(io.mousedown_flag != 0)
     {
         if(io.mouseclicked_flag != 0)
         {
-            if(panel_click(&io.Plclick))
+            if((io.build_flag = panel_click(&io.Plclick, selection.selected_objs[0])) != -1)
             {
                 io.mouseclicked_flag = 0;
+                if(io.build_flag == -3)
+                    selection.selected_objs[0] = NULL;
             }
             else
             {
