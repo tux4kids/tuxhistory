@@ -23,6 +23,7 @@ enum{
     USE,
     DIE,
     STORE,
+    CONSTRUCTION,
     NUM_OF_STATES
 };
 

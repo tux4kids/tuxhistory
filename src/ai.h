@@ -31,6 +31,8 @@ void ai_free_path(th_path *path);
 
 int ai_modify_state(int player, th_obj *object, int state);
 
+th_point ai_alternative_tile(th_point p1, th_point p2);
+
 int ai_state_update(list_node *node);
 
 int ai_valid_tile(int player, int unit, th_point coords);

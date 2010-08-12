@@ -379,7 +379,46 @@ static th_point ai_find_closest_center(th_point point)
     return lowest;
 }
     
+th_point ai_alternative_tile(th_point p1, th_point p2)
+{
+    int prev_hdist;
+    int l;
+    th_point tmp_point;
 
+    prev_hdist = -1;
+    for(l=0; l<NUM_DIRS; l++)
+    {
+        if(gmaps[human_player][p2.x][p2.y].nodes[l])
+        {
+            if(ai_valid_tile(human_player, 0, gmaps[human_player][p2.x][p2.y].nodes[l]->point))
+            {
+                if(prev_hdist == -1)
+                {
+                    tmp_point = gmaps[human_player][p2.x][p2.y].nodes[l]->point;
+                    prev_hdist = HDIST(p1.x, p1.y, gmaps[human_player][p2.x][p2.y].nodes[l]->point.x,
+                           gmaps[human_player][p2.x][p2.y].nodes[l]->point.y);
+                }
+                else if(HDIST(p1.x, p1.y, gmaps[human_player][p2.x][p2.y].nodes[l]->point.x,
+                           gmaps[human_player][p2.x][p2.y].nodes[l]->point.y) < prev_hdist)
+                {
+                    tmp_point = gmaps[human_player][p2.x][p2.y].nodes[l]->point;
+                    prev_hdist = HDIST(p1.x, p1.y, gmaps[human_player][p2.x][p2.y].nodes[l]->point.x,
+                           gmaps[human_player][p2.x][p2.y].nodes[l]->point.y);
+                }
+            }
+        }
+    }
+/*    if(prev_hdist == -1)
+    {
+       for(l=0; l<NUM_DIRS; l++)
+       {
+            tmp_point = ai_alternative_tile(gmaps[human_player][p2.x][p2.y].nodes[l]->point, p2);
+            break;
+       }
+    }*/
+    printf("Alternative point: (%d, %d)\n", tmp_point.x, tmp_point.y);
+    return tmp_point;
+}
 // ai_state_update modifies the values of all objects if they change their
 // state.
 

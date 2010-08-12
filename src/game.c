@@ -553,7 +553,13 @@ static void game_handle_mouse(void)
     {
         if(io.mouseclicked_flag != 0)
         {
-            if((io.build_flag = panel_click(&io.Plclick, selection.selected_objs[0])) != -1)
+            if(io.build_flag >= 0)
+            {
+                Pmousemap = mouse_map(io.Plclick, Pscreen);
+                //rts_build(selection.selected_objs[0], io.build_flag, Pmousemap); 
+                io.build_flag = -1;
+            }
+            else if((io.build_flag = panel_click(&io.Plclick, selection.selected_objs[0])) != -1)
             {
                 io.mouseclicked_flag = 0;
                 if(io.build_flag == -3)

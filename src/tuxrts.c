@@ -195,7 +195,7 @@ int rts_goto(th_obj *obj, th_point point)
     list_node *node;
     th_path *path;
     th_point source;
-    th_point tmp_point;
+    th_point tmp_point, extra_point;
     int l;
     int action;
 
@@ -218,19 +218,11 @@ int rts_goto(th_obj *obj, th_point point)
             tmp_point.x = -1;
             tmp_point.y = -1;
             printf("A object is on the goal tile\n");
-            for(l=0; l<NUM_DIRS; l++)
-            {
-                if(gmaps[human_player][point.x][point.y].nodes[l])
-                {
-                    if(ai_valid_tile(human_player, 0, gmaps[human_player][point.x][point.y].nodes[l]->point)){
-                        tmp_point = point;
-                        point = gmaps[human_player][point.x][point.y].nodes[l]->point;
-                        printf("New goal tile: (%d,%d)\n", point.x, point.y);
-                        break;
-                    }
-                }
-            }
-            
+
+            extra_point.x = obj->x;
+            extra_point.y = obj->y;
+            tmp_point = point;
+            point = ai_alternative_tile(extra_point, point); 
             if(tmp_point.x == -1 && tmp_point.y == -1)
                 return 0;
 
@@ -314,6 +306,116 @@ int rts_goto(th_obj *obj, th_point point)
 
 int rts_build(th_obj *obj, int type, th_point point)
 {
+    list_node *node;
+    th_path *path;
+    th_point source;
+    th_point tmp_point;
+    th_point extra_point;
+    th_obj *obj_template;
+    th_obj new_obj;
+    char obj_name[50];
+    int l;
+    int action;
+
+    if(!obj)
+    {
+        printf("rts_goto error: object invalid!\n");
+        return 0;
+    }
+    if(obj->name_enum != VILLAGER_MILKMAID)
+    {
+        return 0;
+    }
+
+    action = BUILD;
+
+    node = list_nodes;
+    do{
+        if(node->obj.x == point.x && node->obj.y == point.y)
+        {
+            printf("A object is on the goal tile\n");
+            return 0;
+        }
+        node = node->next;
+    }while(node);
+
+    
+    extra_point.x = obj->x;
+    extra_point.y = obj->y;
+    tmp_point = point;
+    point = ai_alternative_tile(extra_point, point); 
+           
+    if(tmp_point.x == -1 && tmp_point.y == -1)
+        return 0;
+
+    sprintf(obj_name, "%d", type);
+    obj_template = hashtable_lookup(obj_table_hash, obj_name);
+            
+    if(!obj_template)
+        return 0;
+
+    new_obj = *obj_template;
+    list_add(&list_nodes, new_obj);
+/*
+
+            printf("Finding a new action!\n");
+
+
+            else
+            {
+                if(node->obj.type == BUILDING) 
+                {
+                    if(node->obj.name_enum == VILLAGE_CENTER &&
+                            obj->state.carrying > 0) 
+                    {
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        action = STORE;
+                    }
+                    else if(node->obj.name_enum == FARM)
+                    {
+                        printf("It is a farm!");
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        obj->state.rec_point = tmp_point;
+                        obj->state.rec_point_flag = 1;    
+                        action = USE;
+                    }
+                    else
+                    {
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        action = REPAIR;
+                    }
+                }
+            }
+            break;
+        }
+        node = node->next;
+    }while(node);
+
+    printf("Change %s state: go from (%d,%d) to (%d,%d)\n", 
+                obj->rname,
+                obj->x,
+                obj->y,
+                point.x,
+                point.y);
+    
+    source.x = obj->x;
+    source.y = obj->y;
+
+    if(!(path = ai_shortes_path(obj->player,obj->type,source, point)))
+    {
+        printf("No shortes path found or a error ocurred!\n");
+        return 1;
+    }
+    
+    obj->state.path = path;
+
+    ai_modify_state(obj->player, obj, action);
+
+    printf("Path found!\n");
+*/
     return 1;
 }
 
