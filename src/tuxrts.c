@@ -248,9 +248,17 @@ int rts_goto(th_obj *obj, th_point point)
             } 
             else
             {
-                if(node->obj.type == BUILDING) 
+                if(node->obj.type == BUILDING && obj->name_enum == VILLAGER_MILKMAID) 
                 {
-                    if(node->obj.name_enum == VILLAGE_CENTER &&
+                    if(node->obj.state.state == CONSTRUCTION)
+                    {
+                        obj->state.target_point = tmp_point;
+                        obj->state.target_obj = &(node->obj);
+                        obj->state.rec_point = tmp_point;
+                        obj->state.rec_point_flag = 1;    
+                        action = BUILD;
+                    }
+                    else if(node->obj.name_enum == VILLAGE_CENTER &&
                             obj->state.carrying > 0) 
                     {
                         obj->state.target_point = tmp_point;
@@ -259,7 +267,6 @@ int rts_goto(th_obj *obj, th_point point)
                     }
                     else if(node->obj.name_enum == FARM)
                     {
-                        printf("It is a farm!");
                         obj->state.target_point = tmp_point;
                         obj->state.target_obj = &(node->obj);
                         obj->state.rec_point = tmp_point;
@@ -317,6 +324,11 @@ int rts_build(th_obj *obj, int type, th_point point)
     int l;
     int action;
 
+    if(type >= NUM_OBJECTS)
+    {
+        printf("I can't build this object, Object not in list!\n");
+        return 0;
+    }
     if(!obj)
     {
         printf("rts_goto error: object invalid!\n");
@@ -326,6 +338,8 @@ int rts_build(th_obj *obj, int type, th_point point)
     {
         return 0;
     }
+
+
 
     action = BUILD;
 
@@ -348,74 +362,78 @@ int rts_build(th_obj *obj, int type, th_point point)
     if(tmp_point.x == -1 && tmp_point.y == -1)
         return 0;
 
-    sprintf(obj_name, "%d", type);
-    obj_template = hashtable_lookup(obj_table_hash, obj_name);
+    // Creating new object: Extract the object tempalte from object hash
+    // modify this object and add it to the object list with CONSTRUCTION
+    // state.
+    printf("Searching for object template %s\n", object_names[type]);
+    obj_template = hashtable_lookup(objects_hash, object_names[type]);
             
     if(!obj_template)
         return 0;
 
+    printf("\nObject found, addint object to list.\n");
+
     new_obj = *obj_template;
-    list_add(&list_nodes, new_obj);
-/*
 
-            printf("Finding a new action!\n");
-
-
-            else
-            {
-                if(node->obj.type == BUILDING) 
-                {
-                    if(node->obj.name_enum == VILLAGE_CENTER &&
-                            obj->state.carrying > 0) 
-                    {
-                        obj->state.target_point = tmp_point;
-                        obj->state.target_obj = &(node->obj);
-                        action = STORE;
-                    }
-                    else if(node->obj.name_enum == FARM)
-                    {
-                        printf("It is a farm!");
-                        obj->state.target_point = tmp_point;
-                        obj->state.target_obj = &(node->obj);
-                        obj->state.rec_point = tmp_point;
-                        obj->state.rec_point_flag = 1;    
-                        action = USE;
-                    }
-                    else
-                    {
-                        obj->state.target_point = tmp_point;
-                        obj->state.target_obj = &(node->obj);
-                        action = REPAIR;
-                    }
-                }
-            }
-            break;
+    //if(obj->player <= num_of_players)
+    //{
+        if( player_vars[obj->player].wood - new_obj.cost[REC_WOOD] > 0 &&
+            player_vars[obj->player].food - new_obj.cost[REC_FOOD] > 0 &&
+            player_vars[obj->player].gold - new_obj.cost[REC_GOLD] > 0 &&
+            player_vars[obj->player].stone - new_obj.cost[REC_STONE] > 0 )
+        {
+            player_vars[obj->player].wood = player_vars[obj->player].wood - new_obj.cost[REC_WOOD]; 
+            player_vars[obj->player].food = player_vars[obj->player].food - new_obj.cost[REC_FOOD];
+            player_vars[obj->player].gold = player_vars[obj->player].gold - new_obj.cost[REC_GOLD];
+            player_vars[obj->player].stone = player_vars[obj->player].stone - new_obj.cost[REC_STONE];
         }
-        node = node->next;
-    }while(node);
+        else
+        {
+            printf("Not enoght resources! You need wood: %d food: %d gold: %d stone: %d\n",
+                    new_obj.cost[REC_WOOD],
+                    new_obj.cost[REC_FOOD],
+                    new_obj.cost[REC_GOLD],
+                    new_obj.cost[REC_STONE]);
+            return 0;
+        }
+    //}
 
-    printf("Change %s state: go from (%d,%d) to (%d,%d)\n", 
-                obj->rname,
-                obj->x,
-                obj->y,
-                point.x,
-                point.y);
+    new_obj.id = object_counter;
+    new_obj.player = obj->player;
+    new_obj.x = tmp_point.x;
+    new_obj.y = tmp_point.y;
+    ai_modify_state(obj->player, &new_obj, CONSTRUCTION);
+    list_add(&list_nodes, new_obj);
+
+    object_counter++;
+
+    // Find the shortes path to a close tile, and chanche the object 
+    // state to build
     
     source.x = obj->x;
     source.y = obj->y;
-
-    if(!(path = ai_shortes_path(obj->player,obj->type,source, point)))
+    if(!(path = ai_shortes_path(obj->player,obj->type, source, point)))
     {
         printf("No shortes path found or a error ocurred!\n");
         return 1;
     }
-    
+
+    node = list_nodes;
+    do{
+        if(node->obj.x == tmp_point.x && node->obj.y == tmp_point.y)
+        {
+             obj_template = &(node->obj);
+             break;
+        }
+        node = node->next;
+    }while(node);
+
+    obj->state.target_point = point;
+    obj->state.target_obj = obj_template;
     obj->state.path = path;
 
     ai_modify_state(obj->player, obj, action);
 
-    printf("Path found!\n");
-*/
     return 1;
 }
 

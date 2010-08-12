@@ -300,6 +300,10 @@ int ai_modify_state(int player, th_obj *object, int state)
         object->state.old_state = object->state.state;
         object->state.state = state;
         object->state.flag = 1;
+        if(state == CONSTRUCTION)
+        {
+            object->actual_live = 1;
+        }
         printf("State Modified from %d to %d!\n",object->state.old_state,object->state.state );
         return 1;
     }
@@ -483,7 +487,17 @@ int ai_state_update(list_node *node)
                 node->obj.state.agains_flag = 0;
                 node->obj.state.action_againts = 0;
                 node->obj.state.path_flag = 1;
-            } 
+            }
+            if(node->obj.state.state == BUILD)
+            {
+                printf("Go to build!\n");
+                node->obj.state.path_count = node->obj.state.path->size;
+                node->obj.state.count = 0;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 1;
+            }  
             node->obj.state.flag = 0;
             if(node->obj.state.state == DIE)
             {
@@ -661,7 +675,39 @@ int ai_state_update(list_node *node)
                     node->obj.state.count = 0;
                 }
             }
+            if(node->obj.state.state == BUILD)
+            {
+                //printf("Building and not walking...\n");
+                if(ai_close_obj(&(node->obj), node->obj.state.target_obj))
+                {
+                    node->obj.state.count++;
+                    if(node->obj.state.count > 10)
+                    {
+                        node->obj.state.count = 0;
+                        node->obj.state.target_obj->state.action_againts = BUILD;
+                        node->obj.state.target_obj->state.agains_flag = 1;
+                        tmp = node->obj.attack;
+                        node->obj.state.target_obj->actual_live = node->obj.state.target_obj->actual_live + tmp;
+                        if(node->obj.state.target_obj->actual_live > node->obj.state.target_obj->live)
+                        {
+                            node->obj.state.target_obj->actual_live = node->obj.state.target_obj->live;
+                            ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                            ai_modify_state(node->obj.player, node->obj.state.target_obj, INACTIVE);
+                            node->obj.state.target_obj = NULL;
+                            node->obj.state.count = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    printf("Not close to the objective!\n");
+                    ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                    node->obj.state.target_obj = NULL;
+                    node->obj.state.count = 0;
+                }
+            }           
         }
+
         if(node->obj.actual_live <= 0)
             ai_modify_state(node->obj.player, &(node->obj), DIE);
 

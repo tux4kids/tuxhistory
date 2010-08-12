@@ -49,7 +49,7 @@ int objects_xml(FILE *fp)
     mxml_node_t *node;
     mxml_node_t *inode;
 
-    objects_hash = make_hashtable(hashtable_default_hash, 1000);
+    objects_hash = make_hashtable(hashtable_default_hash, NUM_OBJECT_HASH);
     if(objects_hash == NULL)
         return 1;
 
@@ -222,7 +222,90 @@ int objects_xml(FILE *fp)
                     return 1;
                 }
             }
-        }
+            node = mxmlFindElement(inode, inode, "food",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].cost[REC_FOOD] = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].cost[REC_WOOD] = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+            else
+            {
+                object[i].cost[REC_FOOD] = 0;
+            }
+
+            node = mxmlFindElement(inode, inode, "wood",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].cost[REC_WOOD] = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].cost[REC_WOOD] = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+            else
+            {
+                object[i].cost[REC_WOOD] = 0;
+            }
+
+            node = mxmlFindElement(inode, inode, "gold",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].cost[REC_GOLD] = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].cost[REC_WOOD] = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+            else
+            {
+                object[i].cost[REC_GOLD] = 0;
+            }
+
+            node = mxmlFindElement(inode, inode, "stone",
+                    NULL, NULL, MXML_DESCEND);
+            
+            if(node != NULL)
+            {
+                if(atoi(node->child->value.opaque) >= 0)
+                {
+                    object[i].cost[REC_STONE] = atoi(node->child->value.opaque);
+                }
+                else
+                {
+                    object[i].cost[REC_WOOD] = -1;
+                    printf("objects_xml: Error loading objects description file.\n");
+                    return 1;
+                }
+            }
+            else
+            {
+                object[i].cost[REC_STONE] = 0;
+            }
+         }
         else
         {
             object[i].defence = -1;
@@ -264,6 +347,7 @@ int objects_xml(FILE *fp)
 
         /* End of debug */
         hashtable_add(objects_hash, object[i].name, &object[i]);
+        strcpy(object_names[object[i].name_enum],object[i].name);
 
         i++;
     }

@@ -12,4 +12,5 @@ explored.png \
 used_forest.png \
 gold.png \
 stone.png \
-wrong.png
+wrong.png \
+construction.png

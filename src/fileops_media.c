@@ -67,6 +67,7 @@ int load_image_data()
   "others/wrong.png",
   "others/explored.png",
   "others/novisible.png",
+  "others/construction.png",
   "gui/byzantine.png",
   "gui/build.png",
   "gui/kill.png",

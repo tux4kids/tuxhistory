@@ -8,6 +8,10 @@
         <description>Cut this trees and get 375 woods</description>
         <live>375</live>
         <vision>1</vision>
+        <food>100</food>
+        <wood>100</wood>
+        <gold>0</gold>
+        <stone>0</stone>
     </object>
     <object>
         <type>FOREST</type>
@@ -16,7 +20,11 @@
         <description>Cut this trees and get 350 woods</description>
         <live>350</live>
         <vision>1</vision>
-    </object>
+        <food>100</food>
+        <wood>100</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>FOREST</type>
         <name>FOREST_SCRUB</name>
@@ -24,7 +32,11 @@
         <description>Cut this trees and get 250 woods</description>
         <live>250</live>
         <vision>1</vision>
-    </object>
+        <food>100</food>
+        <wood>100</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>FOREST</type>
         <name>FOREST_CONIFER</name>
@@ -32,7 +44,11 @@
         <description>Cut this trees and get 400 woods</description>
         <live>400</live>
         <vision>1</vision>
-    </object>
+        <food>100</food>
+        <wood>100</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>FOREST</type>
         <name>FOREST_RAIN</name>
@@ -40,7 +56,11 @@
         <description>Cut this trees and get 300 woods</description>
         <live>300</live>
         <vision>1</vision>
-    </object>
+        <food>100</food>
+        <wood>100</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>GOLD</type>
         <name>REC_GOLD_1</name>
@@ -48,7 +68,11 @@
         <description>Get 450 gold</description>
         <live>450</live>
         <vision>1</vision>
-    </object>
+        <food>0</food>
+        <wood>0</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>STONE</type>
         <name>REC_STONE_1</name>
@@ -56,7 +80,11 @@
         <description>Get 450 Stone</description>
         <live>450</live>
         <vision>1</vision>
-    </object> 
+        <food>0</food>
+        <wood>0</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object> 
     <object>
         <type>UNIT</type>
         <name>VILLAGER_MILKMAID</name>
@@ -67,7 +95,11 @@
         <defence>1</defence>
         <attack>3</attack>
         <move>1</move>
-    </object>
+        <food>50</food>
+        <wood>0</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>BUILDING</type>
         <name>HOUSE</name>
@@ -78,7 +110,11 @@
         <defence>0</defence>
         <attack>0</attack>
         <move>0</move>
-    </object>
+        <food>0</food>
+        <wood>50</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>BUILDING</type>
         <name>HUT</name>
@@ -89,7 +125,11 @@
         <defence>0</defence>
         <attack>0</attack>
         <move>0</move>
-    </object>
+        <food>0</food>
+        <wood>50</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>BUILDING</type>
         <name>FARM</name>
@@ -100,7 +140,11 @@
         <defence>0</defence>
         <attack>0</attack>
         <move>0</move>
-    </object>
+        <food>0</food>
+        <wood>75</wood>
+        <gold>0</gold>
+        <stone>0</stone>
+     </object>
     <object>
         <type>BUILDING</type>
         <name>VILLAGE_CENTER</name>
@@ -111,6 +155,10 @@
         <defence>0</defence>
         <attack>0</attack>
         <move>0</move>
-    </object>
+        <food>100</food>
+        <wood>200</wood>
+        <gold>0</gold>
+        <stone>50</stone>
+     </object>
 </data>
 

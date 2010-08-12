@@ -376,11 +376,23 @@ static void game_draw(int player)
                         origin.x - objects[obj_node->obj.name_enum]->w/2 + panel.panel_game.x;
                     dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
                         origin.y - objects[obj_node->obj.name_enum]->h/2 + panel.panel_game.y;
-                    if(obj_node->obj.actual_live < obj_node->obj.live 
+                    if(obj_node->obj.state.state == CONSTRUCTION)
+                    {
+                        dest.x = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.x - 
+                            origin.x - images[IMG_CONSTRUCTION]->w/2 + panel.panel_game.x;
+                        dest.y = gmaps[0][obj_node->obj.x][obj_node->obj.y].anchor.y - 
+                            origin.y - images[IMG_CONSTRUCTION]->h/2 + panel.panel_game.y;
+                        SDL_BlitSurface(images[IMG_CONSTRUCTION], NULL, screen, &dest);
+                    }
+                    else if(obj_node->obj.actual_live < obj_node->obj.live 
                             && obj_node->obj.type == FOREST)
+                    {
                         SDL_BlitSurface(objects[FOREST_USED], NULL, screen, &dest);
+                    }
                     else
+                    {
                         SDL_BlitSurface(objects[obj_node->obj.name_enum], NULL, screen, &dest);
+                    }
                 }
                 // Is any object selected?
                 if(selection.selected_num != -1)
@@ -556,7 +568,7 @@ static void game_handle_mouse(void)
             if(io.build_flag >= 0)
             {
                 Pmousemap = mouse_map(io.Plclick, Pscreen);
-                //rts_build(selection.selected_objs[0], io.build_flag, Pmousemap); 
+                rts_build(selection.selected_objs[0], io.build_flag, Pmousemap); 
                 io.build_flag = -1;
             }
             else if((io.build_flag = panel_click(&io.Plclick, selection.selected_objs[0])) != -1)

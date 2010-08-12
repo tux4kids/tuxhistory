@@ -4,6 +4,8 @@
 #include "globals.h"
 #include "hashtable.h"
 
+#define NUM_OBJECT_HASH 1000
+
 enum{
     REC_NONE,
     REC_GOLD,
@@ -68,12 +70,14 @@ typedef struct th_obj{
     int defence;
     int attack;
     int move;
+    int cost[NUM_RESOURCES];
     int player;
     struct th_state state;
 }th_obj;
 
 struct hashtable *obj_table_hash; //Strings to enums
 struct hashtable *objects_hash; //Names to objects
+char object_names[NUM_OBJECT_HASH][30];
 
 th_obj *object;
 int object_counter;
