@@ -304,7 +304,7 @@ int ai_modify_state(int player, th_obj *object, int state)
         {
             object->actual_live = 1;
         }
-        printf("State Modified from %d to %d!\n",object->state.old_state,object->state.state );
+        //printf("State Modified from %d to %d!\n",object->state.old_state,object->state.state );
         return 1;
     }
     printf("Not a valid player to modify objects state!");
@@ -314,8 +314,10 @@ static int ai_kill_object(list_node *node)
 {
     list_node *iter_node;
     iter_node = list_nodes;
-    do{
+    if(!node)
+        return 0;
 
+    do{
         if(&(iter_node->obj) == node->obj.state.target_obj)
         {
             node->obj.state.target_obj = NULL;
@@ -325,6 +327,10 @@ static int ai_kill_object(list_node *node)
         iter_node = iter_node->next;
     }while(iter_node);
 
+    if(node->obj.type == UNIT)
+        player_vars[node->obj.player].pop--;
+    if(node->obj.name_enum == HOUSE)
+        player_vars[node->obj.player].limit_pop--;
     list_remove(&node);
     printf("Exito removiendo\n");
     return 1;
@@ -390,6 +396,18 @@ th_point ai_alternative_tile(th_point p1, th_point p2)
     th_point tmp_point;
 
     prev_hdist = -1;
+    if(p1.x == p2.x && p1.y == p2.y)
+    {
+        for(l=0; l<NUM_DIRS; l++)
+        {
+            if(ai_valid_tile(human_player, 0, gmaps[human_player][p2.x][p2.y].nodes[l]->point))
+            {
+                tmp_point = gmaps[human_player][p2.x][p2.y].nodes[l]->point;
+                printf("Alternative point: (%d, %d)\n", tmp_point.x, tmp_point.y);
+                return tmp_point;
+            }
+        }
+    }
     for(l=0; l<NUM_DIRS; l++)
     {
         if(gmaps[human_player][p2.x][p2.y].nodes[l])
@@ -412,14 +430,7 @@ th_point ai_alternative_tile(th_point p1, th_point p2)
             }
         }
     }
-/*    if(prev_hdist == -1)
-    {
-       for(l=0; l<NUM_DIRS; l++)
-       {
-            tmp_point = ai_alternative_tile(gmaps[human_player][p2.x][p2.y].nodes[l]->point, p2);
-            break;
-       }
-    }*/
+
     printf("Alternative point: (%d, %d)\n", tmp_point.x, tmp_point.y);
     return tmp_point;
 }
@@ -428,10 +439,15 @@ th_point ai_alternative_tile(th_point p1, th_point p2)
 
 int ai_state_update(list_node *node)
 {
+    th_point new_point;
+    th_point tmp_point;
+    th_point point;
+    th_obj *tmp_obj;
+    th_obj new_obj;
     list_node *node_tmp;
     int tmp;
     int i;
-    th_point tmp_point, point;
+
     if(!node)
         return 0;
     
@@ -498,7 +514,17 @@ int ai_state_update(list_node *node)
                 node->obj.state.action_againts = 0;
                 node->obj.state.path_flag = 1;
             }  
-            node->obj.state.flag = 0;
+            if(node->obj.state.state == GENERATE)
+            {
+                printf("Generate object!\n");
+                node->obj.state.path_count = 0;
+                node->obj.state.count = 0;
+                node->obj.state.flag = 0;
+                node->obj.state.agains_flag = 0;
+                node->obj.state.action_againts = 0;
+                node->obj.state.path_flag = 0;
+            }  
+             node->obj.state.flag = 0;
             if(node->obj.state.state == DIE)
             {
                 node_tmp = node->next;
@@ -521,8 +547,8 @@ int ai_state_update(list_node *node)
                 {
                     node->obj.x = node->obj.state.path->path[node->obj.state.path_count].x;
                     node->obj.y = node->obj.state.path->path[node->obj.state.path_count].y;
-                    printf("Modify path count %d -> (%d,%d)\n", node->obj.state.path_count,
-                            node->obj.x, node->obj.y);
+                    //printf("Modify path count %d -> (%d,%d)\n", node->obj.state.path_count,
+                    //        node->obj.x, node->obj.y);
                     node->obj.state.path_count = node->obj.state.path_count - 1;
                 }
                 else
@@ -552,17 +578,17 @@ int ai_state_update(list_node *node)
                     if(node->obj.state.count > 10)
                     {
                         node->obj.state.count = 0;
-                        printf("%s attacking %s, %s live is %d\n", node->obj.rname,
-                            node->obj.state.target_obj->rname, 
-                            node->obj.state.target_obj->rname, 
-                            node->obj.state.target_obj->actual_live);
+                        //printf("%s attacking %s, %s live is %d\n", node->obj.rname,
+                        //    node->obj.state.target_obj->rname, 
+                        //    node->obj.state.target_obj->rname, 
+                        //    node->obj.state.target_obj->actual_live);
                         node->obj.state.target_obj->state.action_againts = ATTACK;
                         node->obj.state.target_obj->state.agains_flag = 1;
                         tmp = node->obj.attack - node->obj.state.target_obj->defence;
                         if(tmp > 0)
-                            node->obj.state.target_obj->live = node->obj.state.target_obj->actual_live - tmp;
+                            node->obj.state.target_obj->actual_live = node->obj.state.target_obj->actual_live - tmp;
                         else
-                            node->obj.state.target_obj->live = node->obj.state.target_obj->actual_live - 1;
+                            node->obj.state.target_obj->actual_live = node->obj.state.target_obj->actual_live - 1;
                     }
                 }
                 else
@@ -595,10 +621,10 @@ int ai_state_update(list_node *node)
                         if(node->obj.state.target_obj->name_enum == FARM)
                             node->obj.state.resource_type = REC_FOOD;
 
-                        printf("%s using %s, %s live is %d\n", node->obj.rname,
-                            node->obj.state.target_obj->rname, 
-                            node->obj.state.target_obj->rname, 
-                            node->obj.state.target_obj->actual_live);
+                        //printf("%s using %s, %s live is %d\n", node->obj.rname,
+                        //    node->obj.state.target_obj->rname, 
+                        //    node->obj.state.target_obj->rname, 
+                        //    node->obj.state.target_obj->actual_live);
                         if(node->obj.state.carrying > 50)
                         {
                             tmp_point.x = node->obj.x;
@@ -693,8 +719,11 @@ int ai_state_update(list_node *node)
                             node->obj.state.target_obj->actual_live = node->obj.state.target_obj->live;
                             ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
                             ai_modify_state(node->obj.player, node->obj.state.target_obj, INACTIVE);
+                            if(node->obj.state.target_obj->name_enum == HOUSE)
+                                player_vars[node->obj.player].limit_pop += 4;
                             node->obj.state.target_obj = NULL;
                             node->obj.state.count = 0;
+                            
                         }
                     }
                 }
@@ -706,7 +735,40 @@ int ai_state_update(list_node *node)
                     node->obj.state.count = 0;
                 }
             }           
-        }
+            if(node->obj.state.state == GENERATE)
+            {
+                //printf("Building and not walking...\n");
+                node->obj.state.count++;
+                if(node->obj.state.count > 10)
+                {
+                    node->obj.state.count = 0;
+                    node->obj.state.generate_count += 1;
+                    if(node->obj.state.generate_count >=  node->obj.state.generate_compl)
+                    {
+                        if(player_vars[node->obj.player].pop <= player_vars[node->obj.player].limit_pop)
+                        {
+                            tmp_obj = hashtable_lookup(objects_hash, object_names[node->obj.state.generate_type]);
+                            new_obj = *tmp_obj;
+                            tmp_point.x = node->obj.x;
+                            tmp_point.y = node->obj.y;
+                            new_point = ai_alternative_tile(tmp_point, tmp_point);
+                            new_obj.x = new_point.x;
+                            new_obj.y = new_point.y;
+                            new_obj.player = node->obj.player;
+                            new_obj.id = object_names;
+                            list_add(list_nodes, new_obj);
+                            object_counter++;
+
+                            ai_modify_state(node->obj.player, &(node->obj), INACTIVE);
+                            node->obj.state.target_obj = NULL;
+                            node->obj.state.count = 0;
+                            player_vars[node->obj.player].pop++;
+                        }
+
+                    }
+                }
+            }           
+         }
 
         if(node->obj.actual_live <= 0)
             ai_modify_state(node->obj.player, &(node->obj), DIE);

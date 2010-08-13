@@ -43,7 +43,7 @@
 #include "panel.h"
 
 
-#define FPS 50 /* 15 frames per second */
+#define FPS 40 /* 15 frames per second */
 #define MS_PER_FRAME (1000 / FPS)
 
 #define IN_SCROLL 3 // Scroll speed
@@ -452,13 +452,14 @@ static void game_draw(int player)
         }
     }
 
-    point.x = 0;
-    point.y = 0;
+    point.x = screen->w/2;
+    point.y = screen->h/2;
     dest_point = mouse_map(point, Pscreen);
 
     // Draw no visible areas black
-    if(dest_point.x == -1 || dest_point.y == -1)
+/*    if(dest_point.x == -1 || dest_point.y == -1)
     {
+        printf("No visible area to draw!\n");
         point.x = Pscreen.x + 10;
         point.y = Pscreen.y + 10;
         dest_point = mouse_map(point, Pscreen);
@@ -481,9 +482,10 @@ static void game_draw(int player)
         return;
     }
     //printf("Init in: (%d,%d)\n", dest_point.x, dest_point.y);
+    */
     draw_unexplored(player, dest_point); 
 
-unexp_draw:
+//unexp_draw:
 
 
     panel_draw(selection.selected_objs[0], selection.selected_num);
@@ -565,6 +567,7 @@ static void game_handle_mouse(void)
     {
         if(io.mouseclicked_flag != 0)
         {
+            // Is a option selected form panel and the origin object is a unit? Then build!
             if(io.build_flag >= 0)
             {
                 Pmousemap = mouse_map(io.Plclick, Pscreen);
@@ -573,6 +576,13 @@ static void game_handle_mouse(void)
             }
             else if((io.build_flag = panel_click(&io.Plclick, selection.selected_objs[0])) != -1)
             {
+                // Is the clicked option from a building? Then generate the technologie or the 
+                // unit.
+                if(io.build_flag >= 0 && selection.selected_objs[0]->type == BUILDING)
+                {
+                    rts_generate(selection.selected_objs[0], io.build_flag);
+                    io.build_flag = -1;
+                }
                 io.mouseclicked_flag = 0;
                 if(io.build_flag == -3)
                     selection.selected_objs[0] = NULL;

@@ -332,6 +332,10 @@ int objects_xml(FILE *fp)
         object[i].state.rec_point_flag = 0;
         object[i].state.rec_point.x = 0;
         object[i].state.rec_point.y = 0;
+        object[i].state.generate_flag = 0;
+        object[i].state.generate_type = 0;
+        object[i].state.generate_compl = 0;
+        object[i].state.generate_count = 0;
 
         /* Debug: print the values of current object */
         printf("%d %s:%d(%s) %s lives: %d, def: %d, att: %d, mov: %d\n", 

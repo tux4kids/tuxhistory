@@ -30,6 +30,7 @@
 #include "llist.h"
 #include "graphs.h"
 #include "panel.h"
+#include "players.h"
 
 SDL_Surface* map_image;
 SDL_Surface* mini_map_image;
@@ -181,6 +182,14 @@ int map_xml(FILE *fp)
                         tmp_obj.x = x;
                         tmp_obj.y = y;
                         list_add(&list_nodes, tmp_obj);
+                        if(tmp_obj.type == UNIT)
+                        {
+                            player_vars[tmp_obj.player].pop++;
+                        }
+                        if(tmp_obj.name_enum == HOUSE)
+                        {
+                            player_vars[tmp_obj.player].limit_pop += 4;
+                        }
 
                         object_counter++;
                     }

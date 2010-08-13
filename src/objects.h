@@ -26,6 +26,7 @@ enum{
     DIE,
     STORE,
     CONSTRUCTION,
+    GENERATE,
     NUM_OF_STATES
 };
 
@@ -54,6 +55,10 @@ typedef struct th_state{
     th_point target_point;
     th_point rec_point;
     int rec_point_flag;
+    int generate_flag;
+    int generate_type;
+    int generate_compl;
+    int generate_count;
 }th_state;
 
 typedef struct th_obj{

@@ -437,6 +437,52 @@ int rts_build(th_obj *obj, int type, th_point point)
     return 1;
 }
 
+// Discover a technologie or create a unit.
+int rts_generate(th_obj *obj, int type)
+{
+    th_obj *tmp_obj;
+
+    tmp_obj = hashtable_lookup(objects_hash, object_names[type]);
+
+    if( player_vars[obj->player].wood - tmp_obj->cost[REC_WOOD] > 0 &&
+        player_vars[obj->player].food - tmp_obj->cost[REC_FOOD] > 0 &&
+        player_vars[obj->player].gold - tmp_obj->cost[REC_GOLD] > 0 &&
+        player_vars[obj->player].stone - tmp_obj->cost[REC_STONE] > 0 )
+    {
+        player_vars[obj->player].wood = player_vars[obj->player].wood - tmp_obj->cost[REC_WOOD]; 
+        player_vars[obj->player].food = player_vars[obj->player].food - tmp_obj->cost[REC_FOOD];
+        player_vars[obj->player].gold = player_vars[obj->player].gold - tmp_obj->cost[REC_GOLD];
+        player_vars[obj->player].stone = player_vars[obj->player].stone - tmp_obj->cost[REC_STONE];
+    }
+    else
+    {
+        printf("Not enoght resources! You need wood: %d food: %d gold: %d stone: %d\n",
+                    tmp_obj->cost[REC_WOOD],
+                    tmp_obj->cost[REC_FOOD],
+                    tmp_obj->cost[REC_GOLD],
+                    tmp_obj->cost[REC_STONE]);
+        return 0;
+    }
+
+    if(obj->state.generate_type != type)
+    {
+        obj->state.generate_type = type;
+        obj->state.generate_flag = 0;
+        obj->state.generate_compl = tmp_obj->live;
+        obj->state.generate_count = 0;
+    }
+    else if(obj->state.generate_flag == 0)
+    {
+        obj->state.generate_type = type;
+        obj->state.generate_flag = 0;
+        obj->state.generate_compl = tmp_obj->live;
+        obj->state.generate_count = 0;
+    }
+    obj->state.generate_flag++;
+    ai_modify_state(obj->player, obj, GENERATE);
+    return 1;
+}
+
 int rts_die(th_obj *obj)
 {
     return 1;

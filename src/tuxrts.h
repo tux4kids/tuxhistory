@@ -68,4 +68,5 @@ int rts_repair(th_obj *obj, th_obj *target, th_point);
 
 int rts_use(th_obj *obj, th_obj *target, th_point point);
 
+int rts_generate(th_obj *obj, int type);
 #endif

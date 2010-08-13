@@ -62,6 +62,7 @@ int add_player(char *name, int civ, int max_pop, int stone,
     player_vars[last_player].food = food;
     player_vars[last_player].gold = gold;
     player_vars[last_player].pop = 0;
+    player_vars[last_player].limit_pop = 0;
     player_vars[last_player].player_num = last_player;
     /*if(gmaps == NULL)
     {

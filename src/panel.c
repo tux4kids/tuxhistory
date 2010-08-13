@@ -100,8 +100,6 @@ void panel_draw(th_obj *select, int num)
     char tmp_text[100];
     int menu_y =(screen->h / 5) * 4;
 
-    //TODO: Write a panel function to manipulate the game...
-
     rect.x = 0;
     rect.y = 0;
     rect.w = images[IMG_GUIKILL]->w;
@@ -109,11 +107,13 @@ void panel_draw(th_obj *select, int num)
 
     SDL_BlitSurface(images[IMG_GUIBG_BYZANTINE], &panel.panel_header_dest, screen, 
             &panel.panel_header_origin);
-    sprintf(tmp_text,"Wood %5d   Food %5d   Stone %5d   Gold %5d ", 
+    sprintf(tmp_text,"Wood %5d   Food %5d   Stone %5d   Gold %5d  Population: %d/%d", 
                                 player_vars[1].wood,
                                 player_vars[1].food,
                                 player_vars[1].stone,
-                                player_vars[1].gold);
+                                player_vars[1].gold,
+                                player_vars[human_player].pop,
+                                player_vars[human_player].limit_pop);
             
     th_ShowMessage(tmp_text, 16, panel.panel_header_dest.x+2, panel.panel_header_dest.y+2);
 
@@ -163,11 +163,13 @@ void panel_draw(th_obj *select, int num)
                 panel.panel_actions[4] = DIE;
 
                 panel.panel_actions[3] = INACTIVE;
+                panel.panel_actions_obj[3] = -1;               
             }
             else if(select->name_enum == VILLAGE_CENTER)
             {
                 SDL_BlitSurface(images[IMG_GUIPAWN], NULL, screen, &panel.panel_option[0]);
                 panel.panel_actions[0] = BUILD;
+                panel.panel_actions_obj[0] = VILLAGER_MILKMAID;
 
                 SDL_BlitSurface(images[IMG_GUIKILL], NULL, screen, &panel.panel_option[4]);
                 panel.panel_actions[4] = DIE;
