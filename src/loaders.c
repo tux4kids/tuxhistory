@@ -660,7 +660,6 @@ FILE *LoadMap(const char* name)
   FILE *fp = NULL;
   char fn[PATH_MAX];
   int fn_len;
-  int i;
 
   /* check if map file is present */
   sprintf(fn, "%s/maps/%s.xml", DATA_PREFIX, name);
@@ -689,7 +688,6 @@ FILE *LoadObj(const char* name)
   FILE *fp = NULL;
   char fn[PATH_MAX];
   int fn_len;
-  int i;
 
   /* check if objects file is present */
   sprintf(fn, "%s/objects/%s.xml", DATA_PREFIX, name);

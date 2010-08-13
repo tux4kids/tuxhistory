@@ -105,6 +105,191 @@ int map_xml(FILE *fp)
     x_tildes = -1;
     y_tildes = -1;
 
+    // Get the game vars
+    
+    node = mxmlFindElement(tree, tree, "message1", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            strcpy(thegame.message1, node->child->value.text.string);
+        }
+    }
+    else
+    {
+        strcpy(thegame.message1, "");
+    }
+
+    node = mxmlFindElement(tree, tree, "message2", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            strcpy(thegame.message2, node->child->value.text.string);
+        }
+    }
+    else
+    {
+        strcpy(thegame.message2, "");
+    }
+
+    node = mxmlFindElement(tree, tree, "message3", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            strcpy(thegame.message2, node->child->value.text.string);
+        }
+    }
+    else
+    {
+        strcpy(thegame.message2, "");
+    }
+
+    node = mxmlFindElement(tree, tree, "players", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            value = atoi(node->child->value.text.string);
+            thegame.players = value;
+        }
+    }
+    else
+    {
+        thegame.players = 2;
+    }
+
+    node = mxmlFindElement(tree, tree, "population", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            if(strcmp("YES",node->child->value.text.string)==0)
+            {
+                thegame.goal_population = 1;
+            }
+            else
+            {
+                thegame.goal_population = 0;
+            }
+        }
+    }
+    else
+    {
+        thegame.goal_population = 0;
+    }
+
+    node = mxmlFindElement(tree, tree, "conquest", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            if(strcmp("YES",node->child->value.text.string)==0)
+            {
+                thegame.goal_conquest = 1;
+            }
+            else
+            {
+                thegame.goal_conquest = 0;
+            }
+        }
+    }
+    else
+    {
+        thegame.goal_conquest = 0;
+    }
+
+    node = mxmlFindElement(tree, tree, "goal_food", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            if(strcmp("NO",node->child->value.text.string)==0)
+            {
+                thegame.goal_food = -1;
+            }
+            else
+            {
+                thegame.goal_food = atoi(node->child->value.text.string);
+            }
+        }
+    }
+    else
+    {
+        thegame.goal_food = -1;
+    }
+
+    node = mxmlFindElement(tree, tree, "goal_wood", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            if(strcmp("NO",node->child->value.text.string)==0)
+            {
+                thegame.goal_wood = -1;
+            }
+            else
+            {
+                thegame.goal_wood = atoi(node->child->value.text.string);
+            }
+        }
+    }
+    else
+    {
+        thegame.goal_wood = -1;
+    }
+    
+    node = mxmlFindElement(tree, tree, "goal_gold", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            if(strcmp("NO",node->child->value.text.string)==0)
+            {
+                thegame.goal_gold = -1;
+            }
+            else
+            {
+                thegame.goal_gold = atoi(node->child->value.text.string);
+            }
+        }
+    }
+    else
+    {
+        thegame.goal_gold = -1;
+    }
+
+    node = mxmlFindElement(tree, tree, "goal_stone", 
+                NULL, NULL, MXML_DESCEND);
+    if(node)
+    {
+        if(node->child)
+        {
+            if(strcmp("NO",node->child->value.text.string)==0)
+            {
+                thegame.goal_stone = -1;
+            }
+            else
+            {
+                thegame.goal_stone = atoi(node->child->value.text.string);
+            }
+        }
+    }
+    else
+    {
+        thegame.goal_stone = -1;
+    }
+
     for(inode = mxmlFindElement(tree, tree, "row", 
                 NULL, NULL, MXML_DESCEND);
             inode != NULL;

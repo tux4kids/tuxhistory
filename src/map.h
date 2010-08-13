@@ -39,6 +39,20 @@ typedef struct th_map{
     //int obj_id;
 }th_map;
 
+typedef struct th_game{
+    char message1[100];
+    char message2[100];
+    char message3[100];
+    int players;
+    int goal_conquest;
+    int goal_population;
+    int goal_food;
+    int goal_wood;
+    int goal_stone;
+    int goal_gold;
+}th_game;
+
+th_game thegame;
 th_point **anchor_map;
 struct hashtable *map_table_hash; //Values of Terrains and objects
 int flag_map; // Map flag: is a map surface allocated? 

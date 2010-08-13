@@ -10,13 +10,12 @@
 #include "graphs.h"
 #include "llist.h"
 #include "ai.h"
+#include "panel.h"
 
 
 int tuxrts_init(char *object_name, char *map_name, int players)
 {
-    float zoom;
     FILE *fp;
-    SDL_Surface *tmp_surf;
 
     object_counter = 0;
 
@@ -79,8 +78,6 @@ int tuxrts_init(char *object_name, char *map_name, int players)
 // and 0 if not.
 int rts_valid_tile(int player, int unit, th_point coords)
 {
-    list_node *node;
-    th_obj *obj_p;
     if(coords.x < 0 || coords.x > x_tildes)
         return 0;
     if(coords.y < 0 || coords.y > y_tildes)
@@ -196,7 +193,6 @@ int rts_goto(th_obj *obj, th_point point)
     th_path *path;
     th_point source;
     th_point tmp_point, extra_point;
-    int l;
     int action;
 
     if(!obj)
@@ -320,8 +316,6 @@ int rts_build(th_obj *obj, int type, th_point point)
     th_point extra_point;
     th_obj *obj_template;
     th_obj new_obj;
-    char obj_name[50];
-    int l;
     int action;
 
     if(type >= NUM_OBJECTS)

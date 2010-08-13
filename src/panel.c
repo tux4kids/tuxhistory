@@ -23,6 +23,7 @@
 #include "setup.h"
 #include "fileops.h"
 #include "players.h"
+#include "ai.h"
 
 static int rect_coll(th_point *p, SDL_Rect *r);
 
@@ -96,9 +97,8 @@ int panel_init(void)
 // from the object xml file info!
 void panel_draw(th_obj *select, int num)
 {
-    SDL_Rect dest, dest2, rect;
+    SDL_Rect dest, rect;
     char tmp_text[100];
-    int menu_y =(screen->h / 5) * 4;
 
     rect.x = 0;
     rect.y = 0;

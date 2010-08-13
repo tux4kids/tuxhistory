@@ -41,6 +41,7 @@
 #include "tuxrts.h"
 #include "ai.h"
 #include "panel.h"
+#include "players.h"
 
 
 #define FPS 40 /* 15 frames per second */
@@ -74,8 +75,8 @@ static SDL_Surface* scaled_bkgd = NULL; //native resolution (fullscreen)
 
 // Game vars
 static SDL_Rect origin;
-static int screen_x;
-static int screen_y;
+//static int screen_x;
+//static int screen_y;
 static rts_vars selection;
 
 static th_point Pscreen;
@@ -119,7 +120,7 @@ static int check_exit_conditions(void);
 static int game_over(int);
 static int pause_game(void);
 
-static void get_mouse_pos(int, int);
+//static void get_mouse_pos(int, int);
 /************** Implementation *******************/
 
 static SDL_Surface* current_bkgd()
@@ -330,13 +331,9 @@ static void draw_unexplored(int player, th_point point)
 static void game_draw(int player)
 {
     SDL_Rect dest;
-    SDL_Rect dest2;
     list_node *obj_node;
-    char tmp_text[100];
     th_point point;
     th_point dest_point;
-    th_point tmp_point;
-    int temp1, temp2, i, j;
 
     origin.x = Pscreen.x;
     origin.y = Pscreen.y;
@@ -496,9 +493,6 @@ static void game_handle_mouse(void)
 {
     th_point Pmousemap;
     th_point Pdtmap;
-    th_point *path;
-    int i, j;
-    int tmp;
     
     Pmousemap = mouse_map(io.Pmouse, Pscreen);
     Pdtmap = Pscreen;
@@ -1027,6 +1021,10 @@ static int check_exit_conditions(void)
   }
   // TODO: Loose or win...
   return GAME_IN_PROGRESS;
+  if(thegame.goal_food < player_vars[0].food)
+  {
+    return GAME_OVER_WON;
+  }
 }
 
 
