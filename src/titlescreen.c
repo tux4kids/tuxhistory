@@ -348,6 +348,8 @@ int RenderTitleScreen(void)
 
     /* "Tux, of math command" title in upper right corner */
     SetRect(&title_rect, title_pos);
+    title_rect.w = title_rect.w + title_rect.w/2;
+    title_rect.h = title_rect.h + title_rect.h/2 ;
     title = LoadImageOfBoundingBox(title_path, IMG_ALPHA, title_rect.w, title_rect.h);
     if(title)
     {
