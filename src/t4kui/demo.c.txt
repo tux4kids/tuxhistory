@@ -1,0 +1,116 @@
+/*
+ * demo.c
+ * This file is part of Tux4Kids
+ *
+ * Copyright (C) 2010 - Aviral Dasgupta
+ *
+ * Tux4Kids is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Tux4Kids is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tux4Kids; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, 
+ * Boston, MA  02110-1301  USA
+ */
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <assert.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
+
+#include "ui_system.h"
+#include "ui_window.h"
+#include "ui_button.h"
+#include "ui_proxywidget.h"
+#include "ui_colors.h"
+#include "ui_events.h"
+#include "ui_layouts.h"
+#include "ui_callback.h"
+
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 480
+#define SCREEN_BPP 32
+
+static SDL_Surface *screen;
+static UI_Window *window;
+
+void DEMO_CreateUI();
+void DEMO_DestroyUI();
+void DEMO_Update();
+void DEMO_Repaint();
+
+int main(int argc, char *argv[]) {
+  if(SDL_Init(SDL_INIT_TIMER|SDL_INIT_VIDEO)!=0) {
+    fprintf(stderr, "Fatal: %s\n(%s)\n", "SDL failed to initialize.", SDL_GetError());
+    return EXIT_FAILURE;
+  }
+  
+  if((screen=SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_DOUBLEBUF))==NULL) {
+    fprintf(stderr, "Fatal: %s\n(%s)\n", "Failed to set video mode.", SDL_GetError());
+    return EXIT_FAILURE;
+  }
+  DEMO_CreateUI();
+  
+  int running = 1;
+  while(running) {
+    //TODO add display functions here
+    
+    DEMO_Update();
+    DEMO_Repaint();
+    
+    SDL_Flip(screen);
+    SDL_Delay(1);
+  }
+  
+  return EXIT_SUCCESS;
+}
+
+static UI_Button *button;
+static UI_Button *button2;
+
+int btn1_callback(void *target) {exit(EXIT_SUCCESS);}
+int btn2_callback(void *target) {SDL_WM_IconifyWindow();}
+
+void DEMO_CreateUI() {
+	SDL_WM_SetCaption("Tuxedo UI Library Demo", "TuxUIDemo");
+	ui_InitSystem();
+	uie_Register();
+	window = ui_CreateWindow(0, 0, 320, 240);
+	uie_RegisterWindow(window);
+	button = ui_CreateButton("Exit Application");
+	ui_SetButtonCallback(button, btn1_callback);
+	layout_FSetPos(0, 0);
+	ui_AddWidget(window, button, WT_BUTTON);
+	button2 = ui_CreateButton("Minimise Application");
+	ui_SetButtonCallback(button2, btn2_callback);
+	layout_FSetPos(100, 100);
+	ui_AddWidget(window, button2, WT_BUTTON);
+}
+
+void DEMO_DestroyUI() {
+}
+
+void DEMO_Update() {
+  SDL_Event event;
+  
+  while(SDL_PollEvent(&event)) {
+    switch(event.type) {
+      case SDL_QUIT:
+        exit(EXIT_SUCCESS);
+    }
+  }
+}
+
+void DEMO_Repaint() {
+	SDL_FillRect(screen, NULL, C_BLACK);
+	ui_DrawWindow(window, screen);
+}
+
