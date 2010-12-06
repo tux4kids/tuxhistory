@@ -61,7 +61,7 @@ char *ui_GetButtonLabel(struct _UI_Button *button) {
 void ui_SetButtonLabel(struct _UI_Button *button, char *label) {
     SDL_Surface *tmpsurf;
 	button->label = label;
-    tmpsurf = SimpleText(label, FONT_SIZE, SDLC_WHITE);
+    tmpsurf = SimpleText(&label, FONT_SIZE, 0xffffff);
     SDL_BlitSurface(tmpsurf, NULL, button->prerendered, NULL);
 	//button->prerendered = TTF_RenderText_Shaded(ui_GetFont(), label, SDLC_WHITE, SDLC_BTN_BG);
 }

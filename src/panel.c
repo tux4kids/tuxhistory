@@ -24,6 +24,14 @@
 #include "fileops.h"
 #include "players.h"
 #include "ai.h"
+#include "ui_system.h"
+#include "ui_window.h"
+#include "ui_button.h"
+#include "ui_proxywidget.h"
+#include "ui_colors.h"
+#include "ui_events.h"
+#include "ui_layouts.h"
+#include "ui_callback.h"
 
 static int rect_coll(th_point *p, SDL_Rect *r);
 
@@ -33,6 +41,7 @@ int panel_init(void)
     float zoom;
     SDL_Surface *tmp_surf;
 
+	ui_InitSystem();
     panel.panel_dest.x = 0;
     panel.panel_dest.y = (screen->h / 5) * 4;
     panel.panel_dest.w = screen->w;

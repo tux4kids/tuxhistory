@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tr2\n"
 "Report-Msgid-Bugs-To: tuxmath-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2010-06-28 17:16-0500\n"
+"POT-Creation-Date: 2010-12-05 11:56-0600\n"
 "PO-Revision-Date: 2008-12-07 15:54+0200\n"
 "Last-Translator: Doruk Fisek <dfisek@fisek.com.tr>\n"
 "Language-Team: Turkish <gnu-tr-u12a@lists.sourceforge.net>\n"
@@ -97,43 +97,43 @@ msgstr ""
 msgid "For more information about Free Software and the GNU GPL, visit:"
 msgstr ""
 
-#: src/highscore.c:167
+#: src/highscore.c:165
 msgid "Hall Of Fame"
 msgstr "Gurur Tablosu"
 
-#: src/highscore.c:187 src/highscore.c:208
+#: src/highscore.c:185 src/highscore.c:206
 msgid "Space Cadet"
 msgstr "Uzay Tertibi"
 
-#: src/highscore.c:190
+#: src/highscore.c:188
 msgid "Scout"
 msgstr "İzci"
 
-#: src/highscore.c:193
+#: src/highscore.c:191
 msgid "Ranger"
 msgstr "Korucu"
 
-#: src/highscore.c:196
+#: src/highscore.c:194
 msgid "Ace"
 msgstr "As"
 
-#: src/highscore.c:199
+#: src/highscore.c:197
 msgid "Commando"
 msgstr "Komando"
 
-#: src/highscore.c:202
+#: src/highscore.c:200
 msgid "Factors"
 msgstr "Çarpanlar"
 
-#: src/highscore.c:205
+#: src/highscore.c:203
 msgid "Fractions"
 msgstr "Kesirler"
 
-#: src/highscore.c:286
+#: src/highscore.c:284
 msgid "You Are In The Hall of Fame!"
 msgstr ""
 
-#: src/highscore.c:286
+#: src/highscore.c:284
 msgid "Enter Your Name:"
 msgstr ""
 
@@ -157,19 +157,19 @@ msgstr ""
 "tuxmath-devel@lists.sourceforge.net e-posta listesinde TuxMath'in geleceğini "
 "tartışabilirsin"
 
-#: src/titlescreen.c:477
+#: src/titlescreen.c:478
 msgid "Work In Progress!"
 msgstr "Çalışmalar Sürüyor!"
 
-#: src/titlescreen.c:478
+#: src/titlescreen.c:479
 msgid "This feature is not ready yet"
 msgstr "Bu özellik henüz hazır değil"
 
-#: src/titlescreen.c:479
+#: src/titlescreen.c:480
 msgid "Discuss the future of TuxMath at"
 msgstr "Tuxmath'in geleceğini tartışıldığı liste :"
 
-#: src/titlescreen.c:480
+#: src/titlescreen.c:481
 msgid "tuxmath-devel@lists.sourceforge.net"
 msgstr "tuxmath-devel@lists.sourceforge.net"
 

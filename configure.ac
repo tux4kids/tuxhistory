@@ -179,24 +179,12 @@ AC_CHECK_LIB([m],
               [AC_MSG_ERROR([Math library not found - functions in <math.h> may not be available.])])
 
 dnl Check for LibLua: --------------------------------------------------------
-
-PKG_CHECK_MODULES([LUA],
-    [lua50],
-    ,
-    [
-      [echo "LUA not found via pkg_config, checking with AC_CHECK_LIB:"]
-	AC_CHECK_LIB(lua50, lua_open, [
-           LUA_LIBS="-llua50"
-           ],[AC_MSG_ERROR([LUA not found! http://www.lua.org])])
-
-      [echo "LUA successfully located"]
-    ] 
-)
-
+AX_LUA_HEADERS_VERSION(500)
+AX_LUA_LIBS()
+AX_LUA_HEADERS()
 AC_DEFINE([HAVE_LIBLUA],[1],[Define to 1 if you have the `lua` library])
-CFLAGS="$CFLAGS $LUA_CFLAGS"
-LIBS="$LIBS $LUA_LIBS"
-
+CFLAGS="$CFLAGS $LUA_INCLUDE"
+LIBS="$LIBS $LUA_LIB"
 
 dnl Check for SDL_Pango: --------------------------------------------------------
 
