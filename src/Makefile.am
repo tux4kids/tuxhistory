@@ -52,7 +52,15 @@ tuxhistory_SOURCES = tuxhistory.c \
 	SDL_rotozoom.c	\
 	scandir.c	\
 	pixels.c	\
-	tuxrts.c
+	tuxrts.c    \
+	t4kui/ui_button.c \
+	t4kui/ui_events.c \
+	t4kui/ui_proxywidget.c    \
+	t4kui/ui_window.c \
+    t4kui/ui_colors.c \
+    t4kui/ui_layouts.c    \
+    t4kui/ui_system.c \
+    t4kui/util.c
 
 
 # HACK "TuxHistory" is the Windows program, whereas "tuxhistory" is the Unix program
