@@ -24,14 +24,14 @@
 #include "fileops.h"
 #include "players.h"
 #include "ai.h"
-#include "ui_system.h"
-#include "ui_window.h"
-#include "ui_button.h"
-#include "ui_proxywidget.h"
-#include "ui_colors.h"
-#include "ui_events.h"
-#include "ui_layouts.h"
-#include "ui_callback.h"
+#include "t4kui/ui_system.h"
+#include "t4kui/ui_window.h"
+#include "t4kui/ui_button.h"
+#include "t4kui/ui_proxywidget.h"
+#include "t4kui/ui_colors.h"
+#include "t4kui/ui_events.h"
+#include "t4kui/ui_layouts.h"
+#include "t4kui/ui_callback.h"
 
 static int rect_coll(th_point *p, SDL_Rect *r);
 
