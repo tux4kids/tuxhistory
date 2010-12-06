@@ -52,7 +52,6 @@ tuxhistory_SOURCES = tuxhistory.c \
 	SDL_rotozoom.c	\
 	scandir.c	\
 	pixels.c	\
-<<<<<<< HEAD:src/Makefile.am
 	tuxrts.c 	\
 	t4kui/ui_button.c \
 	t4kui/ui_events.c \
