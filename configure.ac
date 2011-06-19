@@ -179,12 +179,39 @@ AC_CHECK_LIB([m],
               [AC_MSG_ERROR([Math library not found - functions in <math.h> may not be available.])])
 
 dnl Check for LibLua: --------------------------------------------------------
-AX_LUA_HEADERS_VERSION(500)
-AX_LUA_LIBS()
-AX_LUA_HEADERS()
-AC_DEFINE([HAVE_LIBLUA],[1],[Define to 1 if you have the `lua` library])
-CFLAGS="$CFLAGS $LUA_INCLUDE"
-LIBS="$LIBS $LUA_LIB"
+
+AC_MSG_CHECKING([for Lua package name])
+PKG_CHECK_EXISTS([lua5.1], [LUA="lua5.1"],
+    [PKG_CHECK_EXISTS([lua-5.1], [LUA="lua-5.1"], [LUA="lua"])])
+AC_MSG_RESULT([$LUA])
+
+PKG_CHECK_MODULES([LUA],
+    [$LUA],
+    ,
+    [ [echo "$LUA not found via pkg_config, checking with AC_CHECK_LIB:"]
+      AC_CHECK_LIB([$LUA],
+	 [lua_newstate],
+         ,
+         [AC_MSG_ERROR([LUA no found! http://www.lua.org/download.html])]
+      )
+      [echo "$LUA successfully located"]
+    ] 
+)
+
+AC_DEFINE([HAVE_LUA],[1],[Define to 1 if you have the `LUA` library])
+
+
+CFLAGS="$CFLAGS $LUA_CFLAGS"
+LIBS="$LIBS $LUA_LIBS"
+
+dnl AX_WITH_LUA()
+dnl AX_LUA_VERSION(500)
+dnl AX_LUA_HEADERS()
+dnl AX_LUA_HEADERS_VERSION(500)
+dnl AX_LUA_LIBS()
+dnl AC_DEFINE([HAVE_LIBLUA],[1],[Define to 1 if you have the `lua` library])
+dnl CFLAGS="$CFLAGS $LUA_INCLUDE"
+dnl LIBS="$LIBS $LUA_LIB"
 
 dnl Check for SDL_Pango: --------------------------------------------------------
 

@@ -40,8 +40,9 @@ int panel_init(void)
     int i;
     float zoom;
     SDL_Surface *tmp_surf;
+    static UI_Window *window;
 
-	ui_InitSystem();
+    window = ui_CreateWindow(0, 0, 320, 240);
     panel.panel_dest.x = 0;
     panel.panel_dest.y = (screen->h / 5) * 4;
     panel.panel_dest.w = screen->w;
